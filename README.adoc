@@ -1,0 +1,13 @@
+= Welcome to PyeIQ
+
+== Purpose
+
+PyeIQ provides classes and scripts to manage the eIQ Samples Apps.
+
+== Copyright and License
+
+© 2020 NXP Semiconductors.
+
+Free use of this software is granted under the terms of the BSD 3-Clause License.
+
+
