@@ -1,0 +1,23 @@
+= Object Detection TFlite Runtime
+
+== Building Process
+
+Refers to the first readme file.
+
+== Running
+
+. Open the Python3 terminal:
++
+[source,console]
+----
+root@imx8qmmek:~# python3
+----
++
+. Run the following commands:
++
+[source,console]
+----
+>>> from pyeiq.tflite.object_detection import ObjectDetection                                                      
+>>> demo = ObjectDetection()                                                                                          
+>>> demo.run()
+----
