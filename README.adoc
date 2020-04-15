@@ -1,8 +1,87 @@
 = Welcome to PyeIQ
 
-== Purpose
-
 PyeIQ provides classes and scripts to manage the eIQ Samples Apps.
+
+== Getting Started with PyeIQ
+
+Before installing PyeIQ, ensure all dependencies are installed. Most of them are
+common dependencies found in any _GNU/Linux Distribution_; package names will be
+different, but it shouldn't be difficult to search using whatever package management
+tool that's used by your distribution.
+
+[NOTE]
+====
+The procedures described in this document target a GNU/Linux Distribution Ubuntu 18.04.
+====
+
+=== Software Requirements
+
+. Install the following packages in the GNU/Linux system:
++
+[source,console]
+----
+~# apt install python3 python3-pip
+----
++
+. Then, use _pip3_ tool to install the https://virtualenv.pypa.io/en/latest/[_Virtualenv_] tool:
++
+[source,console]
+----
+~$ pip3 install virtualenv
+----
+
+=== Building the PyeIQ Package
+
+. Clone the PyeIQ repository from CAF.
++
+. Use _Virtualenv_ tool to create an isolated Python environment:
++
+[source,console]
+----
+~/pyeiq$ virtualenv env
+~/pyeiq$ source env/bin/activate
+----
++
+. Generate the Wheel (_.whl_) file format:
++
+[source,console]
+----
+(env) ~/pyeiq# python3 setup.py sdist bdist_wheel
+----
++
+. Copy the whirl file to the board:
++
+[source,console]
+----
+(env) ~/pyeiq$ scp dist/eiq-1.0-py3-none-any.whl root@<boards_IP>:~
+----
++
+. To deactivate the Python isolated environment:
++
+[source,console]
+----
+(env) ~/pyeiq$ deactivate
+~/pyeiq$
+----
+
+=== Deploy the PyeIQ Package
+
+. Install the PyeIQ Wheel file in the board:
++
+[source,console]
+----
+root@imx8qmmek:~# pip3 install eiq-1.0-py3-none-any.whl
+----
++
+. Check the installation by retrieving the version:
++
+[source,console]
+----
+root@imx8qmmek:~# python3
+>>> import eiq
+>>> eiq.__version__
+----
+
 
 == Copyright and License
 
