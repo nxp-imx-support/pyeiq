@@ -51,21 +51,26 @@ The procedures described in this document target a GNU/Linux Distribution Ubuntu
 ~/pyeiq$ source env/bin/activate
 ----
 +
-. Generate the Wheel (_.whl_) file format:
+. Generate the wheel (_.whl_) file format:
 +
 [source,console]
 ----
 (env) ~/pyeiq# python3 setup.py sdist bdist_wheel
 ----
 +
-. Copy the whirl file to the board:
+. Copy the wheel file to the board:
 +
 [source,console]
 ----
 (env) ~/pyeiq$ scp dist/eiq-1.0-py3-none-any.whl root@<boards_IP>:~
 ----
 +
-. To deactivate the Python isolated environment:
+[CAUTION]
+====
+Be careful on changing the _<boards_IP>_ for the actually IP Address.
+====
++
+. To deactivate the virtual environment:
 +
 [source,console]
 ----
@@ -84,13 +89,22 @@ root@imx8qmmek:~# pip3 install eiq-1.0-py3-none-any.whl
 +
 . Check the installation by retrieving the version:
 +
+.. Start an interactive mode with Python3:
++
 [source,console]
 ----
 root@imx8qmmek:~# python3
+----
++
+.. Check the PyeIQ latest version:
++
+[source,console]
+----
 >>> import eiq
 >>> eiq.__version__
 ----
-
++
+.. The output is the PyeIQ latest version installed in the board.
 
 == Copyright and License
 
