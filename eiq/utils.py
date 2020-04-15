@@ -2,7 +2,6 @@ from contextlib import contextmanager
 from datetime import timedelta
 from time import monotonic
 from urllib.parse import urlparse
-import importlib
 import os
 import pathlib
 import sys
@@ -14,11 +13,10 @@ logging.basicConfig(level = logging.INFO)
 
 from eiq import config
 
-if importlib.util.find_spec("progressbar") is not None:
+try:
     import progressbar
     found = True
-
-else:
+except ImportError:
     found = False
 
 class ProgressBar():
