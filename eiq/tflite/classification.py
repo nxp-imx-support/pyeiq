@@ -285,6 +285,7 @@ class eIQFireDetection(object):
 class eIQFireDetectionCamera(object):
     def __init__(self, model_url: str = None, **kwargs):
         self.__dict__.update(kwargs)
+        self.args = args_parser(model = True)
         self.name = self.__class__.__name__
         self.video = ""
         self.tensor = 0
@@ -294,7 +295,10 @@ class eIQFireDetectionCamera(object):
         self.pipeline = ""
 
     def retrieve_data(self):
-        self.model = retrieve_from_url(self.to_fetch, self.name)
+        if self.args.model is not None and os.path.isfile(self.args.model):
+            self.model = self.args.model
+        else:
+            self.model = retrieve_from_url(self.to_fetch, self.name)
 
     def gstreamer_configurations(self):
         self.pipeline = set_pipeline(1280, 720)
