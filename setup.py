@@ -13,6 +13,7 @@ license="BDS-3-Clause",
 packages=find_packages(),
 zip_safe=False)
 
+init = "__init__.py"
 demos_dir = os.path.join(os.getcwd(), "eiq", "demos")
 install_dir = os.path.join("/opt", "eiq", "demos")
 
@@ -23,5 +24,6 @@ if not os.path.exists(install_dir):
         sys.exit("os.mkdir() function has failed: %s" % install_dir)
 
 for file in os.listdir(demos_dir):
-    file = os.path.join(demos_dir, file)
-    shutil.copy(file, install_dir)
+    if file != init:
+        file = os.path.join(demos_dir, file)
+        shutil.copy(file, install_dir)
