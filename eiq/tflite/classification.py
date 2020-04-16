@@ -18,7 +18,7 @@ import eiq.tflite.config as config
 class eIQObjectDetection(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
-        self.args = args_parser(model = True, label = True)
+        self.args = args_parser(webcam = True, model = True, label = True)
         self.name = self.__class__.__name__
         self.video = ""
         self.tensor = 0
@@ -44,7 +44,10 @@ class eIQObjectDetection(object):
 
     def gstreamer_configurations(self):
         self.pipeline = set_pipeline(1280, 720)
-        self.video = opencv.VideoCapture(self.pipeline)
+        if self.args.webcam is True:
+            self.video = opencv.VideoCapture(0)
+        else:
+            self.video = opencv.VideoCapture(self.pipeline)
 
     def tflite_runtime_interpreter(self):
         self.interpreter = Interpreter(self.model)
@@ -287,7 +290,7 @@ class eIQFireDetection(object):
 class eIQFireDetectionCamera(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
-        self.args = args_parser(model = True)
+        self.args = args_parser(webcam = True, model = True)
         self.name = self.__class__.__name__
         self.video = ""
         self.tensor = 0
@@ -304,7 +307,10 @@ class eIQFireDetectionCamera(object):
 
     def gstreamer_configurations(self):
         self.pipeline = set_pipeline(1280, 720)
-        self.video = opencv.VideoCapture(self.pipeline)
+        if self.args.webcam is True:
+            self.video = opencv.VideoCapture(0)
+        else:
+            self.video = opencv.VideoCapture(self.pipeline)
 
     def tflite_runtime_interpreter(self):
         self.interpreter = Interpreter(self.model)
