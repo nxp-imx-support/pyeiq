@@ -220,7 +220,7 @@ This generates a (.tflite) model in `output/fire_detection.model/`.
 +
 [source,console]
 ----
-root@imx8qmmek:~/opt/eiq/demos/# python3 fire_detection_camera.py <new_model>.tflite
+root@imx8qmmek:~/opt/eiq/demos/# python3 fire_detection_camera.py --model=<model.tflite path>
 ----
 
 == Copyright and License
