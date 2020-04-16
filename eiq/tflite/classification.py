@@ -370,7 +370,7 @@ class eIQCameraOpenCV(object):
         self.args = args_parser(model = True)
         self.name = self.__class__.__name__
         self.Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
-        self.to_fetch = config.EXAMPLE_CAMERA_MODEL
+        self.to_fetch = config.CAMERA_OPENCV_MODEL
 
         self.model = ""
         self.pipeline = ""
