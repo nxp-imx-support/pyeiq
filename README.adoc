@@ -173,9 +173,8 @@ root@imx8qmmek:~/opt/eiq/demos/# python3 <demo>.py
 
 == Training a Model
 
-The PyeIQ intents to support training models. At this point PyeIQ currently support
-training for the `Fire Detection` demo only. Follow the next instructions to build
-a new model:
+The currently PyeIQ version supports model training for only the Fire detection
+demo. Follow the instructions in the README file located in the `eiq/train/` folder.
 
 include::eiq/train/README.adoc[]
 
