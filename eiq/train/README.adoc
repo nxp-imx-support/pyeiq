@@ -1,44 +1,47 @@
-= Convert TensorFlow/Keras Model to TFlite Model
+=== Fire Detection Training Example
 
-This guide explains from scratch how to build a model to detect fire in a scene.
-The main idea is to build this model using Keras (.h5) and then convert it to
-TensorFlow Lite (.tflite).
-
-== Software Requirements
-
-. Install the essential packages:
+. Use Virtualenv tool to create an isolated Python environment in the PyeIQ repo:
 +
 [source,console]
 ----
-~# apt install python3 python3-pip
-~$ pip3 install virtualenv
+~/pyeiq/eiq/train$ virtualenv env
+~/pyeiq/eiq/train$ source env/bin/activate
 ----
-
-== Building the Model
-
-. Clone the repository and then set up the environment:
++
+.. Install the Python requirements to train the model:
 +
 [source,console]
 ----
-~$ cd pyeiq/eiq/train
-~pyeiq/eiq/train$ virtualenv env
-~pyeiq/eiq/train$ source env/bin/activate
+(env) ~/pyeiq/eiq/train$ pip3 install -r requirements-fire-detection.txt
 ----
 +
-. Install the required packages using `pip` tool:
+.. Train the model passing the number of epochs [0 - 50]:
 +
 [source,console]
 ----
-(env) ~pyeiq/eiq/train$ pip3 install -r requirements.txt
+(env) ~/pyeiq/eiq/train$ python3 train.py --epochs=50
 ----
 +
-. Train the model:
+[NOTE]
+====
+This generate (_.pb_) and (_.h5_) models in `output/fire_detection.model/` folder.
+====
++
+.. To convert the Keras (_.h5_) model to the TensorFlow Lite model, run:
 +
 [source,console]
 ----
-(env) ~pyeiq/eiq/train$ python3 train.py
+(env) ~/pyeiq/eiq/train$ python3 convert_h5_to_tflite.py
 ----
-
-== Converting the Model to TensorFlow Lite
-
-. Run the following
++
+[NOTE]
+====
+This generates a (.tflite) model in `output/fire_detection.model/`.
+====
++
+. Deploy this model to the board and then:
++
+[source,console]
+----
+root@imx8qmmek:~/opt/eiq/demos/# python3 fire_detection_camera.py --model=<model.tflite path>
+----
