@@ -2,7 +2,7 @@ from contextlib import contextmanager
 from datetime import timedelta
 from time import monotonic
 from urllib.parse import urlparse
-import argparse
+from argparse import ArgumentParser
 import os
 import pathlib
 import sys
@@ -101,17 +101,24 @@ def url_validator(url: str = None):
     except:
         return False
 
-def args_parser():
-    parser = argparse.ArgumentParser()
+def args_parser(image: bool = False, model: bool = False, label: bool = False, epochs: bool = False):
+    parser = ArgumentParser()
 
-    parser.add_argument(
-        '-i', '--image', default=None,
-        help='image to be classified')
-    parser.add_argument(
-        '-m', '--model', default=None,
-        help='.tflite model to be executed')
-    parser.add_argument(
-        '-l', '--label', default=None,
-        help='name of file containing labels')
+    if image:
+        parser.add_argument(
+            '-i', '--image', default=None,
+            help="path of the image to be classified")
+    if model:
+        parser.add_argument(
+            '-m', '--model', default=None,
+            help="path of the .tflite model to be executed")
+    if label:
+        parser.add_argument(
+            '-l', '--label', default=None,
+            help="path of the file containing labels")
+    if epochs:
+        parser.add_argument(
+            '-e', '--epochs', type=int, default=50,
+            help="number of epochs for the traning")
 
     return parser.parse_args()
