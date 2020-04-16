@@ -101,9 +101,13 @@ def url_validator(url: str = None):
     except:
         return False
 
-def args_parser(image: bool = False, model: bool = False, label: bool = False, epochs: bool = False):
+def args_parser(webcam: bool = False, image: bool = False, model: bool = False, label: bool = False, epochs: bool = False):
     parser = ArgumentParser()
 
+    if webcam:
+        parser.add_argument(
+            '-w', '--webcam', type = bool, default = False,
+            help="set --webcam=True if a webcam is been used.")
     if image:
         parser.add_argument(
             '-i', '--image', default=None,
