@@ -117,7 +117,64 @@ root@imx8qmmek:~# python3
 >>> eiq.__version__
 ----
 +
-.. The output is the PyeIQ latest version installed in the board.
+.. The output is the PyeIQ latest version installed in the system.
+
+== Running the Demos
+
+After installing the PyeIQ package, all the demos are installed in the
+`/opt/eiq/demos` path.
+
+.PyeIQ Available Demos
+|===
+|Demo Name |i.MX Board |BSP Release |Accelerated |Framework |Building
+
+|Label Image
+|QM
+|5.4
+|Yes
+|TensorFlow Lite
+|image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
+
+|Object Detection
+|QM
+|5.4
+|Yes
+|TensorFlow Lite
+|image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
+
+|Fire Detection File Based
+|QM
+|5.4
+|Yes
+|TensorFlow Lite
+|image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
+
+|Fire Detection Camera Based
+|QM
+|5.4
+|Yes
+|TensorFlow Lite
+|image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
+|===
+
+. To run the demos enter the `/opt/eiq/demos` folder:
++
+[source,console]
+----
+root@imx8qmmek:~# cd /opt/eiq/demos/
+----
++
+. Choose the demo and execute it:
++
+[source,console]
+----
+root@imx8qmmek:~/opt/eiq/demos/# python3 <demo>.py
+----
+
+
+== Training a Model
+
+The PyeIQ supports model training
 
 == Copyright and License
 
