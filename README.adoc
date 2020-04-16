@@ -132,29 +132,36 @@ After installing the PyeIQ package, all the demos are installed in the
 |QM
 |5.4
 |Yes
-|TensorFlow Lite
+|TensorFlow Lite 2.1.0
 |image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
 
 |Object Detection
 |QM
 |5.4
 |Yes
-|TensorFlow Lite
+|TensorFlow Lite 2.1.0
 |image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
 
 |Fire Detection File Based
 |QM
 |5.4
 |Yes
-|TensorFlow Lite
+|TensorFlow Lite 2.1.0
 |image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
 
 |Fire Detection Camera Based
 |QM
 |5.4
 |Yes
-|TensorFlow Lite
+|TensorFlow Lite 2.1.0
 |image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
+
+|Fire Detection Camera Based
+|QM
+|5.4
+|-
+|PyArmNN 19.08
+|Requires 19.11
 |===
 
 . To run the demos enter the `/opt/eiq/demos` folder:
