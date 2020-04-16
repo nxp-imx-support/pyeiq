@@ -9,7 +9,20 @@ endif::[]
 
 = Welcome to PyeIQ
 
-PyeIQ provides classes and scripts to manage the eIQ Samples Apps.
+PyeIQ provide high level classes to allow the user execute eIQ applications and demos.
+
+.PyeIQ Tested On
+|===
+|i.MX Board |BSP Release |Building
+
+|8QM
+|5.4
+|image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
+
+|8MPlus
+|5.4
+|
+|===
 
 == Getting Started with PyeIQ
 
@@ -111,5 +124,3 @@ root@imx8qmmek:~# python3
 © 2020 NXP Semiconductors.
 
 Free use of this software is granted under the terms of the BSD 3-Clause License.
-
-
