@@ -216,7 +216,7 @@ class eIQLabelImage(object):
                 print('{:08.6f}: {}'.format(float(results[i] / 255.0), labels[i]))
 
 class eIQFireDetection(object):
-    def __init__(self, model_url: str = None, **kwargs):
+    def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
         self.args = args_parser(image = True, model = True)
         self.name = self.__class__.__name__
@@ -283,7 +283,7 @@ class eIQFireDetection(object):
             print("Fire")
 
 class eIQFireDetectionCamera(object):
-    def __init__(self, model_url: str = None, **kwargs):
+    def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
         self.args = args_parser(model = True)
         self.name = self.__class__.__name__
