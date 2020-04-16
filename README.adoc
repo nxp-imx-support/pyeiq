@@ -211,8 +211,17 @@ This generate (_.pb_) and (_.h5_) models in `output/fire_detection.model/` folde
 (env) ~/pyeiq/eiq/train$ python3 convert_h5_to_tflite.py
 ----
 +
-
-
+[NOTE]
+====
+This generates a (.tflite) model in `output/fire_detection.model/`.
+====
++
+. Deploy this model to the board and then:
++
+[source,console]
+----
+root@imx8qmmek:~/opt/eiq/demos/# python3 fire_detection_camera.py <new_model>.tflite
+----
 
 == Copyright and License
 
