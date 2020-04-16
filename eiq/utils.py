@@ -2,6 +2,7 @@ from contextlib import contextmanager
 from datetime import timedelta
 from time import monotonic
 from urllib.parse import urlparse
+import argparse
 import os
 import pathlib
 import sys
@@ -92,3 +93,25 @@ def retrieve_from_url(url: str = None, name: str = None, filename: str = None):
         return fp
     else:
         return download_url(fp, filename, url, filename_parsed.netloc)
+
+def url_validator(url: str = None):
+    try:
+        result = urlparse(url)
+        return all([result.scheme, result.netloc, result.path])
+    except:
+        return False
+
+def args_parser():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        '-i', '--image', default=None,
+        help='image to be classified')
+    parser.add_argument(
+        '-m', '--model', default=None,
+        help='.tflite model to be executed')
+    parser.add_argument(
+        '-l', '--label', default=None,
+        help='name of file containing labels')
+
+    return parser.parse_args()
