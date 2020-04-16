@@ -7,7 +7,7 @@ import numpy as np
 from PIL import Image
 from tflite_runtime.interpreter import Interpreter
 
-from eiq.utils import retrieve_from_url, timeit
+from eiq.utils import retrieve_from_url, timeit, args_parser
 from eiq.multimedia.v4l2 import set_pipeline
 from eiq.tflite.utils import get_label
 from eiq.tflite.utils import get_model
@@ -126,7 +126,8 @@ class eIQObjectDetection(object):
         opencv.destroyAllWindows()
 
 class eIQLabelImage(object):
-    def __init__(self, model_url: str = None, **kwargs):
+    def __init__(self, **kwargs):
+        self.args = args_parser()
         self.__dict__.update(kwargs)
         self.name = self.__class__.__name__
         self.tensor = 0
@@ -146,9 +147,20 @@ class eIQLabelImage(object):
             return [line.strip() for line in f.readlines()]
 
     def retrieve_data(self):
-        self.image = retrieve_from_url(self.to_fetch['image'], self.name)
-        self.label = get_label(retrieve_from_url(self.to_fetch['labels'], self.name))
-        self.model = get_model(retrieve_from_url(self.to_fetch['model'], self.name))
+        if os.path.isfile(self.args.image):
+            self.image = self.args.image
+        else:
+            self.image = retrieve_from_url(self.to_fetch['image'], self.name)
+
+        if os.path.isfile(self.args.label):
+            self.label = self.args.label
+        else:
+            self.label = get_label(retrieve_from_url(self.to_fetch['labels'], self.name))
+
+        if os.path.isfile(self.args.model):
+            self.model = self.args.model
+        else:
+            self.model = get_model(retrieve_from_url(self.to_fetch['model'], self.name))
 
     def tflite_runtime_interpreter(self):
         self.interpreter = Interpreter(self.model)
