@@ -9,18 +9,18 @@ from tflite_runtime.interpreter import Interpreter
 
 from eiq.utils import retrieve_from_url, timeit, args_parser
 from eiq.multimedia.v4l2 import set_pipeline
-from eiq.tflite.utils import get_label
-from eiq.tflite.utils import get_model
+from eiq.tflite.utils import get_label, get_model
 
 import eiq.tflite.config as config
 
 class eIQObjectDetection(object):
-    def __init__(self, model_url: str = None, **kwargs):
+    def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
+        self.args = args_parser(model = True, label = True)
         self.name = self.__class__.__name__
         self.video = ""
         self.tensor = 0
-        self.to_fetch = model_url if model_url is not None else config.OBJECT_RECOGNITION_MODEL
+        self.to_fetch = config.OBJECT_RECOGNITION_MODEL
       
         self.label = ""
         self.model = ""
@@ -29,8 +29,16 @@ class eIQObjectDetection(object):
 
     def retrieve_data(self):
         self.path = retrieve_from_url(self.to_fetch, self.name)
-        self.label = get_label(self.path)
-        self.model = get_model(self.path)
+
+        if self.args.label is not None and os.path.isfile(self.args.label):
+            self.label = self.args.label
+        else:
+            self.label = get_label(self.path)
+
+        if self.args.model is not None and os.path.isfile(self.args.model):
+            self.model = self.args.model
+        else:
+            self.model = get_model(self.path)
 
     def gstreamer_configurations(self):
         self.pipeline = set_pipeline(1280, 720)
@@ -147,17 +155,17 @@ class eIQLabelImage(object):
             return [line.strip() for line in f.readlines()]
 
     def retrieve_data(self):
-        if os.path.isfile(self.args.image):
+        if self.args.image is not None and os.path.isfile(self.args.image):
             self.image = self.args.image
         else:
             self.image = retrieve_from_url(self.to_fetch['image'], self.name)
 
-        if os.path.isfile(self.args.label):
+        if self.args.label is not None and os.path.isfile(self.args.label):
             self.label = self.args.label
         else:
             self.label = get_label(retrieve_from_url(self.to_fetch['labels'], self.name))
 
-        if os.path.isfile(self.args.model):
+        if self.args.model is not None and os.path.isfile(self.args.model):
             self.model = self.args.model
         else:
             self.model = get_model(retrieve_from_url(self.to_fetch['model'], self.name))
