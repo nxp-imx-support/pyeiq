@@ -1,11 +1,13 @@
-import os
-import sys
-import time
-
+import argparse
+import collections
 import cv2 as opencv
 import numpy as np
+import os
 from PIL import Image
+import re
+import sys
 from tflite_runtime.interpreter import Interpreter
+import time
 
 from eiq.utils import retrieve_from_url, timeit, args_parser
 from eiq.multimedia.v4l2 import set_pipeline
@@ -360,4 +362,147 @@ class eIQFireDetectionCamera(object):
             opencv.imshow("eIQ PyTflite 2.1 - " + self.name, frame)
             if (opencv.waitKey(1) & 0xFF == ord('q')):
                 break
+        opencv.destroyAllWindows()
+
+class eIQCameraOpenCV(object):
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+        self.args = args_parser(model = True)
+        self.name = self.__class__.__name__
+        self.Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
+        self.to_fetch = config.EXAMPLE_CAMERA_MODEL
+
+        self.model = ""
+        self.pipeline = ""
+
+    def retrieve_data(self):
+        path = retrieve_from_url(self.to_fetch, self.name)
+        self.model = get_model(path)
+        self.label = get_label(path)
+
+    def tflite_runtime_interpreter(self):
+        self.interpreter = Interpreter(self.model)
+
+    def inference(self):
+        with timeit("Inference time"):
+                self.interpreter.invoke()
+
+    def set_input(self, interpreter, image, resample=Image.NEAREST):
+        """Copies data to input tensor."""
+        image = image.resize((self.input_image_size(interpreter)[0:2]), resample)
+        self.input_tensor(interpreter)[:, :] = image
+
+    def input_image_size(self, interpreter):
+        """Returns input image size as (width, height, channels) tuple."""
+        _, height, width, channels = interpreter.get_input_details()[0]['shape']
+        return width, height, channels
+
+    def input_tensor(self, interpreter):
+        """Returns input tensor view as numpy array of shape (height, width, 3)."""
+        tensor_index = interpreter.get_input_details()[0]['index']
+        return interpreter.tensor(tensor_index)()[0]
+
+    def output_tensor(self, interpreter, i):
+        """Returns dequantized output tensor if quantized before."""
+        output_details = interpreter.get_output_details()[i]
+        output_data = np.squeeze(interpreter.tensor(output_details['index'])())
+        if 'quantization' not in output_details:
+            return output_data
+        scale, zero_point = output_details['quantization']
+        if scale == 0:
+            return output_data - zero_point
+        return scale * (output_data - zero_point)
+
+    def load_labels(self, path):
+        p = re.compile(r'\s*(\d+)(.+)')
+        with open(path, 'r', encoding='utf-8') as f:
+            lines = (p.match(line).groups() for line in f.readlines())
+            return {int(num): text.strip() for num, text in lines}
+
+    def get_output(self, interpreter, score_threshold, top_k, image_scale=1.0):
+        """Returns list of detected objects."""
+        boxes = self.output_tensor(interpreter, 0)
+        class_ids = self.output_tensor(interpreter, 1)
+        scores = self.output_tensor(interpreter, 2)
+        count = int(self.output_tensor(interpreter, 3))
+
+        def make(i):
+            ymin, xmin, ymax, xmax = boxes[i]
+            return self.Object(
+                id=int(class_ids[i]),
+                score=scores[i],
+                bbox=self.BBox(xmin=np.maximum(0.0, xmin),
+                        ymin=np.maximum(0.0, ymin),
+                        xmax=np.minimum(1.0, xmax),
+                        ymax=np.minimum(1.0, ymax)))
+
+        return [make(i) for i in range(top_k) if scores[i] >= score_threshold]
+
+    def append_objs_to_img(self, opencv_im, objs, labels):
+        height, width, channels = opencv_im.shape
+        for obj in objs:
+            x0, y0, x1, y1 = list(obj.bbox)
+            x0, y0, x1, y1 = int(x0*width), int(y0*height), int(x1*width), int(y1*height)
+            percent = int(100 * obj.score)
+            label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))
+
+            opencv_im = opencv.rectangle(opencv_im, (x0, y0), (x1, y1), (0, 255, 0), 2)
+            opencv_im = opencv.putText(opencv_im, label, (x0, y0+30),
+                                opencv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
+        return opencv_im
+
+    class BBox(collections.namedtuple('BBox', ['xmin', 'ymin', 'xmax', 'ymax'])):
+        """Bounding box.
+        Represents a rectangle which sides are either vertical or horizontal, parallel
+        to the x or y axis.
+        """
+        __slots__ = ()
+
+    def start(self):
+        self.retrieve_data()
+
+    def run(self):
+        self.start()
+
+        default_model_dir = os.path.join("/tmp", "eiq", self.__class__.__name__)
+        default_model = 'mobilenet_ssd_v2_coco_quant_postprocess.tflite'
+        default_labels = 'coco_labels.txt'
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--model', help='.tflite model path',
+                            default=os.path.join(default_model_dir,default_model))
+        parser.add_argument('--labels', help='label file path',
+                            default=os.path.join(default_model_dir, default_labels))
+        parser.add_argument('--top_k', type=int, default=3,
+                            help='number of categories with highest score to display')
+        parser.add_argument('--camera_idx', type=int, help='Index of which video source to use. ', default = 0)
+        parser.add_argument('--threshold', type=float, default=0.1,
+                            help='classifier score threshold')
+        args = parser.parse_args()
+
+        print('Loading {} with {} labels.'.format(args.model, args.labels))
+        interpreter = Interpreter(args.model)
+        interpreter.allocate_tensors()
+        labels = self.load_labels(args.labels)
+
+        cap = opencv.VideoCapture(args.camera_idx)
+
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+                break
+            opencv_im = frame
+
+            opencv_im_rgb = opencv.cvtColor(opencv_im, opencv.COLOR_BGR2RGB)
+            pil_im = Image.fromarray(opencv_im_rgb)
+
+            self.set_input(interpreter, pil_im)
+            interpreter.invoke()
+            objs = self.get_output(interpreter, score_threshold=args.threshold, top_k=args.top_k)
+            opencv_im = self.append_objs_to_img(opencv_im, objs, labels)
+
+            opencv.imshow('frame', opencv_im)
+            if opencv.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        cap.release()
         opencv.destroyAllWindows()
