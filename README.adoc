@@ -121,47 +121,52 @@ root@imx8qmmek:~# python3
 
 == Running the Demos
 
-After installing the PyeIQ package, all the demos are installed in the
-`/opt/eiq/demos` path.
+All the demos are installed in the `/opt/eiq/demos` folder. Follow a list of the
+available demos in PyeIQ:
 
 .PyeIQ Available Demos
 |===
-|Demo Name |i.MX Board |BSP Release |BSP Framework |Inference |Building
+|Demo Name |i.MX Board |BSP Release |BSP Framework |Inference |Status |Note
 
 |Label Image
 |QM
-|5.4
-|TensorFlow Lite 2.1.0
+|_5.4_
+|TensorFlow Lite _2.1.0_
 |GPU
 |image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
+|Requires _2.1.0.post1_ for better inference
 
 |Object Detection
 |QM
-|5.4
-|TensorFlow Lite 2.1.0
+|_5.4_
+|TensorFlow Lite _2.1.0_
 |GPU
 |image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
+|
 
 |Fire Detection File Based
 |QM
-|5.4
-|TensorFlow Lite 2.1.0
+|_5.4_
+|TensorFlow Lite _2.1.0_
 |GPU
 |image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
+|
 
 |Fire Detection Camera Based
 |QM
-|5.4
-|TensorFlow Lite 2.1.0
+|_5.4_
+|TensorFlow Lite _2.1.0_
 |GPU
 |image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
+|
 
 |Fire Detection Camera Based
 |QM
-|5.4
-|PyArmNN 19.08
+|_5.4_
+|PyArmNN _19.08_
 |-
-|Requires 19.11
+|-
+|Requires _19.11_
 |===
 
 . To run the demos enter the `/opt/eiq/demos` folder:
