@@ -218,6 +218,7 @@ class eIQLabelImage(object):
 class eIQFireDetection(object):
     def __init__(self, model_url: str = None, **kwargs):
         self.__dict__.update(kwargs)
+        self.args = args_parser(image = True, model = True)
         self.name = self.__class__.__name__
         self.tensor = 0
         self.to_fetch = {   'image' : config.FIRE_DETECTION_DEFAULT_IMAGE,
@@ -228,8 +229,15 @@ class eIQFireDetection(object):
         self.model = ''
 
     def retrieve_data(self):
-        self.image = retrieve_from_url(self.to_fetch['image'], self.name)
-        self.model = retrieve_from_url(self.to_fetch['model'], self.name)
+        if self.args.image is not None and os.path.isfile(self.args.image):
+            self.image = self.args.image
+        else:
+            self.image = retrieve_from_url(self.to_fetch['image'], self.name)
+
+        if self.args.model is not None and os.path.isfile(self.args.model):
+            self.model = self.args.model
+        else:
+            self.model = retrieve_from_url(self.to_fetch['model'], self.name)
 
     def tflite_runtime_interpreter(self):
         self.interpreter = Interpreter(self.model)
