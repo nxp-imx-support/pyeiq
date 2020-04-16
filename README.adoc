@@ -171,10 +171,48 @@ root@imx8qmmek:~# cd /opt/eiq/demos/
 root@imx8qmmek:~/opt/eiq/demos/# python3 <demo>.py
 ----
 
-
 == Training a Model
 
-The PyeIQ supports model training
+The PyeIQ intents to support training models. At this point PyeIQ currently support
+training for the `Fire Detection` demo only. Follow the next instructions to build
+a new model:
+
+. Use Virtualenv tool to create an isolated Python environment in the PyeIQ repo:
++
+[source,console]
+----
+~/pyeiq/eiq/train$ virtualenv env
+~/pyeiq/eiq/train$ source env/bin/activate
+----
++
+. Install the Python requirements to train the model:
++
+[source,console]
+----
+(env) ~/pyeiq/eiq/train$ pip3 install -r requirements-fire-detection.txt
+----
++
+. Train the model passing the number of epochs [0 - 50]:
++
+[source,console]
+----
+(env) ~/pyeiq/eiq/train$ python3 train.py --epochs=50
+----
++
+[NOTE]
+====
+This generate (_.pb_) and (_.h5_) models in `output/fire_detection.model/` folder.
+====
++
+. To convert the Keras (_.h5_) model to the TensorFlow Lite model, run:
++
+[source,console]
+----
+(env) ~/pyeiq/eiq/train$ python3 convert_h5_to_tflite.py
+----
++
+
+
 
 == Copyright and License
 
