@@ -5,14 +5,16 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
 import numpy as np
+import argparse
 
 from net.firedetectionnet import FireDetectionNet
 from utils import retrieve_from_id, load_dataset, log
 import config
 
 class GenerateFireDetectionModel(object):
-    def __init__(self, **kwargs):
+    def __init__(self, epochs_num, **kwargs):
         self.__dict__.update(kwargs)
+        self.epochs_num = epochs_num
         self.fire_dataset_path = " "
         self.non_fire_dataset_path = " "
 
@@ -89,10 +91,10 @@ class GenerateFireDetectionModel(object):
 
     def compile_model(self):   
         log("eIQ:", "Optimizing and compiling the model...")    
-        opt = SGD(lr=config.INIT_LR, momentum=0.9, decay=config.INIT_LR / config.NUM_EPOCHS)    
+        opt = SGD(lr=config.INIT_LR, momentum=0.9, decay=config.INIT_LR / self.epochs_num)
         self.model = FireDetectionNet.build(width=128, height=128, depth=3, classes=2)    
         self.model.compile(loss="binary_crossentropy", optimizer=opt, metrics=["accuracy"])
-        
+
     def train_network(self):
         log("eIQ:", "Traning the network...")   
         H = self.model.fit_generator(self.aug.flow(self.trainX,
@@ -101,7 +103,7 @@ class GenerateFireDetectionModel(object):
                                                    validation_data=(self.testX,
                                                                     self.testY),
                                                    steps_per_epoch=self.trainX.shape[0] // config.BATCH_SIZE,
-                                                   epochs=config.NUM_EPOCHS,
+                                                   epochs=self.epochs_num,
                                                    class_weight=self.class_weight,
                                                    verbose=1)
 
@@ -136,7 +138,14 @@ class GenerateFireDetectionModel(object):
   
 
 if __name__ == '__main__':
-    fire_detection_model = GenerateFireDetectionModel()
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('-e', '--epochs', type=int, default=50,
+                        help='number of epochs for the traning')
+    args = parser.parse_args()
+
+    fire_detection_model = GenerateFireDetectionModel(epochs_num=args.epochs)
     fire_detection_model.run()
     
 
