@@ -5,10 +5,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 
 import numpy as np
-import argparse
 
 from net.firedetectionnet import FireDetectionNet
 from utils import retrieve_from_id, load_dataset, log
+from eiq.utils import args_parser
 import config
 
 class GenerateFireDetectionModel(object):
@@ -139,13 +139,9 @@ class GenerateFireDetectionModel(object):
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser()
+    args = args_parser(epochs = True)
 
-    parser.add_argument('-e', '--epochs', type=int, default=50,
-                        help='number of epochs for the traning')
-    args = parser.parse_args()
-
-    fire_detection_model = GenerateFireDetectionModel(epochs_num=args.epochs)
+    fire_detection_model = GenerateFireDetectionModel(epochs_num = args.epochs)
     fire_detection_model.run()
     
 

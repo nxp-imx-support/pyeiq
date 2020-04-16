@@ -127,7 +127,7 @@ class eIQObjectDetection(object):
 
 class eIQLabelImage(object):
     def __init__(self, **kwargs):
-        self.args = args_parser()
+        self.args = args_parser(image = True, model = True, label = True)
         self.__dict__.update(kwargs)
         self.name = self.__class__.__name__
         self.tensor = 0
