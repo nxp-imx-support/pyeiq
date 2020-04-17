@@ -280,7 +280,6 @@ class eIQFireDetection(object):
         image = np.expand_dims(image, axis=0)
         if floating_model:
             image = np.array(image, dtype=np.float32) / 255.0
-        print(image.shape)
 
         # Test model on image.
         self.interpreter.set_tensor(input_details[0]['index'], image)
@@ -291,7 +290,7 @@ class eIQFireDetection(object):
         # The function `get_tensor()` returns a copy of the tensor data.
         # Use `tensor()` in order to get a pointer to the tensor.
         output_data = self.interpreter.get_tensor(output_details[0]['index'])
-        print(output_data)
+
         j = np.argmax(output_data)
         if j == 0:
             print("Non-Fire")
