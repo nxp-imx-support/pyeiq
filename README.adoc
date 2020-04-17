@@ -21,7 +21,8 @@ PyeIQ provide high level classes to allow the user execute eIQ applications and 
 
 |8 MPlus
 |5.4
-|
+|image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
+
 
 |8 M Mini
 |5.4
@@ -130,7 +131,7 @@ available demos in PyeIQ:
 
 .PyeIQ Available Demos
 |===
-|Demo Name |Type |i.MX Board |BSP Release |BSP Framework |Inference |Status |Note
+|Demo Name |Demo Type |i.MX Board |BSP Release |BSP Framework |Inference |Status |Notes
 
 |Label Image
 |File Based
@@ -148,7 +149,7 @@ available demos in PyeIQ:
 |TensorFlow Lite _2.1.0_
 |GPU, NPU
 |image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
-|
+|Works with low accuracy. Need better model.
 
 |Object Detection OpenCV
 |SSD/Camera Based
@@ -157,16 +158,25 @@ available demos in PyeIQ:
 |TensorFlow Lite _2.1.0_
 |GPU, NPU
 |image:https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg[Build Status]
-|
+|Higher accuracy than above one.
 
 |Object Detection Native GStreamer
 |SSD/Camera Based
 |QM, MPlus
 |_5.4_
 |TensorFlow Lite _2.1.0_
+|GPU, NPU
+|-
+|** Fixing undetermined GStreamer hangs**.
+
+|Object Detection Yolov3
+|SSD/File Based
+|QM, MPlus
+|_5.4_
+|TensorFlow Lite _2.1.0_
 |-
 |-
-|Pending issues.
+|**Pending issues**.
 
 |Object Detection Yolov3
 |SSD/Camera Based
@@ -175,7 +185,7 @@ available demos in PyeIQ:
 |TensorFlow Lite _2.1.0_
 |-
 |-
-|Pending issues.
+|**Pending issues**.
 
 |Fire Detection
 |File Based
@@ -197,12 +207,22 @@ available demos in PyeIQ:
 
 |Fire Detection
 |Camera Based
-|QM
+|QM, MPlus
 |_5.4_
 |PyArmNN _19.08_
 |-
 |-
 |Requires _19.11_
+
+
+|Coral Posenet
+|Camera Based
+|-
+|-
+|-
+|-
+|-
+|Ongoing
 |===
 
 . To run the demos enter the `/opt/eiq/demos` folder:
