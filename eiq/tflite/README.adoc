@@ -13,11 +13,56 @@ Refers to the first readme file.
 root@imx8qmmek:~# python3
 ----
 +
-. Run the following commands:
+.. Label Image
 +
 [source,console]
 ----
->>> from pyeiq.tflite.object_detection import ObjectDetection                                                      
->>> demo = ObjectDetection()                                                                                          
->>> demo.run()
+>>> from eiq.tflite.classification import eIQLabelImage
+>>> app = eIQLabelImage()
+>>> app.run()
+----
++
+.. Object Detection Camera
++
+[source,console]
+----
+>>> from eiq.tflite.classification import eIQObjectDetection
+>>> app = eIQObjectDetection()
+>>> app.run()
+----
++
+.. Object Detection OpenCV
++
+[source,console]
+----
+>>> from eiq.tflite.classification import eIQObjectDetectionOpenCV
+>>> app = eIQObjectDetectionOpenCV()
+>>> app.run()
+----
++
+.. Object Detection GStreamer
++
+[source,console]
+----
+>>> from eiq.tflite.classification import eIQObjectDetectionGStreamer
+>>> app = eIQObjectDetectionGStreamer()
+>>> app.run()
+----
++
+.. Fire Detection Image
++
+[source,console]
+----
+>>> from eiq.tflite.classification import eIQFireDetection
+>>> app = eIQFireDetection()
+>>> app.run()
+----
++
+.. Fire Detection Camera
++
+[source,console]
+----
+>>> from eiq.tflite.classification import eIQFireDetectionCamera
+>>> app = eIQFireDetectionCamera()
+>>> app.run()
 ----
