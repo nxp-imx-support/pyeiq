@@ -398,7 +398,7 @@ class eIQObjectDetectionOpenCV(object):
         self.threshold = 0.1
 
     def retrieve_data(self):
-        path = os.path.dirname(retrieve_from_url(self.to_fetch, self.name))
+        path = os.path.dirname(get_model(retrieve_from_url(self.to_fetch, self.name)))
         self.model = os.path.join(path, config.CAMERA_OPENCV_DEFAULT_MODEL)
         self.label = os.path.join(path, config.CAMERA_OPENCV_DEFAULT_LABEL)
 
@@ -516,21 +516,30 @@ class eIQObjectDetectionOpenCV(object):
 
 class eIQObjectDetectionGStreamer(object):
     def __init__(self, **kwargs):
+        self.args = args_parser(camera=True, webcam=True)
         self.__dict__.update(kwargs)
         self.name = self.__class__.__name__
         self.Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
-        self.to_fetch = config.CAMERA_OPENCV_MODEL
+        self.to_fetch = config.CAMERA_GSTREAMER_MODEL
 
         self.model = ""
+        self.label = ""
+
+        self.videosrc = ""
+        self.videofmt = "raw"
+        self.top_k = 3
+        self.threshold = 0.1
 
     def retrieve_data(self):
-        path = retrieve_from_url(self.to_fetch, self.name)
-        self.model = get_model(path)
-        self.label = get_label(path)
+        path = os.path.dirname(get_model(retrieve_from_url(self.to_fetch, self.name)))
+        self.model = os.path.join(path, config.CAMERA_GSTREAMER_DEFAULT_MODEL)
+        self.label = os.path.join(path, config.CAMERA_GSTREAMER_DEFAULT_LABEL)
 
-    def inference(self, interpreter):
-        with timeit("Inference time"):
-            interpreter.invoke()
+    def video_src_config(self):
+        if self.args.webcam >= 0:
+            self.videosrc = "/dev/video" + str(self.args.webcam)
+        else:
+            self.videosrc = "/dev/video" + str(self.args.camera)
 
     def input_image_size(self, interpreter):
         """Returns input size as (width, height, channels) tuple."""
@@ -634,6 +643,7 @@ class eIQObjectDetectionGStreamer(object):
 
     def start(self):
         self.retrieve_data()
+        self.video_src_config()
 
     def run(self):
         if not has_svgwrite:
@@ -641,31 +651,11 @@ class eIQObjectDetectionGStreamer(object):
                 "The module svgwrite needed to run this demo was not found. If you want to install it type 'pip3 install svgwrite' at your terminal. Exiting..."
             )
 
-        default_model_dir = os.path.join("/tmp", "eiq", self.__class__.__name__)
-        default_model = "mobilenet_ssd_v2_coco_quant_postprocess.tflite"
-        default_labels = "coco_labels.txt"
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--model', help='.tflite model path',
-                            default=os.path.join(default_model_dir,default_model))
-        parser.add_argument('--labels', help='label file path',
-                            default=os.path.join(default_model_dir, default_labels))
-        parser.add_argument('--top_k', type=int, default=3,
-                            help='number of categories with highest score to display')
-        parser.add_argument('--threshold', type=float, default=0.1,
-                            help='classifier score threshold')
-        parser.add_argument('--videosrc', help='Which video source to use. ',
-                            default='/dev/video0')
-        parser.add_argument('--videofmt', help='Input video format.',
-                            default='raw',
-                            choices=['raw', 'h264', 'jpeg'])
-        args = parser.parse_args()
-
         self.start()
 
-        print('Loading {} with {} labels.'.format(args.model, args.labels))
-        interpreter = Interpreter(args.model)
+        interpreter = Interpreter(self.model)
         interpreter.allocate_tensors()
-        labels = self.load_labels(args.labels)
+        labels = self.load_labels(self.label)
 
         w, h, _ = self.input_image_size(interpreter)
         inference_size = (w, h)
@@ -678,7 +668,7 @@ class eIQObjectDetectionGStreamer(object):
             self.set_input(interpreter, input_tensor)
             interpreter.invoke()
             # For larger input image sizes, use the edgetpu.classification.engine for better performance
-            objs = self.get_output(interpreter, args.threshold, args.top_k)
+            objs = self.get_output(interpreter, self.threshold, self.top_k)
             end_time = time.monotonic()
             text_lines = [
                 'Inference: {:.2f} ms'.format((end_time - start_time) * 1000),
@@ -690,5 +680,5 @@ class eIQObjectDetectionGStreamer(object):
         result = gstreamer.run_pipeline(user_callback,
                                             src_size=(640, 480),
                                             appsink_size=inference_size,
-                                            videosrc=args.videosrc,
-                                            videofmt=args.videofmt)
+                                            videosrc=self.videosrc,
+                                            videofmt=self.videofmt)
