@@ -1,17 +1,22 @@
 import argparse
 import collections
 import cv2 as opencv
+import gi
+gi.require_version('Gst', '1.0')
+from gi.repository import Gst
 import numpy as np
 import os
 from PIL import Image
 import re
+import svgwrite
 import sys
 from tflite_runtime.interpreter import Interpreter
 import time
 
-from eiq.utils import retrieve_from_url, timeit, args_parser
+from eiq.multimedia import gstreamer
 from eiq.multimedia.v4l2 import set_pipeline
 from eiq.tflite.utils import get_label, get_model
+from eiq.utils import retrieve_from_url, timeit, args_parser
 
 import eiq.tflite.config as config
 
@@ -512,3 +517,178 @@ class eIQCameraOpenCV(object):
 
         cap.release()
         opencv.destroyAllWindows()
+
+class eIQCameraGStreamer(object):
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+        self.args = args_parser(model = True)
+        self.name = self.__class__.__name__
+        self.Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
+        self.to_fetch = config.CAMERA_OPENCV_MODEL
+
+        self.model = ""
+
+    def retrieve_data(self):
+        path = retrieve_from_url(self.to_fetch, self.name)
+        self.model = get_model(path)
+        self.label = get_label(path)
+
+    def inference(self, interpreter):
+        with timeit("Inference time"):
+            interpreter.invoke()
+
+    def input_image_size(self, interpreter):
+        """Returns input size as (width, height, channels) tuple."""
+        _, height, width, channels = interpreter.get_input_details()[0]['shape']
+        return width, height, channels
+
+    def input_tensor(self, interpreter):
+        """Returns input tensor view as numpy array of shape (height, width, channels)."""
+        tensor_index = interpreter.get_input_details()[0]['index']
+        return interpreter.tensor(tensor_index)()[0]
+
+    def set_input(self, interpreter, buf):
+        """Copies data to input tensor."""
+        result, mapinfo = buf.map(Gst.MapFlags.READ)
+        if result:
+            np_buffer = np.reshape(np.frombuffer(mapinfo.data, dtype=np.uint8), self.input_image_size(interpreter))
+            self.input_tensor(interpreter)[:, :] = np_buffer
+            buf.unmap(mapinfo)
+
+    def output_tensor(self, interpreter, i):
+        """Returns dequantized output tensor if quantized before."""
+        output_details = interpreter.get_output_details()[i]
+        output_data = np.squeeze(interpreter.tensor(output_details['index'])())
+        if 'quantization' not in output_details:
+            return output_data
+        scale, zero_point = output_details['quantization']
+        if scale == 0:
+            return output_data - zero_point
+        return scale * (output_data - zero_point)
+
+    def avg_fps_counter(self, window_size):
+        window = collections.deque(maxlen=window_size)
+        prev = time.monotonic()
+        yield 0.0  # First fps value.
+
+        while True:
+            curr = time.monotonic()
+            window.append(curr - prev)
+            prev = curr
+            yield len(window) / sum(window)
+
+    def load_labels(self, path):
+        p = re.compile(r'\s*(\d+)(.+)')
+        with open(path, 'r', encoding='utf-8') as f:
+            lines = (p.match(line).groups() for line in f.readlines())
+            return {int(num): text.strip() for num, text in lines}
+
+    def shadow_text(self, dwg, x, y, text, font_size=20):
+        dwg.add(dwg.text(text, insert=(x+1, y+1), fill='black', font_size=font_size))
+        dwg.add(dwg.text(text, insert=(x, y), fill='white', font_size=font_size))
+
+    def generate_svg(self, src_size, inference_size, inference_box, objs, labels, text_lines):
+        dwg = svgwrite.Drawing('', size=src_size)
+        src_w, src_h = src_size
+        inf_w, inf_h = inference_size
+        box_x, box_y, box_w, box_h = inference_box
+        scale_x, scale_y = src_w / box_w, src_h / box_h
+
+        for y, line in enumerate(text_lines, start=1):
+            self.shadow_text(dwg, 10, y*20, line)
+        for obj in objs:
+            x0, y0, x1, y1 = list(obj.bbox)
+            # Relative coordinates.
+            x, y, w, h = x0, y0, x1 - x0, y1 - y0
+            # Absolute coordinates, input tensor space.
+            x, y, w, h = int(x * inf_w), int(y * inf_h), int(w * inf_w), int(h * inf_h)
+            # Subtract boxing offset.
+            x, y = x - box_x, y - box_y
+            # Scale to source coordinate space.
+            x, y, w, h = x * scale_x, y * scale_y, w * scale_x, h * scale_y
+            percent = int(100 * obj.score)
+            label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))
+            self.shadow_text(dwg, x, y - 5, label)
+            dwg.add(dwg.rect(insert=(x,y), size=(w, h),
+                            fill='none', stroke='red', stroke_width='2'))
+        return dwg.tostring()
+
+    class BBox(collections.namedtuple('BBox', ['xmin', 'ymin', 'xmax', 'ymax'])):
+        """Bounding box.
+        Represents a rectangle which sides are either vertical or horizontal, parallel
+        to the x or y axis.
+        """
+        __slots__ = ()
+
+    def get_output(self, interpreter, score_threshold, top_k, image_scale=1.0):
+        """Returns list of detected objects."""
+        boxes = self.output_tensor(interpreter, 0)
+        category_ids = self.output_tensor(interpreter, 1)
+        scores = self.output_tensor(interpreter, 2)
+
+        def make(i):
+            ymin, xmin, ymax, xmax = boxes[i]
+            return self.Object(
+                id=int(category_ids[i]),
+                score=scores[i],
+                bbox=self.BBox(xmin=np.maximum(0.0, xmin),
+                        ymin=np.maximum(0.0, ymin),
+                        xmax=np.minimum(1.0, xmax),
+                        ymax=np.minimum(1.0, ymax)))
+        return [make(i) for i in range(top_k) if scores[i] >= score_threshold]
+
+    def start(self):
+        self.retrieve_data()
+
+    def run(self):
+        self.start()
+
+        default_model_dir = os.path.join("/tmp", "eiq", self.__class__.__name__)
+        default_model = "mobilenet_ssd_v2_coco_quant_postprocess.tflite"
+        default_labels = "coco_labels.txt"
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--model', help='.tflite model path',
+                            default=os.path.join(default_model_dir,default_model))
+        parser.add_argument('--labels', help='label file path',
+                            default=os.path.join(default_model_dir, default_labels))
+        parser.add_argument('--top_k', type=int, default=3,
+                            help='number of categories with highest score to display')
+        parser.add_argument('--threshold', type=float, default=0.1,
+                            help='classifier score threshold')
+        parser.add_argument('--videosrc', help='Which video source to use. ',
+                            default='/dev/video0')
+        parser.add_argument('--videofmt', help='Input video format.',
+                            default='raw',
+                            choices=['raw', 'h264', 'jpeg'])
+        args = parser.parse_args()
+
+        print('Loading {} with {} labels.'.format(args.model, args.labels))
+        interpreter = Interpreter(args.model)
+        interpreter.allocate_tensors()
+        labels = self.load_labels(args.labels)
+
+        w, h, _ = self.input_image_size(interpreter)
+        inference_size = (w, h)
+        # Average fps over last 30 frames.
+        fps_counter  = self.avg_fps_counter(30)
+
+        def user_callback(input_tensor, src_size, inference_box):
+            nonlocal fps_counter
+            start_time = time.monotonic()
+            self.set_input(interpreter, input_tensor)
+            interpreter.invoke()
+            # For larger input image sizes, use the edgetpu.classification.engine for better performance
+            objs = self.get_output(interpreter, args.threshold, args.top_k)
+            end_time = time.monotonic()
+            text_lines = [
+                'Inference: {:.2f} ms'.format((end_time - start_time) * 1000),
+                'FPS: {} fps'.format(round(next(fps_counter))),
+            ]
+            print(' '.join(text_lines))
+            return self.generate_svg(src_size, inference_size, inference_box, objs, labels, text_lines)
+
+        result = gstreamer.run_pipeline(user_callback,
+                                            src_size=(640, 480),
+                                            appsink_size=inference_size,
+                                            videosrc=args.videosrc,
+                                            videofmt=args.videofmt)
