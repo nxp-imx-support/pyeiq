@@ -101,13 +101,18 @@ def url_validator(url: str = None):
     except:
         return False
 
-def args_parser(webcam: bool = False, image: bool = False, model: bool = False, label: bool = False, epochs: bool = False):
+def args_parser(camera: bool = False, webcam: bool = False, image: bool = False, model: bool = False, label: bool = False, epochs: bool = False):
     parser = ArgumentParser()
+
+    if camera:
+        parser.add_argument(
+            '-c', '--camera', type = int, default = 0,
+            help="set the number your camera is identified at /dev/video<x>.")
 
     if webcam:
         parser.add_argument(
             '-w', '--webcam', type = int, default = -1,
-            help="if you are using a webcam, set the number you webcam is identified at /dev/video<x>.")
+            help="if you are using a webcam, set the number your webcam is identified at /dev/video<x>.")
     if image:
         parser.add_argument(
             '-i', '--image', default=None,
