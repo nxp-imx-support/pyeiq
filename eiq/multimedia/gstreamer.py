@@ -13,7 +13,12 @@
 # limitations under the License.
 
 import sys
-import svgwrite
+
+try:
+    import svgwrite
+except ImportError:
+    None
+
 import threading
 
 import gi

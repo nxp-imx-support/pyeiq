@@ -8,7 +8,13 @@ import numpy as np
 import os
 from PIL import Image
 import re
-import svgwrite
+
+try:
+    import svgwrite
+    has_svgwrite = True
+except ImportError:
+    has_svgwrite = False
+
 import sys
 from tflite_runtime.interpreter import Interpreter
 import time
@@ -641,6 +647,11 @@ class eIQCameraGStreamer(object):
         self.retrieve_data()
 
     def run(self):
+        if not has_svgwrite:
+            sys.exit(
+                "The module svgwrite needed to run this demo was not found. If you want to install it type 'pip3 install svgwrite' at your terminal. Exiting..."
+            )
+
         self.start()
 
         default_model_dir = os.path.join("/tmp", "eiq", self.__class__.__name__)
