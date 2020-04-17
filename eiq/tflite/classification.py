@@ -7,17 +7,18 @@ from gi.repository import Gst
 import numpy as np
 import os
 from PIL import Image
+from pkg_resources import parse_version
 import re
+import sys
+from tflite_runtime import __version__ as tfl_rt_version
+from tflite_runtime.interpreter import Interpreter
+import time
 
 try:
     import svgwrite
     has_svgwrite = True
 except ImportError:
     has_svgwrite = False
-
-import sys
-from tflite_runtime.interpreter import Interpreter
-import time
 
 from eiq.multimedia import gstreamer
 from eiq.multimedia.v4l2 import set_pipeline
@@ -195,8 +196,10 @@ class eIQLabelImage(object):
 
     def run(self):
         self.start()
-
         self.interpreter.allocate_tensors()
+
+        if parse_version(tfl_rt_version) < parse_version('2.1.0.post1'):
+            print("WARNING: This demo won't do a proper inference if module tflite_runtime's version is not 2.1.0.post1 or higher.")
 
         input_details = self.interpreter.get_input_details()
         output_details = self.interpreter.get_output_details()
