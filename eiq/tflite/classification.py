@@ -55,8 +55,8 @@ class eIQObjectDetection(object):
 
     def gstreamer_configurations(self):
         self.pipeline = set_pipeline(1280, 720)
-        if self.args.webcam is True:
-            self.video = opencv.VideoCapture(0)
+        if self.args.webcam >= 0:
+            self.video = opencv.VideoCapture(self.args.webcam)
         else:
             self.video = opencv.VideoCapture(self.pipeline)
 
@@ -318,8 +318,8 @@ class eIQFireDetectionCamera(object):
 
     def gstreamer_configurations(self):
         self.pipeline = set_pipeline(1280, 720)
-        if self.args.webcam is True:
-            self.video = opencv.VideoCapture(0)
+        if self.args.webcam >= 0:
+            self.video = opencv.VideoCapture(self.args.webcam)
         else:
             self.video = opencv.VideoCapture(self.pipeline)
 

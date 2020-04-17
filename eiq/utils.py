@@ -106,8 +106,8 @@ def args_parser(webcam: bool = False, image: bool = False, model: bool = False, 
 
     if webcam:
         parser.add_argument(
-            '-w', '--webcam', type = bool, default = False,
-            help="set --webcam=True if a webcam is been used.")
+            '-w', '--webcam', type = int, default = -1,
+            help="if you are using a webcam, set the number you webcam is identified at /dev/video<x>.")
     if image:
         parser.add_argument(
             '-i', '--image', default=None,
