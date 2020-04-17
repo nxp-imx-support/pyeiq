@@ -76,7 +76,7 @@ class eIQObjectDetection(object):
 
     def inference(self):
         with timeit("Inference time"):
-                self.interpreter.invoke()
+            self.interpreter.invoke()
 
     def detect_objects(self, image):
 
@@ -190,6 +190,10 @@ class eIQLabelImage(object):
     def tflite_runtime_interpreter(self):
         self.interpreter = Interpreter(self.model)
 
+    def inference(self):
+        with timeit("Inference time"):
+            self.interpreter.invoke()
+
     def start(self):
         self.retrieve_data()
         self.tflite_runtime_interpreter()
@@ -220,8 +224,7 @@ class eIQLabelImage(object):
 
         self.interpreter.set_tensor(input_details[0]['index'], input_data)
 
-        with timeit("Inference time"):
-            self.interpreter.invoke()
+        self.inference()
 
         output_data = self.interpreter.get_tensor(output_details[0]['index'])
         results = np.squeeze(output_data)
@@ -261,6 +264,10 @@ class eIQFireDetection(object):
     def tflite_runtime_interpreter(self):
         self.interpreter = Interpreter(self.model)
 
+    def inference(self):
+        with timeit("Inference time"):
+            self.interpreter.invoke()
+
     def start(self):
         self.retrieve_data()
         self.tflite_runtime_interpreter()
@@ -287,8 +294,7 @@ class eIQFireDetection(object):
         # Test model on image.
         self.interpreter.set_tensor(input_details[0]['index'], image)
 
-        with timeit("Inference time"):
-            self.interpreter.invoke()
+        self.inference()
 
         # The function `get_tensor()` returns a copy of the tensor data.
         # Use `tensor()` in order to get a pointer to the tensor.
@@ -330,7 +336,7 @@ class eIQFireDetectionCamera(object):
 
     def inference(self):
         with timeit("Inference time"):
-                self.interpreter.invoke()
+            self.interpreter.invoke()
 
     def detect_fire(self, image):
         # Get input and output tensors.
@@ -410,6 +416,10 @@ class eIQObjectDetectionOpenCV(object):
             self.video = self.args.webcam
         else:
             self.video = self.pipeline
+
+    def inference(self, interpreter):
+        with timeit("Inference time"):
+            interpreter.invoke()
 
     def set_input(self, interpreter, image, resample=Image.NEAREST):
         """Copies data to input tensor."""
@@ -505,7 +515,7 @@ class eIQObjectDetectionOpenCV(object):
             pil_im = Image.fromarray(opencv_im_rgb)
 
             self.set_input(interpreter, pil_im)
-            interpreter.invoke()
+            self.inference(interpreter)
             objs = self.get_output(interpreter, score_threshold=self.threshold, top_k=self.top_k)
             opencv_im = self.append_objs_to_img(opencv_im, objs, labels)
 
@@ -542,6 +552,10 @@ class eIQObjectDetectionGStreamer(object):
             self.videosrc = "/dev/video" + str(self.args.webcam)
         else:
             self.videosrc = "/dev/video" + str(self.args.camera)
+
+    def inference(self, interpreter):
+        with timeit("Inference time"):
+            interpreter.invoke()
 
     def input_image_size(self, interpreter):
         """Returns input size as (width, height, channels) tuple."""
@@ -668,7 +682,7 @@ class eIQObjectDetectionGStreamer(object):
             nonlocal fps_counter
             start_time = time.monotonic()
             self.set_input(interpreter, input_tensor)
-            interpreter.invoke()
+            self.inference(interpreter)
             # For larger input image sizes, use the edgetpu.classification.engine for better performance
             objs = self.get_output(interpreter, self.threshold, self.top_k)
             end_time = time.monotonic()
