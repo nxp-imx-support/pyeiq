@@ -29,7 +29,7 @@ import eiq.tflite.config as config
 class eIQObjectDetection(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
-        self.args = args_parser(webcam = True, model = True, label = True)
+        self.args = args_parser(camera=True, webcam=True, model=True, label=True)
         self.name = self.__class__.__name__
         self.video = ""
         self.tensor = 0
@@ -54,7 +54,7 @@ class eIQObjectDetection(object):
             self.model = get_model(self.path)
 
     def gstreamer_configurations(self):
-        self.pipeline = set_pipeline(1280, 720)
+        self.pipeline = set_pipeline(1280, 720, device=self.args.camera)
         if self.args.webcam >= 0:
             self.video = opencv.VideoCapture(self.args.webcam)
         else:
@@ -234,7 +234,7 @@ class eIQLabelImage(object):
 class eIQFireDetection(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
-        self.args = args_parser(image = True, model = True)
+        self.args = args_parser(image=True, model=True)
         self.name = self.__class__.__name__
         self.tensor = 0
         self.to_fetch = {   'image' : config.FIRE_DETECTION_DEFAULT_IMAGE,
@@ -301,7 +301,7 @@ class eIQFireDetection(object):
 class eIQFireDetectionCamera(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
-        self.args = args_parser(webcam = True, model = True)
+        self.args = args_parser(camera=True, webcam=True, model=True)
         self.name = self.__class__.__name__
         self.video = ""
         self.tensor = 0
@@ -317,7 +317,7 @@ class eIQFireDetectionCamera(object):
             self.model = retrieve_from_url(self.to_fetch, self.name)
 
     def gstreamer_configurations(self):
-        self.pipeline = set_pipeline(1280, 720)
+        self.pipeline = set_pipeline(1280, 720, device=self.args.camera)
         if self.args.webcam >= 0:
             self.video = opencv.VideoCapture(self.args.webcam)
         else:
