@@ -384,7 +384,6 @@ class eIQFireDetectionCamera(object):
 class eIQObjectDetectionOpenCV(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
-        self.args = args_parser(model = True)
         self.name = self.__class__.__name__
         self.Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
         self.to_fetch = config.CAMERA_OPENCV_MODEL
@@ -479,8 +478,6 @@ class eIQObjectDetectionOpenCV(object):
         self.retrieve_data()
 
     def run(self):
-        self.start()
-
         default_model_dir = os.path.join("/tmp", "eiq", self.__class__.__name__)
         default_model = 'mobilenet_ssd_v2_coco_quant_postprocess.tflite'
         default_labels = 'coco_labels.txt'
@@ -495,6 +492,8 @@ class eIQObjectDetectionOpenCV(object):
         parser.add_argument('--threshold', type=float, default=0.1,
                             help='classifier score threshold')
         args = parser.parse_args()
+
+        self.start()
 
         print('Loading {} with {} labels.'.format(args.model, args.labels))
         interpreter = Interpreter(args.model)
@@ -527,7 +526,6 @@ class eIQObjectDetectionOpenCV(object):
 class eIQObjectDetectionGStreamer(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
-        self.args = args_parser(model = True)
         self.name = self.__class__.__name__
         self.Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
         self.to_fetch = config.CAMERA_OPENCV_MODEL
@@ -652,8 +650,6 @@ class eIQObjectDetectionGStreamer(object):
                 "The module svgwrite needed to run this demo was not found. If you want to install it type 'pip3 install svgwrite' at your terminal. Exiting..."
             )
 
-        self.start()
-
         default_model_dir = os.path.join("/tmp", "eiq", self.__class__.__name__)
         default_model = "mobilenet_ssd_v2_coco_quant_postprocess.tflite"
         default_labels = "coco_labels.txt"
@@ -672,6 +668,8 @@ class eIQObjectDetectionGStreamer(object):
                             default='raw',
                             choices=['raw', 'h264', 'jpeg'])
         args = parser.parse_args()
+
+        self.start()
 
         print('Loading {} with {} labels.'.format(args.model, args.labels))
         interpreter = Interpreter(args.model)
