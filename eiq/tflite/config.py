@@ -1,4 +1,3 @@
-
 OBJECT_RECOGNITION_MODEL = "https://storage.googleapis.com/download.tensorflow.org/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip"
 
 LABEL_IMAGE_MODEL = "https://storage.googleapis.com/download.tensorflow.org/models/mobilenet_v1_2018_02_22/mobilenet_v1_1.0_224.tgz"
@@ -9,3 +8,6 @@ FIRE_DETECTION_MODEL = "https://github.com/ARM-software/ML-examples/raw/master/p
 FIRE_DETECTION_DEFAULT_IMAGE = "https://unsplash.com/photos/7WNEiyeMbB0/download?force=true&w=640"
 
 CAMERA_OPENCV_MODEL = "https://dl.google.com/coral/canned_models/all_models.tar.gz"
+
+CAMERA_OPENCV_DEFAULT_MODEL = "mobilenet_ssd_v2_coco_quant_postprocess.tflite"
+CAMERA_OPENCV_DEFAULT_LABEL = "coco_labels.txt"
