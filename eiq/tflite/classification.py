@@ -384,24 +384,30 @@ class eIQFireDetectionCamera(object):
 class eIQObjectDetectionOpenCV(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
+        self.args = args_parser(camera=True, webcam=True)
         self.name = self.__class__.__name__
         self.Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
         self.to_fetch = config.CAMERA_OPENCV_MODEL
 
         self.model = ""
+        self.label = ""
+        self.video = ""
         self.pipeline = ""
 
+        self.top_k = 3
+        self.threshold = 0.1
+
     def retrieve_data(self):
-        path = retrieve_from_url(self.to_fetch, self.name)
-        self.model = get_model(path)
-        self.label = get_label(path)
+        path = os.path.dirname(retrieve_from_url(self.to_fetch, self.name))
+        self.model = os.path.join(path, config.CAMERA_OPENCV_DEFAULT_MODEL)
+        self.label = os.path.join(path, config.CAMERA_OPENCV_DEFAULT_LABEL)
 
-    def tflite_runtime_interpreter(self):
-        self.interpreter = Interpreter(self.model)
-
-    def inference(self):
-        with timeit("Inference time"):
-                self.interpreter.invoke()
+    def gstreamer_configurations(self):
+        self.pipeline = set_pipeline(1280, 720, device=self.args.camera)
+        if self.args.webcam >= 0:
+            self.video = self.args.webcam
+        else:
+            self.video = self.pipeline
 
     def set_input(self, interpreter, image, resample=Image.NEAREST):
         """Copies data to input tensor."""
@@ -476,31 +482,16 @@ class eIQObjectDetectionOpenCV(object):
 
     def start(self):
         self.retrieve_data()
+        self.gstreamer_configurations()
 
     def run(self):
-        default_model_dir = os.path.join("/tmp", "eiq", self.__class__.__name__)
-        default_model = 'mobilenet_ssd_v2_coco_quant_postprocess.tflite'
-        default_labels = 'coco_labels.txt'
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--model', help='.tflite model path',
-                            default=os.path.join(default_model_dir,default_model))
-        parser.add_argument('--labels', help='label file path',
-                            default=os.path.join(default_model_dir, default_labels))
-        parser.add_argument('--top_k', type=int, default=3,
-                            help='number of categories with highest score to display')
-        parser.add_argument('--camera_idx', type=int, help='Index of which video source to use. ', default = 0)
-        parser.add_argument('--threshold', type=float, default=0.1,
-                            help='classifier score threshold')
-        args = parser.parse_args()
-
         self.start()
 
-        print('Loading {} with {} labels.'.format(args.model, args.labels))
-        interpreter = Interpreter(args.model)
+        interpreter = Interpreter(self.model)
         interpreter.allocate_tensors()
-        labels = self.load_labels(args.labels)
+        labels = self.load_labels(self.label)
 
-        cap = opencv.VideoCapture(args.camera_idx)
+        cap = opencv.VideoCapture(self.video)
 
         while cap.isOpened():
             ret, frame = cap.read()
@@ -513,7 +504,7 @@ class eIQObjectDetectionOpenCV(object):
 
             self.set_input(interpreter, pil_im)
             interpreter.invoke()
-            objs = self.get_output(interpreter, score_threshold=args.threshold, top_k=args.top_k)
+            objs = self.get_output(interpreter, score_threshold=self.threshold, top_k=self.top_k)
             opencv_im = self.append_objs_to_img(opencv_im, objs, labels)
 
             opencv.imshow('frame', opencv_im)
