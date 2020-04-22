@@ -223,6 +223,15 @@ available demos in PyeIQ:
 |-
 |-
 |Ongoing
+
+|NEO DLR
+|Camera Based
+|-
+|-
+|-
+|-
+|-
+|Ongoing
 |===
 
 . To run the demos enter the `/opt/eiq/demos` folder:
