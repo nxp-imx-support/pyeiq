@@ -203,9 +203,6 @@ class eIQLabelImage(object):
         self.start()
         self.interpreter.allocate_tensors()
 
-        if parse_version(tfl_rt_version) < parse_version('2.1.0.post1'):
-            print("WARNING: This demo won't do a proper inference if module tflite_runtime's version is not 2.1.0.post1 or higher.")
-
         input_details = self.interpreter.get_input_details()
         output_details = self.interpreter.get_output_details()
 
