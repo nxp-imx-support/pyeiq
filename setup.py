@@ -1,6 +1,7 @@
 import os
 import pathlib
 import shutil
+import sys
 from setuptools import setup, find_packages
 
 setup(name="eiq",
@@ -15,7 +16,10 @@ zip_safe=False)
 
 init = "__init__.py"
 demos_dir = os.path.join(os.getcwd(), "eiq", "demos")
-install_dir = os.path.join("/opt", "eiq", "demos")
+apps_dir = os.path.join(os.getcwd(), "eiq", "apps")
+install_dir_base = os.path.join("/opt", "eiq")
+
+install_dir = os.path.join(install_dir_base, "demos")
 
 if not os.path.exists(install_dir):
     try:
@@ -26,4 +30,17 @@ if not os.path.exists(install_dir):
 for file in os.listdir(demos_dir):
     if file != init:
         file = os.path.join(demos_dir, file)
+        shutil.copy(file, install_dir)
+
+install_dir = os.path.join(install_dir_base, "apps")
+
+if not os.path.exists(install_dir):
+    try:
+        pathlib.Path(install_dir).mkdir(parents=True, exist_ok=True)
+    except OSError:
+        sys.exit("os.mkdir() function has failed: %s" % install_dir)
+
+for file in os.listdir(apps_dir):
+    if file != init:
+        file = os.path.join(apps_dir, file)
         shutil.copy(file, install_dir)
