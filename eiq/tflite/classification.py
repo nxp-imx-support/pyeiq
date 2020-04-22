@@ -181,14 +181,12 @@ class eIQLabelImage(object):
         if self.args.label is not None and os.path.isfile(self.args.label):
             self.label = self.args.label
         else:
-            self.label = get_label(retrieve_from_url(
-                self.to_fetch['labels'], self.name))
+            self.label = retrieve_from_url(self.to_fetch['labels'], self.name)
 
         if self.args.model is not None and os.path.isfile(self.args.model):
             self.model = self.args.model
         else:
-            self.model = get_model(retrieve_from_url(
-                self.to_fetch['model'], self.name))
+            self.model = retrieve_from_url(self.to_fetch['model'], self.name)
 
     def tflite_runtime_interpreter(self):
         self.interpreter = Interpreter(self.model)
