@@ -1,23 +1,25 @@
+from helper.google_driver_downloader import GoogleDriveDownloader as gdd
+import config
+import numpy as np
+import cv2
 from imutils import paths
 import os
 import tempfile
 import pathlib
 import logging
-logging.basicConfig(level = logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
-import cv2
-import numpy as np
-
-import config
-from helper.google_driver_downloader import GoogleDriveDownloader as gdd
 
 def log(*args):
-    logging.info(" ".join("%s" %a for a in args))
+    logging.info(" ".join("%s" % a for a in args))
+
 
 def get_temporary_path(*path):
     return os.path.join(tempfile.gettempdir(), *path)
 
-def retrieve_from_id(gd_id_url: str = None, filename: str = None, unzip_flag: bool = False):
+
+def retrieve_from_id(gd_id_url: str = None,
+                     filename: str = None, unzip_flag: bool = False):
     name = "fire_detection"
     dirpath = os.path.join(config.TMP_FILE_PATH, name)
     tmpdir = get_temporary_path(dirpath)
@@ -33,19 +35,21 @@ def retrieve_from_id(gd_id_url: str = None, filename: str = None, unzip_flag: bo
     else:
         try:
             dst = os.path.join(tmpdir, filename + '.zip')
-            gdd.download_file_from_google_drive(file_id=gd_id_url, dest_path=dst, unzip=unzip_flag)
+            gdd.download_file_from_google_drive(
+                file_id=gd_id_url, dest_path=dst, unzip=unzip_flag)
         except ImportError:
             sys.exit("Could not find GoogleDriverDownloader Module")
         finally:
             return fp
-    return 
+    return
+
 
 def load_dataset(dataset_path):
-	image_paths = list(paths.list_images(dataset_path))
-	data = []
+    image_paths = list(paths.list_images(dataset_path))
+    data = []
 
-	for image_path in image_paths:
-		image = cv2.imread(image_path)
-		image = cv2.resize(image, (128, 128))
-		data.append(image)
-	return np.array(data, dtype="float32")
+    for image_path in image_paths:
+        image = cv2.imread(image_path)
+        image = cv2.resize(image, (128, 128))
+        data.append(image)
+    return np.array(data, dtype="float32")

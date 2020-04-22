@@ -15,4 +15,5 @@ NUM_EPOCHS = 50
 CLASSES = ["Non-Fire", "Fire"]
 
 MODEL_PATH_PB_FORMAT = os.path.sep.join(["output", "fire_detection.model"])
-MODEL_PATH_H5_FORMAT = os.path.sep.join(["output", "fire_detection.model", "saved_model.h5"])
+MODEL_PATH_H5_FORMAT = os.path.sep.join(
+    ["output", "fire_detection.model", "saved_model.h5"])

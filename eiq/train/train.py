@@ -11,6 +11,7 @@ from utils import retrieve_from_id, load_dataset, log
 from eiq.utils import args_parser
 import config
 
+
 class GenerateFireDetectionModel(object):
     def __init__(self, epochs_num, **kwargs):
         self.__dict__.update(kwargs)
@@ -23,22 +24,21 @@ class GenerateFireDetectionModel(object):
 
         self.fire_labels = " "
         self.non_fire_labels = " "
-        
+
         self.data = " "
         self.labels = " "
 
         self.class_totals = " "
         self.class_weight = " "
-        
+
         self.model = " "
         self.aug = " "
         self.predictions = " "
-        
+
         self.trainX = " "
         self.testX = " "
         self.trainY = " "
         self.testY = " "
-        
 
     def retrieve(self):
         log("eIQ:", "Retrieving datasets...")
@@ -51,18 +51,19 @@ class GenerateFireDetectionModel(object):
         log("eIQ:", "Loading data...")
         self.fire_data = load_dataset(self.fire_dataset_path)
         self.non_fire_data = load_dataset(self.non_fire_dataset_path)
-       
+
     def construct_classes(self):
         log("eIQ:", "Constructing class labels for the data...")
         self.fire_labels = np.ones((self.fire_data.shape[0],))
         self.non_fire_labels = np.zeros((self.non_fire_data.shape[0],))
 
     def stack_fire_non_fire_data(self):
-        log("eIQ:", "Stack fire and non-fire data, scaling the data to the range [0, 1]...")
+        log("eIQ:",
+            "Stack fire and non-fire data, scaling the data to the range [0, 1]...")
         self.data = np.vstack([self.fire_data, self.non_fire_data])
         self.labels = np.hstack([self.fire_labels, self.non_fire_labels])
         self. data /= 255
-    
+
     def performe_one_hot_encoding(self):
         log("eIQ:", "Performing one-hot encoding on the labels and account...")
         self.labels = to_categorical(self.labels, num_classes=2)
@@ -78,7 +79,7 @@ class GenerateFireDetectionModel(object):
                                         self.labels,
                                         test_size=config.TEST_SPLIT,
                                         random_state=42)
-        
+
     def initiate_training(self):
         log("eIQ:", "Initializing the training data with pre-configured arguments...")
         self.aug = ImageDataGenerator(rotation_range=30,
@@ -89,38 +90,47 @@ class GenerateFireDetectionModel(object):
                                       horizontal_flip=True,
                                       fill_mode="nearest")
 
-    def compile_model(self):   
-        log("eIQ:", "Optimizing and compiling the model...")    
-        opt = SGD(lr=config.INIT_LR, momentum=0.9, decay=config.INIT_LR / self.epochs_num)
-        self.model = FireDetectionNet.build(width=128, height=128, depth=3, classes=2)    
-        self.model.compile(loss="binary_crossentropy", optimizer=opt, metrics=["accuracy"])
+    def compile_model(self):
+        log("eIQ:", "Optimizing and compiling the model...")
+        opt = SGD(
+            lr=config.INIT_LR,
+            momentum=0.9,
+            decay=config.INIT_LR /
+            self.epochs_num)
+        self.model = FireDetectionNet.build(
+            width=128, height=128, depth=3, classes=2)
+        self.model.compile(
+            loss="binary_crossentropy",
+            optimizer=opt,
+            metrics=["accuracy"])
 
     def train_network(self):
-        log("eIQ:", "Traning the network...")   
+        log("eIQ:", "Traning the network...")
         H = self.model.fit_generator(self.aug.flow(self.trainX,
                                                    self.trainY,
                                                    batch_size=config.BATCH_SIZE),
-                                                   validation_data=(self.testX,
-                                                                    self.testY),
-                                                   steps_per_epoch=self.trainX.shape[0] // config.BATCH_SIZE,
-                                                   epochs=self.epochs_num,
-                                                   class_weight=self.class_weight,
-                                                   verbose=1)
+                                     validation_data=(self.testX,
+                                                      self.testY),
+                                     steps_per_epoch=self.trainX.shape[0] // config.BATCH_SIZE,
+                                     epochs=self.epochs_num,
+                                     class_weight=self.class_weight,
+                                     verbose=1)
 
     def evaluate_network(self):
-        log("eIQ:", "Evaluating the network...")   
-        self.predictions = self.model.predict(self.testX, batch_size=config.BATCH_SIZE)
-        
+        log("eIQ:", "Evaluating the network...")
+        self.predictions = self.model.predict(
+            self.testX, batch_size=config.BATCH_SIZE)
+
     def show_details(self):
-        log("eIQ:", "Showing details of the trained model:")  
+        log("eIQ:", "Showing details of the trained model:")
         log("eIQ:", classification_report(self.testY.argmax(axis=1),
                                           self.predictions.argmax(axis=1),
                                           target_names=config.CLASSES))
 
     def save_model(self):
-        log("eIQ:", "Serializing network...")  
+        log("eIQ:", "Serializing network...")
         self.model.save(config.MODEL_PATH_PB_FORMAT)
-        self.model.save(config.MODEL_PATH_H5_FORMAT) 
+        self.model.save(config.MODEL_PATH_H5_FORMAT)
 
     def run(self):
         self.retrieve()
@@ -135,14 +145,11 @@ class GenerateFireDetectionModel(object):
         self.evaluate_network()
         self.show_details()
         self.save_model()
-  
+
 
 if __name__ == '__main__':
 
-    args = args_parser(epochs = True)
+    args = args_parser(epochs=True)
 
-    fire_detection_model = GenerateFireDetectionModel(epochs_num = args.epochs)
+    fire_detection_model = GenerateFireDetectionModel(epochs_num=args.epochs)
     fire_detection_model.run()
-    
-
-
