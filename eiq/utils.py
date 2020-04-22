@@ -1,3 +1,4 @@
+from eiq import config
 from contextlib import contextmanager
 from datetime import timedelta
 from time import monotonic
@@ -10,15 +11,15 @@ import tempfile
 import urllib.request
 import urllib.error
 import logging
-logging.basicConfig(level = logging.INFO)
+logging.basicConfig(level=logging.INFO)
 
-from eiq import config
 
 try:
     import progressbar
     found = True
 except ImportError:
     found = False
+
 
 class ProgressBar():
     def __init__(self):
@@ -37,7 +38,8 @@ class ProgressBar():
 
 
 def log(*args):
-    logging.info(" ".join("%s" %a for a in args))
+    logging.info(" ".join("%s" % a for a in args))
+
 
 def convert(elapsed):
     return str(timedelta(seconds=elapsed))
@@ -94,6 +96,7 @@ def retrieve_from_url(url: str = None, name: str = None, filename: str = None):
     else:
         return download_url(fp, filename, url, filename_parsed.netloc)
 
+
 def url_validator(url: str = None):
     try:
         result = urlparse(url)
@@ -101,17 +104,17 @@ def url_validator(url: str = None):
     except:
         return False
 
+
 def args_parser(camera: bool = False, webcam: bool = False, image: bool = False, model: bool = False, label: bool = False, epochs: bool = False):
     parser = ArgumentParser()
 
     if camera:
         parser.add_argument(
-            '-c', '--camera', type = int, default = 0,
+            '-c', '--camera', type=int, default=0,
             help="set the number your camera is identified at /dev/video<x>.")
-
     if webcam:
         parser.add_argument(
-            '-w', '--webcam', type = int, default = -1,
+            '-w', '--webcam', type=int, default=-1,
             help="if you are using a webcam, set the number your webcam is identified at /dev/video<x>.")
     if image:
         parser.add_argument(
