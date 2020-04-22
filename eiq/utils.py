@@ -61,9 +61,14 @@ def get_temporary_path(*path):
 
 def download_url(file_path: str = None, filename: str = None,
                  url: str = None, netloc: str = None):
+
+    if not check_connection(url):
+        sys.exit("'{0}' could not be reached, please check your internet connection.".format(netloc))
+
     try:
         log("Downloading '{0}'".format(filename))
         log("From '{0}' ...".format(netloc))
+
         with timeit("Download time"):
             if found is True:
                 urllib.request.urlretrieve(url, file_path, ProgressBar())
@@ -97,10 +102,10 @@ def retrieve_from_url(url: str = None, name: str = None, filename: str = None):
         return download_url(fp, filename, url, filename_parsed.netloc)
 
 
-def url_validator(url: str = None):
+def check_connection(url: str = None):
     try:
-        result = urlparse(url)
-        return all([result.scheme, result.netloc, result.path])
+        urllib.request.urlopen(url)
+        return True
     except:
         return False
 
