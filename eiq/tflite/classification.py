@@ -3,21 +3,21 @@ from eiq.utils import retrieve_from_url, timeit, args_parser
 from eiq.tflite.utils import get_label, get_model
 from eiq.multimedia.v4l2 import set_pipeline
 from eiq.multimedia import gstreamer
-import time
-from tflite_runtime.interpreter import Interpreter
-from tflite_runtime import __version__ as tfl_rt_version
-import sys
-import re
-from pkg_resources import parse_version
-from PIL import Image
-import os
-import numpy as np
-from gi.repository import Gst
 import argparse
 import collections
 import cv2 as opencv
 import gi
 gi.require_version('Gst', '1.0')
+from gi.repository import Gst
+import numpy as np
+import os
+from PIL import Image
+from pkg_resources import parse_version
+import re
+import sys
+import time
+from tflite_runtime.interpreter import Interpreter
+from tflite_runtime import __version__ as tfl_rt_version
 
 try:
     import svgwrite

@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-from gi.repository import GLib, GObject, Gst, GstBase, Gtk
 import sys
 
 try:
@@ -26,6 +24,7 @@ import gi
 gi.require_version('Gst', '1.0')
 gi.require_version('GstBase', '1.0')
 gi.require_version('Gtk', '3.0')
+from gi.repository import GLib, GObject, Gst, GstBase, Gtk
 
 GObject.threads_init()
 Gst.init(None)
