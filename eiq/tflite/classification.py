@@ -1,18 +1,23 @@
+import eiq.tflite.config as config
+from eiq.utils import retrieve_from_url, timeit, args_parser
+from eiq.tflite.utils import get_label, get_model
+from eiq.multimedia.v4l2 import set_pipeline
+from eiq.multimedia import gstreamer
+import time
+from tflite_runtime.interpreter import Interpreter
+from tflite_runtime import __version__ as tfl_rt_version
+import sys
+import re
+from pkg_resources import parse_version
+from PIL import Image
+import os
+import numpy as np
+from gi.repository import Gst
 import argparse
 import collections
 import cv2 as opencv
 import gi
 gi.require_version('Gst', '1.0')
-from gi.repository import Gst
-import numpy as np
-import os
-from PIL import Image
-from pkg_resources import parse_version
-import re
-import sys
-from tflite_runtime import __version__ as tfl_rt_version
-from tflite_runtime.interpreter import Interpreter
-import time
 
 try:
     import svgwrite
@@ -20,22 +25,17 @@ try:
 except ImportError:
     has_svgwrite = False
 
-from eiq.multimedia import gstreamer
-from eiq.multimedia.v4l2 import set_pipeline
-from eiq.tflite.utils import get_label, get_model
-from eiq.utils import retrieve_from_url, timeit, args_parser
-
-import eiq.tflite.config as config
 
 class eIQObjectDetection(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
-        self.args = args_parser(camera=True, webcam=True, model=True, label=True)
+        self.args = args_parser(
+            camera=True, webcam=True, model=True, label=True)
         self.name = self.__class__.__name__
         self.video = ""
         self.tensor = 0
         self.to_fetch = config.OBJECT_RECOGNITION_MODEL
-      
+
         self.label = ""
         self.model = ""
         self.pipeline = ""
@@ -114,8 +114,8 @@ class eIQObjectDetection(object):
             ymin = int(ymin * 720)
             ymax = int(ymax * 720)
 
-            opencv.putText(image, className[int(obj['class_id'])-1]
-                           + " " + str('%.1f'%(obj['score']*100)) + "%",
+            opencv.putText(image, className[int(obj['class_id']) - 1]
+                           + " " + str('%.1f' % (obj['score'] * 100)) + "%",
                            (xmin, int(ymax + .05 * xmax)),
                            opencv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255))
             opencv.rectangle(
@@ -134,7 +134,7 @@ class eIQObjectDetection(object):
 
         self.interpreter.allocate_tensors()
         _, input_height, input_width, _ = self.interpreter.get_input_details(
-            )[0]['shape']
+        )[0]['shape']
 
         while True:
             ret, frame = self.video.read()
@@ -150,16 +150,17 @@ class eIQObjectDetection(object):
                 break
         opencv.destroyAllWindows()
 
+
 class eIQLabelImage(object):
     def __init__(self, **kwargs):
-        self.args = args_parser(image = True, model = True, label = True)
+        self.args = args_parser(image=True, model=True, label=True)
         self.__dict__.update(kwargs)
         self.name = self.__class__.__name__
         self.tensor = 0
-        self.to_fetch = {   'image' : config.LABEL_IMAGE_DEFAULT_IMAGE,
-                            'labels' : config.LABEL_IMAGE_LABELS,
-                            'model' : config.LABEL_IMAGE_MODEL
-        }
+        self.to_fetch = {'image': config.LABEL_IMAGE_DEFAULT_IMAGE,
+                         'labels': config.LABEL_IMAGE_LABELS,
+                         'model': config.LABEL_IMAGE_MODEL
+                         }
 
         self.image = ""
         self.label = ""
@@ -180,12 +181,14 @@ class eIQLabelImage(object):
         if self.args.label is not None and os.path.isfile(self.args.label):
             self.label = self.args.label
         else:
-            self.label = get_label(retrieve_from_url(self.to_fetch['labels'], self.name))
+            self.label = get_label(retrieve_from_url(
+                self.to_fetch['labels'], self.name))
 
         if self.args.model is not None and os.path.isfile(self.args.model):
             self.model = self.args.model
         else:
-            self.model = get_model(retrieve_from_url(self.to_fetch['model'], self.name))
+            self.model = get_model(retrieve_from_url(
+                self.to_fetch['model'], self.name))
 
     def tflite_runtime_interpreter(self):
         self.interpreter = Interpreter(self.model)
@@ -220,7 +223,8 @@ class eIQLabelImage(object):
         input_data = np.expand_dims(img, axis=0)
 
         if floating_model:
-            input_data = (np.float32(input_data) - self.input_mean) / self.input_std
+            input_data = (np.float32(input_data) -
+                          self.input_mean) / self.input_std
 
         self.interpreter.set_tensor(input_details[0]['index'], input_data)
 
@@ -235,7 +239,9 @@ class eIQLabelImage(object):
             if floating_model:
                 print('{:08.6f}: {}'.format(float(results[i]), labels[i]))
             else:
-                print('{:08.6f}: {}'.format(float(results[i] / 255.0), labels[i]))
+                print('{:08.6f}: {}'.format(
+                    float(results[i] / 255.0), labels[i]))
+
 
 class eIQFireDetection(object):
     def __init__(self, **kwargs):
@@ -243,9 +249,9 @@ class eIQFireDetection(object):
         self.args = args_parser(image=True, model=True)
         self.name = self.__class__.__name__
         self.tensor = 0
-        self.to_fetch = {   'image' : config.FIRE_DETECTION_DEFAULT_IMAGE,
-                            'model' : config.FIRE_DETECTION_MODEL
-        }
+        self.to_fetch = {'image': config.FIRE_DETECTION_DEFAULT_IMAGE,
+                         'model': config.FIRE_DETECTION_MODEL
+                         }
 
         self.image = ''
         self.model = ''
@@ -280,7 +286,7 @@ class eIQFireDetection(object):
         # Get input and output tensors.
         input_details = self.interpreter.get_input_details()
         output_details = self.interpreter.get_output_details()
-        _,height,width,_ = input_details[0]['shape']
+        _, height, width, _ = input_details[0]['shape']
         floating_model = False
         if input_details[0]['dtype'] == np.float32:
             floating_model = True
@@ -305,6 +311,7 @@ class eIQFireDetection(object):
             print("Non-Fire")
         else:
             print("Fire")
+
 
 class eIQFireDetectionCamera(object):
     def __init__(self, **kwargs):
@@ -342,7 +349,7 @@ class eIQFireDetectionCamera(object):
         # Get input and output tensors.
         input_details = self.interpreter.get_input_details()
         output_details = self.interpreter.get_output_details()
-        _,height,width,_ = input_details[0]['shape']
+        _, height, width, _ = input_details[0]['shape']
         floating_model = False
         if input_details[0]['dtype'] == np.float32:
             floating_model = True
@@ -380,14 +387,17 @@ class eIQFireDetectionCamera(object):
             has_fire = self.detect_fire(frame)
 
             if has_fire == 0:
-                opencv.putText(frame, "No Fire", (200, 200), opencv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
+                opencv.putText(frame, "No Fire", (200, 200),
+                               opencv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
             else:
-                opencv.putText(frame, "Fire Detected", (200, 200), opencv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255))
+                opencv.putText(frame, "Fire Detected", (200, 200),
+                               opencv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255))
 
             opencv.imshow("eIQ PyTflite 2.1 - " + self.name, frame)
             if (opencv.waitKey(1) & 0xFF == ord('q')):
                 break
         opencv.destroyAllWindows()
+
 
 class eIQObjectDetectionOpenCV(object):
     def __init__(self, **kwargs):
@@ -406,7 +416,8 @@ class eIQObjectDetectionOpenCV(object):
         self.threshold = 0.1
 
     def retrieve_data(self):
-        path = os.path.dirname(get_model(retrieve_from_url(self.to_fetch, self.name)))
+        path = os.path.dirname(
+            get_model(retrieve_from_url(self.to_fetch, self.name)))
         self.model = os.path.join(path, config.CAMERA_OPENCV_DEFAULT_MODEL)
         self.label = os.path.join(path, config.CAMERA_OPENCV_DEFAULT_LABEL)
 
@@ -423,12 +434,14 @@ class eIQObjectDetectionOpenCV(object):
 
     def set_input(self, interpreter, image, resample=Image.NEAREST):
         """Copies data to input tensor."""
-        image = image.resize((self.input_image_size(interpreter)[0:2]), resample)
+        image = image.resize(
+            (self.input_image_size(interpreter)[0:2]), resample)
         self.input_tensor(interpreter)[:, :] = image
 
     def input_image_size(self, interpreter):
         """Returns input image size as (width, height, channels) tuple."""
-        _, height, width, channels = interpreter.get_input_details()[0]['shape']
+        _, height, width, channels = interpreter.get_input_details()[
+            0]['shape']
         return width, height, channels
 
     def input_tensor(self, interpreter):
@@ -466,9 +479,9 @@ class eIQObjectDetectionOpenCV(object):
                 id=int(class_ids[i]),
                 score=scores[i],
                 bbox=self.BBox(xmin=np.maximum(0.0, xmin),
-                        ymin=np.maximum(0.0, ymin),
-                        xmax=np.minimum(1.0, xmax),
-                        ymax=np.minimum(1.0, ymax)))
+                               ymin=np.maximum(0.0, ymin),
+                               xmax=np.minimum(1.0, xmax),
+                               ymax=np.minimum(1.0, ymax)))
 
         return [make(i) for i in range(top_k) if scores[i] >= score_threshold]
 
@@ -476,16 +489,19 @@ class eIQObjectDetectionOpenCV(object):
         height, width, channels = opencv_im.shape
         for obj in objs:
             x0, y0, x1, y1 = list(obj.bbox)
-            x0, y0, x1, y1 = int(x0*width), int(y0*height), int(x1*width), int(y1*height)
+            x0, y0, x1, y1 = int(
+                x0 * width), int(y0 * height), int(x1 * width), int(y1 * height)
             percent = int(100 * obj.score)
             label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))
 
-            opencv_im = opencv.rectangle(opencv_im, (x0, y0), (x1, y1), (0, 255, 0), 2)
-            opencv_im = opencv.putText(opencv_im, label, (x0, y0+30),
-                                opencv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
+            opencv_im = opencv.rectangle(
+                opencv_im, (x0, y0), (x1, y1), (0, 255, 0), 2)
+            opencv_im = opencv.putText(opencv_im, label, (x0, y0 + 30),
+                                       opencv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
         return opencv_im
 
-    class BBox(collections.namedtuple('BBox', ['xmin', 'ymin', 'xmax', 'ymax'])):
+    class BBox(collections.namedtuple(
+            'BBox', ['xmin', 'ymin', 'xmax', 'ymax'])):
         """Bounding box.
         Represents a rectangle which sides are either vertical or horizontal, parallel
         to the x or y axis.
@@ -516,7 +532,8 @@ class eIQObjectDetectionOpenCV(object):
 
             self.set_input(interpreter, pil_im)
             self.inference(interpreter)
-            objs = self.get_output(interpreter, score_threshold=self.threshold, top_k=self.top_k)
+            objs = self.get_output(
+                interpreter, score_threshold=self.threshold, top_k=self.top_k)
             opencv_im = self.append_objs_to_img(opencv_im, objs, labels)
 
             opencv.imshow('frame', opencv_im)
@@ -525,6 +542,7 @@ class eIQObjectDetectionOpenCV(object):
 
         cap.release()
         opencv.destroyAllWindows()
+
 
 class eIQObjectDetectionGStreamer(object):
     def __init__(self, **kwargs):
@@ -543,7 +561,8 @@ class eIQObjectDetectionGStreamer(object):
         self.threshold = 0.1
 
     def retrieve_data(self):
-        path = os.path.dirname(get_model(retrieve_from_url(self.to_fetch, self.name)))
+        path = os.path.dirname(
+            get_model(retrieve_from_url(self.to_fetch, self.name)))
         self.model = os.path.join(path, config.CAMERA_GSTREAMER_DEFAULT_MODEL)
         self.label = os.path.join(path, config.CAMERA_GSTREAMER_DEFAULT_LABEL)
 
@@ -559,7 +578,8 @@ class eIQObjectDetectionGStreamer(object):
 
     def input_image_size(self, interpreter):
         """Returns input size as (width, height, channels) tuple."""
-        _, height, width, channels = interpreter.get_input_details()[0]['shape']
+        _, height, width, channels = interpreter.get_input_details()[
+            0]['shape']
         return width, height, channels
 
     def input_tensor(self, interpreter):
@@ -571,7 +591,8 @@ class eIQObjectDetectionGStreamer(object):
         """Copies data to input tensor."""
         result, mapinfo = buf.map(Gst.MapFlags.READ)
         if result:
-            np_buffer = np.reshape(np.frombuffer(mapinfo.data, dtype=np.uint8), self.input_image_size(interpreter))
+            np_buffer = np.reshape(np.frombuffer(
+                mapinfo.data, dtype=np.uint8), self.input_image_size(interpreter))
             self.input_tensor(interpreter)[:, :] = np_buffer
             buf.unmap(mapinfo)
 
@@ -604,10 +625,19 @@ class eIQObjectDetectionGStreamer(object):
             return {int(num): text.strip() for num, text in lines}
 
     def shadow_text(self, dwg, x, y, text, font_size=20):
-        dwg.add(dwg.text(text, insert=(x+1, y+1), fill='black', font_size=font_size))
-        dwg.add(dwg.text(text, insert=(x, y), fill='white', font_size=font_size))
+        dwg.add(dwg.text(text, insert=(x + 1, y + 1),
+                         fill='black', font_size=font_size))
+        dwg.add(
+            dwg.text(
+                text,
+                insert=(
+                    x,
+                    y),
+                fill='white',
+                font_size=font_size))
 
-    def generate_svg(self, src_size, inference_size, inference_box, objs, labels, text_lines):
+    def generate_svg(self, src_size, inference_size,
+                     inference_box, objs, labels, text_lines):
         dwg = svgwrite.Drawing('', size=src_size)
         src_w, src_h = src_size
         inf_w, inf_h = inference_size
@@ -615,13 +645,14 @@ class eIQObjectDetectionGStreamer(object):
         scale_x, scale_y = src_w / box_w, src_h / box_h
 
         for y, line in enumerate(text_lines, start=1):
-            self.shadow_text(dwg, 10, y*20, line)
+            self.shadow_text(dwg, 10, y * 20, line)
         for obj in objs:
             x0, y0, x1, y1 = list(obj.bbox)
             # Relative coordinates.
             x, y, w, h = x0, y0, x1 - x0, y1 - y0
             # Absolute coordinates, input tensor space.
-            x, y, w, h = int(x * inf_w), int(y * inf_h), int(w * inf_w), int(h * inf_h)
+            x, y, w, h = int(x * inf_w), int(y *
+                                             inf_h), int(w * inf_w), int(h * inf_h)
             # Subtract boxing offset.
             x, y = x - box_x, y - box_y
             # Scale to source coordinate space.
@@ -629,11 +660,12 @@ class eIQObjectDetectionGStreamer(object):
             percent = int(100 * obj.score)
             label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))
             self.shadow_text(dwg, x, y - 5, label)
-            dwg.add(dwg.rect(insert=(x,y), size=(w, h),
-                            fill='none', stroke='red', stroke_width='2'))
+            dwg.add(dwg.rect(insert=(x, y), size=(w, h),
+                             fill='none', stroke='red', stroke_width='2'))
         return dwg.tostring()
 
-    class BBox(collections.namedtuple('BBox', ['xmin', 'ymin', 'xmax', 'ymax'])):
+    class BBox(collections.namedtuple(
+            'BBox', ['xmin', 'ymin', 'xmax', 'ymax'])):
         """Bounding box.
         Represents a rectangle which sides are either vertical or horizontal, parallel
         to the x or y axis.
@@ -652,9 +684,9 @@ class eIQObjectDetectionGStreamer(object):
                 id=int(category_ids[i]),
                 score=scores[i],
                 bbox=self.BBox(xmin=np.maximum(0.0, xmin),
-                        ymin=np.maximum(0.0, ymin),
-                        xmax=np.minimum(1.0, xmax),
-                        ymax=np.minimum(1.0, ymax)))
+                               ymin=np.maximum(0.0, ymin),
+                               xmax=np.minimum(1.0, xmax),
+                               ymax=np.minimum(1.0, ymax)))
         return [make(i) for i in range(top_k) if scores[i] >= score_threshold]
 
     def start(self):
@@ -676,14 +708,15 @@ class eIQObjectDetectionGStreamer(object):
         w, h, _ = self.input_image_size(interpreter)
         inference_size = (w, h)
         # Average fps over last 30 frames.
-        fps_counter  = self.avg_fps_counter(30)
+        fps_counter = self.avg_fps_counter(30)
 
         def user_callback(input_tensor, src_size, inference_box):
             nonlocal fps_counter
             start_time = time.monotonic()
             self.set_input(interpreter, input_tensor)
             self.inference(interpreter)
-            # For larger input image sizes, use the edgetpu.classification.engine for better performance
+            # For larger input image sizes, use the
+            # edgetpu.classification.engine for better performance
             objs = self.get_output(interpreter, self.threshold, self.top_k)
             end_time = time.monotonic()
             text_lines = [
@@ -691,10 +724,11 @@ class eIQObjectDetectionGStreamer(object):
                 'FPS: {} fps'.format(round(next(fps_counter))),
             ]
             print(' '.join(text_lines))
-            return self.generate_svg(src_size, inference_size, inference_box, objs, labels, text_lines)
+            return self.generate_svg(
+                src_size, inference_size, inference_box, objs, labels, text_lines)
 
         result = gstreamer.run_pipeline(user_callback,
-                                            src_size=(640, 480),
-                                            appsink_size=inference_size,
-                                            videosrc=self.videosrc,
-                                            videofmt=self.videofmt)
+                                        src_size=(640, 480),
+                                        appsink_size=inference_size,
+                                        videosrc=self.videosrc,
+                                        videofmt=self.videofmt)
