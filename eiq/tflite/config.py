@@ -4,7 +4,7 @@ LABEL_IMAGE_MODEL = "https://github.com/google-coral/edgetpu/raw/master/test_dat
 LABEL_IMAGE_LABELS = "https://github.com/google-coral/edgetpu/raw/master/test_data/imagenet_labels.txt"
 LABEL_IMAGE_DEFAULT_IMAGE = "https://raw.githubusercontent.com/tensorflow/tensorflow/master/tensorflow/lite/examples/label_image/testdata/grace_hopper.bmp"
 
-FIRE_DETECTION_MODEL = "https://github.com/ARM-software/ML-examples/raw/master/pyarmnn-fire-detection/fire_detection.tflite"
+FIRE_DETECTION_MODEL = "1WDG7QEhP8zHPU1I8J55Ju7nZ7TxRjOeV"
 FIRE_DETECTION_DEFAULT_IMAGE = "https://unsplash.com/photos/7WNEiyeMbB0/download?force=true&w=640"
 
 CAMERA_OPENCV_MODEL = "https://dl.google.com/coral/canned_models/all_models.tar.gz"

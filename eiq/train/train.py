@@ -7,9 +7,10 @@ from sklearn.metrics import classification_report
 import numpy as np
 
 from net.firedetectionnet import FireDetectionNet
-from utils import retrieve_from_id, load_dataset, log
-from eiq.utils import args_parser
+from utils import load_dataset, log
+from eiq.utils import args_parser, retrieve_from_id
 import config
+from os.path import join
 
 
 class GenerateFireDetectionModel(object):
@@ -42,11 +43,8 @@ class GenerateFireDetectionModel(object):
 
     def retrieve(self):
         log("eIQ:", "Retrieving datasets...")
-        self.fire_dataset_path = retrieve_from_id(config.GD_ID_FIRE_DATASET,
-                                                  "fire", True)
-        self.non_fire_dataset_path = retrieve_from_id(config.GD_ID_NON_FIRE_DATASET,
-                                                      "non-fire", True)
-
+        self.fire_dataset_path = join(retrieve_from_id(config.GD_ID_FIRE_DATASET, "fire", "fire.zip", True), "fire")
+        self.non_fire_dataset_path = join(retrieve_from_id(config.GD_ID_NON_FIRE_DATASET, "non-fire", "non-fire.zip", True), "non-fire")
     def loading_dataset(self):
         log("eIQ:", "Loading data...")
         self.fire_data = load_dataset(self.fire_dataset_path)

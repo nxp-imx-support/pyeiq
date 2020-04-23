@@ -1,10 +1,8 @@
-from helper.google_driver_downloader import GoogleDriveDownloader as gdd
 import config
 import numpy as np
 import cv2
 from imutils import paths
 import os
-import tempfile
 import pathlib
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -16,32 +14,6 @@ def log(*args):
 
 def get_temporary_path(*path):
     return os.path.join(tempfile.gettempdir(), *path)
-
-
-def retrieve_from_id(gd_id_url: str = None,
-                     filename: str = None, unzip_flag: bool = False):
-    name = "fire_detection"
-    dirpath = os.path.join(config.TMP_FILE_PATH, name)
-    tmpdir = get_temporary_path(dirpath)
-    if not os.path.exists(dirpath):
-        try:
-            pathlib.Path(tmpdir).mkdir(parents=True, exist_ok=True)
-        except OSError:
-            sys.exit("os.mkdir() function has failed: %s" % tmpdir)
-
-    fp = os.path.join(tmpdir, filename)
-    if (os.path.isfile(fp)):
-        return fp
-    else:
-        try:
-            dst = os.path.join(tmpdir, filename + '.zip')
-            gdd.download_file_from_google_drive(
-                file_id=gd_id_url, dest_path=dst, unzip=unzip_flag)
-        except ImportError:
-            sys.exit("Could not find GoogleDriverDownloader Module")
-        finally:
-            return fp
-    return
 
 
 def load_dataset(dataset_path):

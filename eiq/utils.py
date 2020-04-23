@@ -1,18 +1,26 @@
-from eiq import config
+from __future__ import print_function
+from argparse import ArgumentParser
 from contextlib import contextmanager
 from datetime import timedelta
-from time import monotonic
-from urllib.parse import urlparse
-from argparse import ArgumentParser
-import os
-import pathlib
-import shutil
-import sys
-import tempfile
-import urllib.request
-import urllib.error
+from eiq import config
 import logging
 logging.basicConfig(level=logging.INFO)
+import os
+from os import makedirs
+from os.path import dirname
+from os.path import exists
+import pathlib
+import requests
+import shutil
+import sys
+from sys import stdout
+import tempfile
+from time import monotonic
+import urllib.error
+from urllib.parse import urlparse
+import urllib.request
+import warnings
+import zipfile
 
 
 try:
@@ -20,6 +28,90 @@ try:
     found = True
 except ImportError:
     found = False
+
+class GoogleDriveDownloader:
+    CHUNK_SIZE = 32768
+    DOWNLOAD_URL = 'https://docs.google.com/uc?export=download'
+
+    @staticmethod
+    def download_file_from_google_drive(
+            file_id, dest_path, overwrite=False, unzip=False, showsize=False):
+        destination_directory = dirname(dest_path)
+        if not exists(destination_directory):
+            makedirs(destination_directory)
+
+        if not exists(dest_path) or overwrite:
+
+            session = requests.Session()
+
+            print(
+                'Downloading {} into {}... '.format(
+                    file_id, dest_path), end='')
+            stdout.flush()
+
+            response = session.get(
+                GoogleDriveDownloader.DOWNLOAD_URL, params={
+                    'id': file_id}, stream=True)
+
+            token = GoogleDriveDownloader._get_confirm_token(response)
+            if token:
+                params = {'id': file_id, 'confirm': token}
+                response = session.get(
+                    GoogleDriveDownloader.DOWNLOAD_URL,
+                    params=params,
+                    stream=True)
+
+            if showsize:
+                print()  # Skip to the next line
+
+            current_download_size = [0]
+            GoogleDriveDownloader._save_response_content(
+                response, dest_path, showsize, current_download_size)
+            print('Done.')
+
+            if unzip:
+                try:
+                    print('Unzipping...', end='')
+                    stdout.flush()
+                    with zipfile.ZipFile(dest_path, 'r') as z:
+                        z.extractall(destination_directory)
+                    print('Done.')
+                except zipfile.BadZipfile:
+                    warnings.warn(
+                        'Ignoring `unzip` since "{}" does not look like a valid zip file'.format(file_id))
+
+    @staticmethod
+    def _get_confirm_token(response):
+        for key, value in response.cookies.items():
+            if key.startswith('download_warning'):
+                return value
+        return None
+
+    @staticmethod
+    def _save_response_content(response, destination, showsize, current_size):
+        with open(destination, 'wb') as f:
+            for chunk in response.iter_content(
+                    GoogleDriveDownloader.CHUNK_SIZE):
+                if chunk:  # filter out keep-alive new chunks
+                    f.write(chunk)
+                    if showsize:
+                        print(
+                            '\r' +
+                            GoogleDriveDownloader.sizeof_fmt(
+                                current_size[0]),
+                            end=' ')
+                        stdout.flush()
+                        current_size[0] += GoogleDriveDownloader.CHUNK_SIZE
+
+    # From
+    # https://stackoverflow.com/questions/1094841/reusable-library-to-get-human-readable-version-of-file-size
+    @staticmethod
+    def sizeof_fmt(num, suffix='B'):
+        for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
+            if abs(num) < 1024.0:
+                return '{:.1f} {}{}'.format(num, unit, suffix)
+            num /= 1024.0
+        return '{:.1f} {}{}'.format(num, 'Yi', suffix)
 
 
 class ProgressBar():
@@ -81,6 +173,30 @@ def download_url(file_path: str = None, filename: str = None,
         sys.exit("Something went wrong with HTTPError: " % e)
     finally:
         return file_path
+
+
+def retrieve_from_id(gd_id_url: str=None, pathname: str = None, filename: str=None, unzip_flag: bool=False):
+    dirpath = os.path.join(config.TMP_FILE_PATH, pathname)
+    tmpdir = get_temporary_path(dirpath)
+    if not os.path.exists(dirpath):
+        try:
+            pathlib.Path(tmpdir).mkdir(parents=True, exist_ok=True)
+        except OSError:
+            sys.exit("os.mkdir() function has failed: %s" % tmpdir)
+
+    fp = os.path.join(tmpdir)
+    if (os.path.isfile(fp)):
+        return fp
+    else:
+        try:
+            dst = os.path.join(tmpdir, filename)
+            GoogleDriveDownloader.download_file_from_google_drive(
+                file_id=gd_id_url, dest_path=dst, unzip=unzip_flag)
+        except ImportError:
+            sys.exit("Could not find GoogleDriverDownloader Module")
+        finally:
+            return fp
+    return
 
 
 def retrieve_from_url(url: str = None, name: str = None, filename: str = None):

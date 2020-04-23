@@ -5,7 +5,8 @@ import shutil
 from pathlib import Path
 
 
-def get_model(model_path: str = None, model: str = None):
+def get_model_from_zip(model_path: str = None):
+    model = None
 
     path = os.path.dirname(model_path)
     shutil.unpack_archive(model_path, path)
@@ -15,8 +16,18 @@ def get_model(model_path: str = None, model: str = None):
 
     return model
 
+def get_model_from_path(model_path: str = None):
+    model = None
 
-def get_label(label_path: str = None, label: str = None):
+    for p in Path(model_path).rglob('*.tflite'):
+        model = str(p)
+
+    return model
+
+
+
+def get_label(label_path: str = None):
+    label = None
 
     path = os.path.dirname(label_path)
     shutil.unpack_archive(label_path, path)
