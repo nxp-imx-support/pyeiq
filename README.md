@@ -21,11 +21,12 @@ The procedures described in this document target a GNU/Linux Distribution Ubuntu
 ### Software Requirements
 
 1. Install the following packages in the GNU/Linux system:
-```bash
+```console
 ~# apt install python3 python3-pip
 ```
+
 2. Then, use _pip3_ tool to install the [_Virtualenv_](https://virtualenv.pypa.io/en/latest/) tool:
-```bash
+```console
 ~$ pip3 install virtualenv
 ```
 
@@ -34,22 +35,22 @@ The procedures described in this document target a GNU/Linux Distribution Ubuntu
 1. Clone the PyeIQ repository from CAF.
 
 2. Use _Virtualenv_ tool to create an isolated Python environment:
-```bash
+```console
 ~/pyeiq$ virtualenv env
 ~/pyeiq$ source env/bin/activate
 ```
    * Generate the wheel (_.whl_) file format:
-   ```bash
+   ```console
    (env) ~/pyeiq# python3 setup.py sdist bdist_wheel
    ```
   * Copy the wheel file to the board:
-  ```bash
+  ```console
   (env) ~/pyeiq$ scp dist/eiq-1.0.tar.gz root@<boards_IP>:~
   ```
-    * Change the _**<boards_IP>**_ for the actually IP Address.
+  Change the _**<boards_IP>**_ for the actually IP Address.
 
 3. To deactivate the virtual environment:
-```bash
+```console
 (env) ~/pyeiq$ deactivate
 ~/pyeiq$
 ```
@@ -57,20 +58,22 @@ The procedures described in this document target a GNU/Linux Distribution Ubuntu
 ### Deploy the PyeIQ Package
 
 1. Install the PyeIQ Wheel file in the board:
-```bash
+```console
 root@imx8qmmek:~# pip3 install eiq-1.0.tar.gz
 ```
 
 2. Check the installation:
-    * Start an interactive mode with Python3:
-    ```bash
+    * Start an interactive shell mode with Python3:
+    ```console
     root@imx8qmmek:~# python3
     ```
+
     * Check the PyeIQ latest version:
-    ```bash
+    ```console
     >>> import eiq
     >>> eiq.__version__
     ```
+
     * The output is the PyeIQ latest version installed in the system.
 
 ## Running the Demos
@@ -93,12 +96,10 @@ available demos in PyeIQ:
 | Coral Posenet                     |  Camera Based    |            |             |                         |           |        | Ongoing                                     |
 | NEO DLR                           | Camera Based     |            |             |                         |           |        | Ongoing                                     |
 
-1. To run the demos enter the `/opt/eiq/demos` folder:
-```bash
-root@imx8qmmek:~# cd /opt/eiq/demos/
-```
+1. To run the demos:
     * Choose the demo and execute it:
     ```bash
+    root@imx8qmmek:~# cd /opt/eiq/demos/
     root@imx8qmmek:~/opt/eiq/demos/# python3 <demo>.py
     ```
     * Use help if needed:
