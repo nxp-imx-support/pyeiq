@@ -1,4 +1,4 @@
-from eiq.apps.parser import run_label_image_no_accel, run_label_image_accel
+from eiq.apps.label.parser import run_label_image_no_accel, run_label_image_accel
 
 # include Gtk stuff here.
 

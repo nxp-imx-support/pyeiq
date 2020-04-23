@@ -1,7 +1,7 @@
 import re
 import subprocess
 
-from eiq.apps import config
+from eiq.apps.label import config
 
 
 def run(use_accel: bool):                                                                  
