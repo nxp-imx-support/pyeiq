@@ -503,7 +503,7 @@ class eIQObjectDetectionGStreamer(object):
         if result:
             np_buffer = np.reshape(np.frombuffer(
                 mapinfo.data, dtype=np.uint8), self.input_image_size(interpreter))
-            self.input_tensor()[:, :] = np_buffer
+            self.input_tensor(interpreter)[:, :] = np_buffer
             buf.unmap(mapinfo)
 
     def output_tensor(self, interpreter, i):
