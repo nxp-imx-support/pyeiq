@@ -32,56 +32,36 @@ class eIQObjectDetection(object):
         self.args = args_parser(
             camera=True, webcam=True, model=True, label=True)
         self.name = self.__class__.__name__
-        self.video = ""
-        self.tensor = 0
+        self.interpreter = None
+        self.input_details = None
+        self.output_details = None
+        self.tensor = None
         self.to_fetch = config.OBJECT_RECOGNITION_MODEL
 
-        self.label = ""
-        self.model = ""
-        self.pipeline = ""
+        self.video = None
+        self.label = None
+        self.model = None
+
         self.threshold = 0.5
 
-    def retrieve_data(self):
-        self.path = retrieve_from_url(self.to_fetch, self.name)
+    def annotate_objects(self, image, results, label, className):
+        for obj in results:
+            ymin, xmin, ymax, xmax = obj['bounding_box']
+            xmin = int(xmin * 1280)
+            xmax = int(xmax * 1280)
+            ymin = int(ymin * 720)
+            ymax = int(ymax * 720)
 
-        if self.args.label is not None and os.path.isfile(self.args.label):
-            self.label = self.args.label
-        else:
-            self.label = get_label(self.path)
-
-        if self.args.model is not None and os.path.isfile(self.args.model):
-            self.model = self.args.model
-        else:
-            self.model = get_model_from_zip(self.path)
-
-    def gstreamer_configurations(self):
-        self.pipeline = set_pipeline(1280, 720, device=self.args.camera)
-        if self.args.webcam >= 0:
-            self.video = opencv.VideoCapture(self.args.webcam)
-        else:
-            self.video = opencv.VideoCapture(self.pipeline)
-
-    def tflite_runtime_interpreter(self):
-        self.interpreter = Interpreter(self.model)
-
-    def set_input_tensor(self, image):
-        tensor_index = self.interpreter.get_input_details()[0]['index']
-        input_tensor = self.interpreter.tensor(tensor_index)()[0]
-        input_tensor[:, :] = image
-
-    def get_output_tensor(self, index):
-        output_details = self.interpreter.get_output_details()[index]
-        self.tensor = np.squeeze(
-            self.interpreter.get_tensor(output_details['index']))
-
-    def inference(self):
-        with timeit("Inference time"):
-            self.interpreter.invoke()
+            opencv.putText(image, className[int(obj['class_id']) - 1]
+                           + " " + str('%.1f' % (obj['score'] * 100)) + "%",
+                           (xmin, int(ymax + .05 * xmax)),
+                           opencv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255))
+            opencv.rectangle(
+                image, (xmin, ymax), (xmax, ymin), (0, 0, 255), thickness=2)
 
     def detect_objects(self, image):
-
         self.set_input_tensor(image)
-        self.inference()
+        inference.inference(self.interpreter)
 
         self.get_output_tensor(0)
         boxes = self.tensor
@@ -106,25 +86,33 @@ class eIQObjectDetection(object):
                 results.append(result)
         return results
 
-    def annotate_objects(self, image, results, label, className):
-        for obj in results:
-            ymin, xmin, ymax, xmax = obj['bounding_box']
-            xmin = int(xmin * 1280)
-            xmax = int(xmax * 1280)
-            ymin = int(ymin * 720)
-            ymax = int(ymax * 720)
+    def retrieve_data(self):
+        self.path = retrieve_from_url(self.to_fetch, self.name)
 
-            opencv.putText(image, className[int(obj['class_id']) - 1]
-                           + " " + str('%.1f' % (obj['score'] * 100)) + "%",
-                           (xmin, int(ymax + .05 * xmax)),
-                           opencv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255))
-            opencv.rectangle(
-                image, (xmin, ymax), (xmax, ymin), (0, 0, 255), thickness=2)
+        if self.args.label is not None and os.path.isfile(self.args.label):
+            self.label = self.args.label
+        else:
+            self.label = get_label(self.path)
+
+        if self.args.model is not None and os.path.isfile(self.args.model):
+            self.model = self.args.model
+        else:
+            self.model = get_model_from_zip(self.path)
+
+    def set_input_tensor(self, image):
+        input_tensor = self.interpreter.tensor(self.input_details[0]['index'])()[0]
+        input_tensor[:, :] = image
+
+    def get_output_tensor(self, index):
+        self.tensor = np.squeeze(
+            self.interpreter.get_tensor(self.output_details[index]['index']))
 
     def start(self):
-        self.gstreamer_configurations()
+        os.environ['VSI_NN_LOG_LEVEL'] = "0"
+        self.video = gstreamer_configurations(self.args)
         self.retrieve_data()
-        self.tflite_runtime_interpreter()
+        self.interpreter = inference.load_model(self.model)
+        self.input_details, self.output_details = inference.get_details(self.interpreter)
 
     def run(self):
         self.start()
@@ -132,14 +120,12 @@ class eIQObjectDetection(object):
         lin = open(self.label).read().strip().split("\n")
         className = [r[r.find(" ") + 1:].split(",")[0] for r in lin]
 
-        self.interpreter.allocate_tensors()
-        _, input_height, input_width, _ = self.interpreter.get_input_details(
-        )[0]['shape']
+        _, height, width, _ = self.input_details[0]['shape']
 
         while True:
             ret, frame = self.video.read()
             rows, cols, channels = frame.shape
-            resized_frame = opencv.resize(frame, (300, 300))
+            resized_frame = opencv.resize(frame, (width, height))
 
             results = self.detect_objects(resized_frame)
 
@@ -148,6 +134,7 @@ class eIQObjectDetection(object):
             opencv.imshow("eIQ PyTflite 2.1 - SSD Model", frame)
             if (opencv.waitKey(1) & 0xFF == ord('q')):
                 break
+
         opencv.destroyAllWindows()
 
 
@@ -159,7 +146,6 @@ class eIQLabelImage(object):
         self.interpreter = None
         self.input_details = None
         self.output_details = None
-        self.tensor = None
         self.to_fetch = {'image': config.LABEL_IMAGE_DEFAULT_IMAGE,
                          'labels': config.LABEL_IMAGE_LABELS,
                          'model': config.LABEL_IMAGE_MODEL
@@ -168,6 +154,7 @@ class eIQLabelImage(object):
         self.image = None
         self.label = None
         self.model = None
+
         self.input_mean = 127.5
         self.input_std = 127.5
 
@@ -312,7 +299,6 @@ class eIQFireDetectionCamera(object):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.video = gstreamer_configurations(self.args)
         self.retrieve_data()
-        self.retrieve_data()
         self.interpreter = inference.load_model(self.model)
         self.input_details, self.output_details = inference.get_details(self.interpreter)
 
@@ -321,7 +307,6 @@ class eIQFireDetectionCamera(object):
 
         while True:
             ret, frame = self.video.read()
-            rows, cols, channels = frame.shape
 
             if self.detect_fire(frame) == 0:
                 self.message = "No Fire"
@@ -343,60 +328,47 @@ class eIQFireDetectionCamera(object):
 class eIQObjectDetectionOpenCV(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
+        self.Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
         self.args = args_parser(camera=True, webcam=True)
         self.name = self.__class__.__name__
-        self.Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
+        self.interpreter = None
+        self.input_details = None
+        self.output_details = None
         self.to_fetch = config.CAMERA_OPENCV_MODEL
 
-        self.model = ""
-        self.label = ""
-        self.video = ""
-        self.pipeline = ""
+        self.video = None
+        self.model = None
+        self.label = None
 
         self.top_k = 3
         self.threshold = 0.1
 
     def retrieve_data(self):
-        path = os.path.dirname(
-            get_model_from_zip(retrieve_from_url(self.to_fetch, self.name)))
+        path = os.path.dirname(get_model_from_zip(retrieve_from_url(self.to_fetch, self.name)))
         self.model = os.path.join(path, config.CAMERA_OPENCV_DEFAULT_MODEL)
         self.label = os.path.join(path, config.CAMERA_OPENCV_DEFAULT_LABEL)
 
-    def gstreamer_configurations(self):
-        self.pipeline = set_pipeline(1280, 720, device=self.args.camera)
-        if self.args.webcam >= 0:
-            self.video = self.args.webcam
-        else:
-            self.video = self.pipeline
-
-    def inference(self, interpreter):
-        with timeit("Inference time"):
-            interpreter.invoke()
-
-    def set_input(self, interpreter, image, resample=Image.NEAREST):
+    def set_input(self, image, resample=Image.NEAREST):
         """Copies data to input tensor."""
         image = image.resize(
-            (self.input_image_size(interpreter)[0:2]), resample)
-        self.input_tensor(interpreter)[:, :] = image
+            (self.input_image_size()[0:2]), resample)
+        self.input_tensor()[:, :] = image
 
-    def input_image_size(self, interpreter):
+    def input_image_size(self):
         """Returns input image size as (width, height, channels) tuple."""
-        _, height, width, channels = interpreter.get_input_details()[
-            0]['shape']
+        _, height, width, channels = self.input_details[0]['shape']
         return width, height, channels
 
-    def input_tensor(self, interpreter):
+    def input_tensor(self):
         """Returns input tensor view as numpy array of shape (height, width, 3)."""
-        tensor_index = interpreter.get_input_details()[0]['index']
-        return interpreter.tensor(tensor_index)()[0]
+        return self.interpreter.tensor(self.input_details[0]['index'])()[0]
 
-    def output_tensor(self, interpreter, i):
+    def output_tensor(self, i):
         """Returns dequantized output tensor if quantized before."""
-        output_details = interpreter.get_output_details()[i]
-        output_data = np.squeeze(interpreter.tensor(output_details['index'])())
-        if 'quantization' not in output_details:
+        output_data = np.squeeze(self.interpreter.tensor(self.output_details[i]['index'])())
+        if 'quantization' not in self.output_details:
             return output_data
-        scale, zero_point = output_details['quantization']
+        scale, zero_point = self.output_details['quantization']
         if scale == 0:
             return output_data - zero_point
         return scale * (output_data - zero_point)
@@ -407,12 +379,12 @@ class eIQObjectDetectionOpenCV(object):
             lines = (p.match(line).groups() for line in f.readlines())
             return {int(num): text.strip() for num, text in lines}
 
-    def get_output(self, interpreter, score_threshold, top_k, image_scale=1.0):
+    def get_output(self, score_threshold, top_k, image_scale=1.0):
         """Returns list of detected objects."""
-        boxes = self.output_tensor(interpreter, 0)
-        class_ids = self.output_tensor(interpreter, 1)
-        scores = self.output_tensor(interpreter, 2)
-        count = int(self.output_tensor(interpreter, 3))
+        boxes = self.output_tensor(0)
+        class_ids = self.output_tensor(1)
+        scores = self.output_tensor(2)
+        count = int(self.output_tensor(3))
 
         def make(i):
             ymin, xmin, ymax, xmax = boxes[i]
@@ -450,20 +422,18 @@ class eIQObjectDetectionOpenCV(object):
         __slots__ = ()
 
     def start(self):
+        os.environ['VSI_NN_LOG_LEVEL'] = "0"
+        self.video = gstreamer_configurations(self.args)
         self.retrieve_data()
-        self.gstreamer_configurations()
+        self.interpreter = inference.load_model(self.model)
+        self.input_details, self.output_details = inference.get_details(self.interpreter)
 
     def run(self):
         self.start()
-
-        interpreter = Interpreter(self.model)
-        interpreter.allocate_tensors()
         labels = self.load_labels(self.label)
 
-        cap = opencv.VideoCapture(self.video)
-
-        while cap.isOpened():
-            ret, frame = cap.read()
+        while self.video.isOpened():
+            ret, frame = self.video.read()
             if not ret:
                 break
             opencv_im = frame
@@ -471,17 +441,16 @@ class eIQObjectDetectionOpenCV(object):
             opencv_im_rgb = opencv.cvtColor(opencv_im, opencv.COLOR_BGR2RGB)
             pil_im = Image.fromarray(opencv_im_rgb)
 
-            self.set_input(interpreter, pil_im)
-            self.inference(interpreter)
-            objs = self.get_output(
-                interpreter, score_threshold=self.threshold, top_k=self.top_k)
+            self.set_input(pil_im)
+            inference.inference(self.interpreter)
+            objs = self.get_output(score_threshold=self.threshold, top_k=self.top_k)
             opencv_im = self.append_objs_to_img(opencv_im, objs, labels)
 
-            opencv.imshow('frame', opencv_im)
+            opencv.imshow(self.name, opencv_im)
             if opencv.waitKey(1) & 0xFF == ord('q'):
                 break
 
-        cap.release()
+        self.video.release()
         opencv.destroyAllWindows()
 
 
@@ -534,7 +503,7 @@ class eIQObjectDetectionGStreamer(object):
         if result:
             np_buffer = np.reshape(np.frombuffer(
                 mapinfo.data, dtype=np.uint8), self.input_image_size(interpreter))
-            self.input_tensor(interpreter)[:, :] = np_buffer
+            self.input_tensor()[:, :] = np_buffer
             buf.unmap(mapinfo)
 
     def output_tensor(self, interpreter, i):
