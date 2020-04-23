@@ -1,6 +1,6 @@
 import os
 from setuptools import setup, find_packages
-from utils import copy
+from eiq.utils import copy
 
 setup(name="eiq",
 version="1.0",
