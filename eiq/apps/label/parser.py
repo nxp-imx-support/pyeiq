@@ -4,13 +4,16 @@ import subprocess
 from eiq.apps.label import config
 
 
-def run(use_accel: bool):                                                                  
+def run(use_accel: bool, image_path: str):
+    if image_path is None:
+        image_path = config.DEFAULT_TFLITE_IMAGE
+
     if use_accel:                                                                          
-        accel_flag = config.TFLITE_LABEL_IMAGE_ACCEL                                              
+        accel_flag = config.TFLITE_LABEL_IMAGE_ACCEL.format(image_path)           
     else:                                                                                  
-        accel_flag = config.TFLITE_LABEL_IMAGE_NO_ACCEL                                           
-                                                                                           
-    return subprocess.check_output(accel_flag, shell=True, stderr=subprocess.STDOUT)                                                                              
+        accel_flag = config.TFLITE_LABEL_IMAGE_NO_ACCEL.format(image_path)
+
+    return subprocess.check_output(accel_flag, shell=True, stderr=subprocess.STDOUT)                                                             
 
 def get_chances(line: str):
     x = re.findall(config.REGEX_GET_INTEGER_FLOAT, line)
@@ -46,13 +49,13 @@ def parser_cpu_gpu(data: str, include_accel: bool):
         parsed_data.append(get_chances(l[i]))
     return parsed_data
     
-def run_label_image_no_accel():
-    to_be_parsed_no_accel = run(False)
+def run_label_image_no_accel(image_path: str = None):
+    to_be_parsed_no_accel = run(False, image_path)
     to_be_parsed_no_accel_decoded = to_be_parsed_no_accel.decode('utf-8')
     return parser_cpu_gpu(to_be_parsed_no_accel_decoded, False)
 
-def run_label_image_accel():
-    to_be_parsed_accel = run(True)
+def run_label_image_accel(image_path: str = None):
+    to_be_parsed_accel = run(True, image_path)
     to_be_parsed_accel_decoded = to_be_parsed_accel.decode('utf-8')
     return parser_cpu_gpu(to_be_parsed_accel_decoded, True)
 
