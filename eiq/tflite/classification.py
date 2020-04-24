@@ -4,7 +4,7 @@ from eiq.utils import retrieve_from_url, retrieve_from_id, timeit, args_parser
 from eiq.tflite.utils import get_label, get_model_from_path, get_model_from_zip
 from eiq.multimedia.v4l2 import set_pipeline
 from eiq.multimedia import gstreamer
-from eiq.multimedia.utils import resize_image, gstreamer_configurations
+from eiq.multimedia.utils import BBox, gstreamer_configurations, resize_image
 import argparse
 import collections
 import cv2 as opencv
@@ -391,7 +391,7 @@ class eIQObjectDetectionOpenCV(object):
             return self.Object(
                 id=int(class_ids[i]),
                 score=scores[i],
-                bbox=self.BBox(xmin=np.maximum(0.0, xmin),
+                bbox=BBox(xmin=np.maximum(0.0, xmin),
                                ymin=np.maximum(0.0, ymin),
                                xmax=np.minimum(1.0, xmax),
                                ymax=np.minimum(1.0, ymax)))
@@ -412,14 +412,6 @@ class eIQObjectDetectionOpenCV(object):
             opencv_im = opencv.putText(opencv_im, label, (x0, y0 + 30),
                                        opencv.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
         return opencv_im
-
-    class BBox(collections.namedtuple(
-            'BBox', ['xmin', 'ymin', 'xmax', 'ymax'])):
-        """Bounding box.
-        Represents a rectangle which sides are either vertical or horizontal, parallel
-        to the x or y axis.
-        """
-        __slots__ = ()
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -570,14 +562,6 @@ class eIQObjectDetectionGStreamer(object):
                              fill='none', stroke='red', stroke_width='2'))
         return dwg.tostring()
 
-    class BBox(collections.namedtuple(
-            'BBox', ['xmin', 'ymin', 'xmax', 'ymax'])):
-        """Bounding box.
-        Represents a rectangle which sides are either vertical or horizontal, parallel
-        to the x or y axis.
-        """
-        __slots__ = ()
-
     def get_output(self, score_threshold, top_k, image_scale=1.0):
         """Returns list of detected objects."""
         boxes = self.output_tensor(0)
@@ -589,7 +573,7 @@ class eIQObjectDetectionGStreamer(object):
             return self.Object(
                 id=int(category_ids[i]),
                 score=scores[i],
-                bbox=self.BBox(xmin=np.maximum(0.0, xmin),
+                bbox=BBox(xmin=np.maximum(0.0, xmin),
                                ymin=np.maximum(0.0, ymin),
                                xmax=np.minimum(1.0, xmax),
                                ymax=np.minimum(1.0, ymax)))

@@ -1,7 +1,16 @@
+import collections
 import cv2 as opencv
 import numpy as np
 from PIL import Image
 from eiq.multimedia.v4l2 import set_pipeline
+
+class BBox(collections.namedtuple(
+        'BBox', ['xmin', 'ymin', 'xmax', 'ymax'])):
+    """Bounding box.
+    Represents a rectangle which sides are either vertical or horizontal,
+    parallel to the x or y axis.
+    """
+    __slots__ = ()
 
 def gstreamer_configurations(args):
     if args.webcam >= 0:
