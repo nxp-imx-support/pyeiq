@@ -96,7 +96,7 @@ class eIQObjectDetection(object):
         input_tensor[:, :] = image
 
     def get_output_tensor(self, index):
-        self.tensor = np.squeeze(
+        return np.squeeze(
             self.interpreter.get_tensor(self.output_details[index]['index']))
 
     def start(self):
