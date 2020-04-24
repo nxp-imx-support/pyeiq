@@ -340,9 +340,6 @@ class eIQObjectDetectionOpenCV(object):
         self.model = None
         self.label = None
 
-        self.top_k = 3
-        self.threshold = 0.1
-
     def retrieve_data(self):
         path = os.path.dirname(get_model_from_zip(retrieve_from_url(self.to_fetch, self.name)))
         self.model = os.path.join(path, config.CAMERA_OPENCV_DEFAULT_MODEL)
@@ -379,7 +376,7 @@ class eIQObjectDetectionOpenCV(object):
             lines = (p.match(line).groups() for line in f.readlines())
             return {int(num): text.strip() for num, text in lines}
 
-    def get_output(self, score_threshold, top_k, image_scale=1.0):
+    def get_output(self, score_threshold=0.1, top_k=3, image_scale=1.0):
         """Returns list of detected objects."""
         boxes = self.output_tensor(0)
         class_ids = self.output_tensor(1)
@@ -435,7 +432,7 @@ class eIQObjectDetectionOpenCV(object):
 
             self.set_input(pil_im)
             inference.inference(self.interpreter)
-            objs = self.get_output(score_threshold=self.threshold, top_k=self.top_k)
+            objs = self.get_output()
             opencv_im = self.append_objs_to_img(opencv_im, objs, labels)
 
             opencv.imshow(self.name, opencv_im)
@@ -460,10 +457,8 @@ class eIQObjectDetectionGStreamer(object):
         self.model = None
         self.label = None
 
-        self.videosrc = ""
+        self.videosrc = None
         self.videofmt = "raw"
-        self.top_k = 3
-        self.threshold = 0.1
 
     def retrieve_data(self):
         path = os.path.dirname(
@@ -562,7 +557,7 @@ class eIQObjectDetectionGStreamer(object):
                              fill='none', stroke='red', stroke_width='2'))
         return dwg.tostring()
 
-    def get_output(self, score_threshold, top_k, image_scale=1.0):
+    def get_output(self, score_threshold=0.1, top_k=3, image_scale=1.0):
         """Returns list of detected objects."""
         boxes = self.output_tensor(0)
         category_ids = self.output_tensor(1)
@@ -606,7 +601,7 @@ class eIQObjectDetectionGStreamer(object):
             inference.inference(self.interpreter)
             # For larger input image sizes, use the
             # edgetpu.classification.engine for better performance
-            objs = self.get_output(self.threshold, self.top_k)
+            objs = self.get_output()
             end_time = time.monotonic()
             text_lines = [
                 'Inference: {:.2f} ms'.format((end_time - start_time) * 1000),
