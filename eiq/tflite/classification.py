@@ -116,7 +116,6 @@ class eIQObjectDetection(object):
 
         while True:
             ret, frame = self.video.read()
-            rows, cols, channels = frame.shape
             resized_frame = opencv.resize(frame, (width, height))
 
             results = self.detect_objects(resized_frame)
