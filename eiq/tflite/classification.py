@@ -4,7 +4,7 @@ from eiq.utils import retrieve_from_url, retrieve_from_id, timeit, args_parser
 from eiq.tflite.utils import get_label, get_model_from_path, get_model_from_zip
 from eiq.multimedia.v4l2 import set_pipeline
 from eiq.multimedia import gstreamer
-from eiq.multimedia.utils import BBox, gstreamer_configurations, resize_image
+from eiq.multimedia.utils import gstreamer_configurations, make_boxes, resize_image
 import argparse
 import collections
 import cv2 as opencv
@@ -35,7 +35,6 @@ class eIQObjectDetection(object):
         self.interpreter = None
         self.input_details = None
         self.output_details = None
-        self.tensor = None
         self.to_fetch = config.OBJECT_RECOGNITION_MODEL
 
         self.video = None
@@ -63,17 +62,10 @@ class eIQObjectDetection(object):
         self.set_input_tensor(image)
         inference.inference(self.interpreter)
 
-        self.get_output_tensor(0)
-        boxes = self.tensor
-
-        self.get_output_tensor(1)
-        classes = self.tensor
-
-        self.get_output_tensor(2)
-        scores = self.tensor
-
-        self.get_output_tensor(3)
-        count = int(self.tensor)
+        boxes = self.get_output_tensor(0)
+        classes = self.get_output_tensor(1)
+        scores = self.get_output_tensor(2)
+        count = int(self.get_output_tensor(3))
 
         results = []
         for i in range(count):
@@ -328,7 +320,6 @@ class eIQFireDetectionCamera(object):
 class eIQObjectDetectionOpenCV(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
-        self.Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
         self.args = args_parser(camera=True, webcam=True)
         self.name = self.__class__.__name__
         self.interpreter = None
@@ -383,17 +374,7 @@ class eIQObjectDetectionOpenCV(object):
         scores = self.output_tensor(2)
         count = int(self.output_tensor(3))
 
-        def make(i):
-            ymin, xmin, ymax, xmax = boxes[i]
-            return self.Object(
-                id=int(class_ids[i]),
-                score=scores[i],
-                bbox=BBox(xmin=np.maximum(0.0, xmin),
-                               ymin=np.maximum(0.0, ymin),
-                               xmax=np.minimum(1.0, xmax),
-                               ymax=np.minimum(1.0, ymax)))
-
-        return [make(i) for i in range(top_k) if scores[i] >= score_threshold]
+        return [make_boxes(i, boxes, class_ids, scores) for i in range(top_k) if scores[i] >= score_threshold]
 
     def append_objs_to_img(self, opencv_im, objs, labels):
         height, width, channels = opencv_im.shape
@@ -446,7 +427,6 @@ class eIQObjectDetectionOpenCV(object):
 class eIQObjectDetectionGStreamer(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
-        self.Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
         self.args = args_parser(camera=True, webcam=True)
         self.name = self.__class__.__name__
         self.interpreter = None
@@ -563,18 +543,10 @@ class eIQObjectDetectionGStreamer(object):
         category_ids = self.output_tensor(1)
         scores = self.output_tensor(2)
 
-        def make(i):
-            ymin, xmin, ymax, xmax = boxes[i]
-            return self.Object(
-                id=int(category_ids[i]),
-                score=scores[i],
-                bbox=BBox(xmin=np.maximum(0.0, xmin),
-                               ymin=np.maximum(0.0, ymin),
-                               xmax=np.minimum(1.0, xmax),
-                               ymax=np.minimum(1.0, ymax)))
-        return [make(i) for i in range(top_k) if scores[i] >= score_threshold]
+        return [make_boxes(i, boxes, category_ids, scores) for i in range(top_k) if scores[i] >= score_threshold]
 
     def start(self):
+        os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.video_src_config()
         self.retrieve_data()
         self.interpreter = inference.load_model(self.model)
