@@ -456,14 +456,17 @@ class eIQObjectDetectionOpenCV(object):
 
 class eIQObjectDetectionGStreamer(object):
     def __init__(self, **kwargs):
-        self.args = args_parser(camera=True, webcam=True)
         self.__dict__.update(kwargs)
-        self.name = self.__class__.__name__
         self.Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
+        self.args = args_parser(camera=True, webcam=True)
+        self.name = self.__class__.__name__
+        self.interpreter = None
+        self.input_details = None
+        self.output_details = None
         self.to_fetch = config.CAMERA_GSTREAMER_MODEL
 
-        self.model = ""
-        self.label = ""
+        self.model = None
+        self.label = None
 
         self.videosrc = ""
         self.videofmt = "raw"
@@ -482,37 +485,30 @@ class eIQObjectDetectionGStreamer(object):
         else:
             self.videosrc = "/dev/video" + str(self.args.camera)
 
-    def inference(self, interpreter):
-        with timeit("Inference time"):
-            interpreter.invoke()
-
-    def input_image_size(self, interpreter):
+    def input_image_size(self):
         """Returns input size as (width, height, channels) tuple."""
-        _, height, width, channels = interpreter.get_input_details()[
-            0]['shape']
+        _, height, width, channels = self.input_details[0]['shape']
         return width, height, channels
 
-    def input_tensor(self, interpreter):
+    def input_tensor(self):
         """Returns input tensor view as numpy array of shape (height, width, channels)."""
-        tensor_index = interpreter.get_input_details()[0]['index']
-        return interpreter.tensor(tensor_index)()[0]
+        return self.interpreter.tensor(self.input_details[0]['index'])()[0]
 
-    def set_input(self, interpreter, buf):
+    def set_input(self, buf):
         """Copies data to input tensor."""
         result, mapinfo = buf.map(Gst.MapFlags.READ)
         if result:
             np_buffer = np.reshape(np.frombuffer(
-                mapinfo.data, dtype=np.uint8), self.input_image_size(interpreter))
-            self.input_tensor(interpreter)[:, :] = np_buffer
+                mapinfo.data, dtype=np.uint8), self.input_image_size())
+            self.input_tensor()[:, :] = np_buffer
             buf.unmap(mapinfo)
 
-    def output_tensor(self, interpreter, i):
+    def output_tensor(self, i):
         """Returns dequantized output tensor if quantized before."""
-        output_details = interpreter.get_output_details()[i]
-        output_data = np.squeeze(interpreter.tensor(output_details['index'])())
-        if 'quantization' not in output_details:
+        output_data = np.squeeze(self.interpreter.tensor(self.output_details[i]['index'])())
+        if 'quantization' not in self.output_details:
             return output_data
-        scale, zero_point = output_details['quantization']
+        scale, zero_point = self.output_details['quantization']
         if scale == 0:
             return output_data - zero_point
         return scale * (output_data - zero_point)
@@ -582,11 +578,11 @@ class eIQObjectDetectionGStreamer(object):
         """
         __slots__ = ()
 
-    def get_output(self, interpreter, score_threshold, top_k, image_scale=1.0):
+    def get_output(self, score_threshold, top_k, image_scale=1.0):
         """Returns list of detected objects."""
-        boxes = self.output_tensor(interpreter, 0)
-        category_ids = self.output_tensor(interpreter, 1)
-        scores = self.output_tensor(interpreter, 2)
+        boxes = self.output_tensor(0)
+        category_ids = self.output_tensor(1)
+        scores = self.output_tensor(2)
 
         def make(i):
             ymin, xmin, ymax, xmax = boxes[i]
@@ -600,8 +596,10 @@ class eIQObjectDetectionGStreamer(object):
         return [make(i) for i in range(top_k) if scores[i] >= score_threshold]
 
     def start(self):
-        self.retrieve_data()
         self.video_src_config()
+        self.retrieve_data()
+        self.interpreter = inference.load_model(self.model)
+        self.input_details, self.output_details = inference.get_details(self.interpreter)
 
     def run(self):
         if not has_svgwrite:
@@ -610,12 +608,9 @@ class eIQObjectDetectionGStreamer(object):
             )
 
         self.start()
-
-        interpreter = Interpreter(self.model)
-        interpreter.allocate_tensors()
         labels = self.load_labels(self.label)
 
-        w, h, _ = self.input_image_size(interpreter)
+        w, h, _ = self.input_image_size()
         inference_size = (w, h)
         # Average fps over last 30 frames.
         fps_counter = self.avg_fps_counter(30)
@@ -623,11 +618,11 @@ class eIQObjectDetectionGStreamer(object):
         def user_callback(input_tensor, src_size, inference_box):
             nonlocal fps_counter
             start_time = time.monotonic()
-            self.set_input(interpreter, input_tensor)
-            self.inference(interpreter)
+            self.set_input(input_tensor)
+            inference.inference(self.interpreter)
             # For larger input image sizes, use the
             # edgetpu.classification.engine for better performance
-            objs = self.get_output(interpreter, self.threshold, self.top_k)
+            objs = self.get_output(self.threshold, self.top_k)
             end_time = time.monotonic()
             text_lines = [
                 'Inference: {:.2f} ms'.format((end_time - start_time) * 1000),
