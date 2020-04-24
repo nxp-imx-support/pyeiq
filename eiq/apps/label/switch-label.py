@@ -1,6 +1,6 @@
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
+from gi.repository import Gtk, GdkPixbuf
 
 from eiq.apps.label.parser import run_label_image_no_accel, run_label_image_accel
 
@@ -13,8 +13,10 @@ class SwitchLabelImage(Gtk.Window):
         self.set_position(Gtk.WindowPosition.CENTER)
         self.connect('destroy', self.destroy)
         
-        grid = Gtk.Grid()
+        grid = Gtk.Grid(row_spacing = 10, column_spacing = 10, border_width = 18,)
         self.add(grid)
+        grid.set_column_homogeneous(True)
+        grid.set_row_homogeneous(True)
         
         statusBox = Gtk.Box()
         statusValueBox = Gtk.Box()
@@ -24,6 +26,7 @@ class SwitchLabelImage(Gtk.Window):
         percentageBox = Gtk.Box()
         inferenceBox = Gtk.Box()
         inferenceValueBox = Gtk.Box()
+        imageBox = Gtk.Box()
 
         valueReturnedBox_0 = Gtk.Box()
         valueReturnedBox_1 = Gtk.Box()
@@ -48,6 +51,10 @@ class SwitchLabelImage(Gtk.Window):
         self.labelReturned_2 = Gtk.Label()
         self.labelReturned_3 = Gtk.Label()
         self.labelReturned_4 = Gtk.Label()
+
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("mediaplayer.jpg", 640, 480, True)
+        image = Gtk.Image()
+        image.set_from_pixbuf(pixbuf)
 
         self.set_initial_entrys()
 
@@ -80,36 +87,39 @@ class SwitchLabelImage(Gtk.Window):
         valueReturnedBox_2.pack_start(self.valueReturned_2, True, True, 0)
         valueReturnedBox_3.pack_start(self.valueReturned_3, True, True, 0)
         valueReturnedBox_4.pack_start(self.valueReturned_4, True, True, 0)
+        imageBox.pack_start(image, True, True, 0)
 
         cpu_button = Gtk.Button(label="CPU")
         cpu_button.connect("clicked", self.run_inference_cpu)
-        grid.attach(cpu_button, 1, 0, 1, 1)
+        grid.attach(cpu_button, 3, 0, 1, 1)
         
         npu_button = Gtk.Button(label="NPU")
         npu_button.connect("clicked", self.run_inference_npu)
-        grid.attach(npu_button, 2, 0, 1, 1)
+        grid.attach(npu_button, 4, 0, 1, 1)
 
-        grid.attach(modelBox, 1, 1, 1, 1)
-        grid.attach(modelNameBox, 2, 1, 3, 1)
-        grid.attach(inferenceBox, 1, 2, 1, 1)
-        grid.attach(inferenceValueBox, 2, 2, 2, 1)
-        grid.attach(resultBox, 1, 3, 1, 1)
-        grid.attach(percentageBox, 2, 3, 1, 1)
+        grid.attach(modelBox, 0, 4, 2, 1)
+        grid.attach(modelNameBox, 0, 5, 2, 1)
+        grid.attach(inferenceBox, 0, 6, 2, 1)
+        grid.attach(inferenceValueBox, 0, 7, 2, 1)
+        grid.attach(resultBox, 6, 3, 1, 1)
+        grid.attach(percentageBox, 7, 3, 1, 1)
 
-        grid.attach(labelReturnedBox_0, 1, 4, 1, 1)
-        grid.attach(labelReturnedBox_1, 1, 5, 1, 1)
-        grid.attach(labelReturnedBox_2, 1, 6, 1, 1)
-        grid.attach(labelReturnedBox_3, 1, 7, 1, 1)
-        grid.attach(labelReturnedBox_4, 1, 8, 1, 1)
+        grid.attach(labelReturnedBox_0, 6, 4, 1, 1)
+        grid.attach(labelReturnedBox_1, 6, 5, 1, 1)
+        grid.attach(labelReturnedBox_2, 6, 6, 1, 1)
+        grid.attach(labelReturnedBox_3, 6, 7, 1, 1)
+        grid.attach(labelReturnedBox_4, 6, 8, 1, 1)
 
-        grid.attach(valueReturnedBox_0, 2, 4, 1, 1)
-        grid.attach(valueReturnedBox_1, 2, 5, 1, 1)
-        grid.attach(valueReturnedBox_2, 2, 6, 1, 1)
-        grid.attach(valueReturnedBox_3, 2, 7, 1, 1)
-        grid.attach(valueReturnedBox_4, 2, 8, 1, 1)
+        grid.attach(valueReturnedBox_0, 7, 4, 1, 1)
+        grid.attach(valueReturnedBox_1, 7, 5, 1, 1)
+        grid.attach(valueReturnedBox_2, 7, 6, 1, 1)
+        grid.attach(valueReturnedBox_3, 7, 7, 1, 1)
+        grid.attach(valueReturnedBox_4, 7, 8, 1, 1)
 
-        grid.attach(statusBox, 2, 9, 1, 1)
-        grid.attach(statusValueBox, 2, 10, 1, 1)
+        grid.attach(statusBox, 3, 11, 1, 1)
+        grid.attach(statusValueBox, 4, 11, 1, 1)
+
+        grid.attach(imageBox, 2, 1, 4, 10)
 
         self.show_all()
 
