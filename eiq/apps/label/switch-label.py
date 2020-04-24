@@ -166,7 +166,7 @@ class SwitchLabelImage(Gtk.Window):
         self.statusValueLabel.set_text("Finished.")
         self.modelNameLabel.set_text(x[0])
         self.inferenceValueLabel.set_text(x[1])
-        self.set_returned_entrys()
+        self.set_returned_entrys(x)
         print(x)
 
     def run_inference_npu(self, window):
