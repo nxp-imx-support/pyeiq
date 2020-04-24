@@ -31,11 +31,23 @@ class SwitchLabelImage(Gtk.Window):
         valueReturnedBox_3 = Gtk.Box()
         valueReturnedBox_4 = Gtk.Box()
 
+        labelReturnedBox_0 = Gtk.Box()
+        labelReturnedBox_1 = Gtk.Box()
+        labelReturnedBox_2 = Gtk.Box()
+        labelReturnedBox_3 = Gtk.Box()
+        labelReturnedBox_4 = Gtk.Box()
+
         self.valueReturned_0 = Gtk.Entry()
         self.valueReturned_1 = Gtk.Entry()
         self.valueReturned_2 = Gtk.Entry()
         self.valueReturned_3 = Gtk.Entry()
         self.valueReturned_4 = Gtk.Entry()
+
+        self.labelReturned_0 = Gtk.Label()
+        self.labelReturned_1 = Gtk.Label()
+        self.labelReturned_2 = Gtk.Label()
+        self.labelReturned_3 = Gtk.Label()
+        self.labelReturned_4 = Gtk.Label()
 
         self.set_initial_entrys()
 
@@ -57,6 +69,12 @@ class SwitchLabelImage(Gtk.Window):
         inferenceBox.pack_start(inferenceLabel, True, True, 0)
         inferenceValueBox.pack_start(self.inferenceValueLabel, True, True, 0)
 
+        labelReturnedBox_0.pack_start(self.labelReturned_0, True, True, 0)
+        labelReturnedBox_1.pack_start(self.labelReturned_1, True, True, 0)
+        labelReturnedBox_2.pack_start(self.labelReturned_2, True, True, 0)
+        labelReturnedBox_3.pack_start(self.labelReturned_3, True, True, 0)
+        labelReturnedBox_4.pack_start(self.labelReturned_4, True, True, 0)
+
         valueReturnedBox_0.pack_start(self.valueReturned_0, True, True, 0)
         valueReturnedBox_1.pack_start(self.valueReturned_1, True, True, 0)
         valueReturnedBox_2.pack_start(self.valueReturned_2, True, True, 0)
@@ -77,6 +95,12 @@ class SwitchLabelImage(Gtk.Window):
         grid.attach(inferenceValueBox, 2, 2, 2, 1)
         grid.attach(resultBox, 1, 3, 1, 1)
         grid.attach(percentageBox, 2, 3, 1, 1)
+
+        grid.attach(labelReturnedBox_0, 1, 4, 1, 1)
+        grid.attach(labelReturnedBox_1, 1, 5, 1, 1)
+        grid.attach(labelReturnedBox_2, 1, 6, 1, 1)
+        grid.attach(labelReturnedBox_3, 1, 7, 1, 1)
+        grid.attach(labelReturnedBox_4, 1, 8, 1, 1)
 
         grid.attach(valueReturnedBox_0, 2, 4, 1, 1)
         grid.attach(valueReturnedBox_1, 2, 5, 1, 1)
@@ -121,6 +145,12 @@ class SwitchLabelImage(Gtk.Window):
         self.valueReturned_4.set_progress_fraction(-1)
 
     def set_returned_entrys(self, value):
+        self.labelReturned_0.set_text(str(value[2][2]))
+        self.labelReturned_1.set_text(str(value[3][2]))
+        self.labelReturned_2.set_text(str(value[4][2]))
+        self.labelReturned_3.set_text(str(value[5][2]))
+        self.labelReturned_4.set_text(str(value[6][2]))
+        #TODO: check why the bar is not updating
         self.valueReturned_0.set_text(str("%.2f" % (float(value[2][0])*100))+"%")
         self.valueReturned_1.set_text(str("%.2f" % (float(value[3][0])*100))+"%")
         self.valueReturned_2.set_text(str("%.2f" % (float(value[4][0])*100))+"%")
