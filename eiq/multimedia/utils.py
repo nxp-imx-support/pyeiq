@@ -2,9 +2,11 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import collections
+
 import cv2 as opencv
 import numpy as np
 from PIL import Image
+
 from eiq.multimedia.v4l2 import set_pipeline
 
 Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
