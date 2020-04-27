@@ -1,3 +1,6 @@
+# Copyright 2020 NXP Semiconductors
+# SPDX-License-Identifier: BSD-3-Clause
+
 from __future__ import print_function
 from argparse import ArgumentParser
 from contextlib import contextmanager
