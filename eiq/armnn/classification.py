@@ -1,3 +1,15 @@
+# Copyright 2020 ARM Software
+#
+## Copyright 2020 NXP Semiconductors
+##
+## This file was copied from ARM respecting its rights. All the modified
+## parts below are according to ARM's LICENSE terms.
+##
+## SPDX-License-Identifier:    Apache-2.0
+##
+## References:
+## https://github.com/ARM-software/ML-examples/tree/master/pyarmnn-fire-detection
+
 from eiq.armnn import config
 from timeit import default_timer as timer
 import pyarmnn as ann
