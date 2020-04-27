@@ -1,4 +1,15 @@
-# import the necessary packages
+# Copyright 2020 jrosebr1
+#
+## Copyright 2020 NXP Semiconductors
+##
+## This train code was copied from jrosebr1 respecting its rights. All the
+## modified parts below are according to jrosebr1's LICENSE terms (MIT).
+##
+## SPDX-License-Identifier: BSD-3-Clause
+##
+## References:
+## https://github.com/jrosebr1
+
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import BatchNormalization
 from tensorflow.keras.layers import SeparableConv2D
