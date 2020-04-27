@@ -65,17 +65,7 @@ class SwitchLabelImage(Gtk.Window):
             self.valueReturnedBox.append(Gtk.Box())
             self.labelReturnedBox.append(Gtk.Box())
 
-        if self.args.image is not None and os.path.exists(self.args.image):
-            img = Image.open(self.args.image)
-        else:
-            img = Image.open('/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp')
-        new_img = img.resize( (507, 606) )
-        new_img.save( 'test.png', 'png')
-
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("test.png", 507, 606, True)
-        image = Gtk.Image()
-        image.set_from_pixbuf(pixbuf)
-
+        self.set_displayed_image("grace_hopper.bmp")
         self.set_initial_entrys()
 
         statusLabel = Gtk.Label()
@@ -110,7 +100,7 @@ class SwitchLabelImage(Gtk.Window):
             self.labelReturnedBox[i].pack_start(self.labelReturned[i], True, True, 0)
             self.valueReturnedBox[i].pack_start(self.valueReturned[i], True, True, 0)
 
-        imageBox.pack_start(image, True, True, 0)
+        imageBox.pack_start(self.displayedImage, True, True, 0)
 
         cpu_button = Gtk.Button(label="CPU")
         cpu_button.connect("clicked", self.run_inference_cpu)
@@ -136,12 +126,25 @@ class SwitchLabelImage(Gtk.Window):
 
         self.show_all()
 
+    def set_displayed_image(self, image):
+        if self.args.image is not None and os.path.exists(self.args.image):
+            img = Image.open(self.args.image)
+        else:
+            img = Image.open('/tmp/eiq/switch-images/bmp_examples/' + image)
+        new_img = img.resize( (507, 606) )
+        new_img.save( 'test.png', 'png')
+
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("test.png", 507, 606, True)
+        self.displayedImage = Gtk.Image()
+        self.displayedImage.set_from_pixbuf(pixbuf)
+
     def on_combo_image_changed(self, combo):
-        tree_iter = combo.get_active_iter()
-        if tree_iter is not None:
+        iterr = combo.get_active_iter()
+        if iterr is not None:
             model = combo.get_model()
-            country = model[tree_iter][0]
-            print("Selected: country=%s" % country)
+            imageName = model[iterr][0]
+            print("Selected image: %s" % imageName)
+            self.set_displayed_image(imageName)
 
     def get_bmp_images(self):
         for file in os.listdir("/tmp/eiq/switch-images/bmp_examples/"):
