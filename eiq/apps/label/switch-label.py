@@ -22,6 +22,12 @@ class SwitchLabelImage(Gtk.Window):
         self.labelReturned = []
         self.valueReturnedBox = []
         self.labelReturnedBox = []
+
+        if gethostname() == "imx8mpevk":
+            self.acceleration = "NPU"
+        else:
+            self.acceleration = "GPU"
+
         grid.set_column_homogeneous(True)
         grid.set_row_homogeneous(True)
         
@@ -86,11 +92,7 @@ class SwitchLabelImage(Gtk.Window):
         cpu_button = Gtk.Button(label="CPU")
         cpu_button.connect("clicked", self.run_inference_cpu)
         grid.attach(cpu_button, 3, 0, 1, 1)
-        
-        if gethostname() == "imx8mpevk":
-            npu_button = Gtk.Button(label="NPU")
-        else:
-            npu_button = Gtk.Button(label="GPU")
+        npu_button = Gtk.Button(label=self.acceleration)
         npu_button.connect("clicked", self.run_inference_npu)
         grid.attach(npu_button, 4, 0, 1, 1)
 
@@ -142,7 +144,7 @@ class SwitchLabelImage(Gtk.Window):
         #TODO: the next two lines do not work
         self.set_initial_entrys()
         self.statusValueLabel.set_text("Running...")
-        print ("Running Inference on NPU")
+        print ("Running Inference on {0}".format(self.acceleration))
         x = run_label_image_accel()
         self.statusValueLabel.set_text("done.")
         self.modelNameLabel.set_text(x[0])
