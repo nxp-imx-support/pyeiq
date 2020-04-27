@@ -1,23 +1,29 @@
-import eiq.tflite.config as config
-import eiq.tflite.inference as inference
-from eiq.utils import retrieve_from_url, retrieve_from_id, timeit, args_parser
-from eiq.tflite.utils import get_label, get_model_from_path, get_model_from_zip
-from eiq.multimedia.v4l2 import set_pipeline
-from eiq.multimedia import gstreamer
-from eiq.multimedia.utils import gstreamer_configurations, make_boxes, resize_image
 import argparse
 import collections
-import cv2 as opencv
+
 import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst
-import numpy as np
+
 import os
-from PIL import Image
 import re
 import sys
 import time
+
+import cv2 as opencv
+import numpy as np
+from PIL import Image
 from tflite_runtime.interpreter import Interpreter
+
+from eiq.multimedia import gstreamer
+from eiq.multimedia.utils import gstreamer_configurations, make_boxes, resize_image
+from eiq.multimedia.v4l2 import set_pipeline
+from eiq.utils import retrieve_from_url, retrieve_from_id, timeit, args_parser
+
+import eiq.tflite.config as config
+import eiq.tflite.inference as inference
+from eiq.tflite.utils import get_label, get_model_from_path, get_model_from_zip
+
 
 try:
     import svgwrite
