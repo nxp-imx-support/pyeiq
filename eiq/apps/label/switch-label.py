@@ -19,13 +19,16 @@ class SwitchLabelImage(Gtk.Window):
         self.set_default_size(1280, 720)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.connect('destroy', self.destroy)
-        
+
         grid = Gtk.Grid(row_spacing = 10, column_spacing = 10, border_width = 18,)
         self.add(grid)
         self.valueReturned = []
         self.labelReturned = []
         self.valueReturnedBox = []
         self.labelReturnedBox = []
+        self.imageMap = Gtk.ListStore(str)
+
+        self.get_bmp_images()
 
         images_path = retrieve_from_id(config.IMAGES_DRIVE_ID, "switch-images", config.IMAGES_DRIVE_NAME + ".zip",unzip_flag=True)
         images_path = os.path.join(images_path, config.IMAGES_DRIVE_NAME)
@@ -37,7 +40,7 @@ class SwitchLabelImage(Gtk.Window):
 
         grid.set_column_homogeneous(True)
         grid.set_row_homogeneous(True)
-        
+
         statusBox = Gtk.Box()
         statusValueBox = Gtk.Box()
         modelBox = Gtk.Box()
@@ -46,7 +49,15 @@ class SwitchLabelImage(Gtk.Window):
         percentageBox = Gtk.Box()
         inferenceBox = Gtk.Box()
         inferenceValueBox = Gtk.Box()
+        imageLabelBox = Gtk.Box()
+        imageMapBox = Gtk.Box()
         imageBox = Gtk.Box()
+
+        imageComboBox = Gtk.ComboBox.new_with_model(self.imageMap)
+        imageComboBox.connect("changed", self.on_combo_image_changed)
+        imageRenderedList = Gtk.CellRendererText()
+        imageComboBox.pack_start(imageRenderedList, True)
+        imageComboBox.add_attribute(imageRenderedList, "text", 0)
 
         for i in range(5):
             self.valueReturned.append(Gtk.Entry())
@@ -60,7 +71,6 @@ class SwitchLabelImage(Gtk.Window):
             img = Image.open('/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp')
         new_img = img.resize( (507, 606) )
         new_img.save( 'test.png', 'png')
-
 
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("test.png", 507, 606, True)
         image = Gtk.Image()
@@ -81,6 +91,9 @@ class SwitchLabelImage(Gtk.Window):
         inferenceLabel = Gtk.Label()
         inferenceLabel.set_markup("<b>INFERENCE TIME</b>")
         self.inferenceValueLabel = Gtk.Label("")
+        imageLabel = Gtk.Label()
+        imageLabel.set_markup("<b>SELECT AN IMAGE</b>")
+        imageLabel.set_alignment(0, 1)
 
         modelBox.pack_start(modelLabel, True, True, 0)
         modelNameBox.pack_start(self.modelNameLabel, True, True, 0)
@@ -90,7 +103,8 @@ class SwitchLabelImage(Gtk.Window):
         percentageBox.pack_start(percentageLabel, True, True, 0)
         inferenceBox.pack_start(inferenceLabel, True, True, 0)
         inferenceValueBox.pack_start(self.inferenceValueLabel, True, True, 0)
-
+        imageLabelBox.pack_start(imageLabel, True, True, 0)
+        imageMapBox.pack_start(imageComboBox, True, True, 0)
 
         for i in range(5):
             self.labelReturnedBox[i].pack_start(self.labelReturned[i], True, True, 0)
@@ -105,10 +119,10 @@ class SwitchLabelImage(Gtk.Window):
         npu_button.connect("clicked", self.run_inference_npu)
         grid.attach(npu_button, 4, 0, 1, 1)
 
-        grid.attach(modelBox, 0, 4, 2, 1)
-        grid.attach(modelNameBox, 0, 5, 2, 1)
-        grid.attach(inferenceBox, 0, 6, 2, 1)
-        grid.attach(inferenceValueBox, 0, 7, 2, 1)
+        grid.attach(modelBox, 0, 5, 2, 1)
+        grid.attach(modelNameBox, 0, 6, 2, 1)
+        grid.attach(inferenceBox, 0, 7, 2, 1)
+        grid.attach(inferenceValueBox, 0, 8, 2, 1)
         grid.attach(resultBox, 6, 3, 1, 1)
         grid.attach(percentageBox, 7, 3, 1, 1)
 
@@ -116,12 +130,22 @@ class SwitchLabelImage(Gtk.Window):
             grid.attach(self.labelReturnedBox[i], 6, (4+i), 1, 1)
             grid.attach(self.valueReturnedBox[i], 7, (4+i), 1, 1)
 
-        grid.attach(statusBox, 3, 11, 1, 1)
-        grid.attach(statusValueBox, 4, 11, 1, 1)
-
+        grid.attach(imageLabelBox, 0, 2, 2, 1)
+        grid.attach(imageMapBox, 0, 3, 2, 1)
         grid.attach(imageBox, 2, 1, 4, 10)
 
         self.show_all()
+
+    def on_combo_image_changed(self, combo):
+        tree_iter = combo.get_active_iter()
+        if tree_iter is not None:
+            model = combo.get_model()
+            country = model[tree_iter][0]
+            print("Selected: country=%s" % country)
+
+    def get_bmp_images(self):
+        for file in os.listdir("/tmp/eiq/switch-images/bmp_examples/"):
+            self.imageMap.append([file])
 
     def set_initial_entrys(self):
         for i in range(5):
