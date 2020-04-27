@@ -34,21 +34,16 @@ def parser_cpu_gpu(data: str, include_accel: bool):
     
     if include_accel:
         index = 4
+        start_index = 5
     else:
         index = 3
+        start_index = 4
         
     average_time = l[index].rsplit(':', 1)[1]
     average_time = average_time.rsplit(' ', 1)[0]
     parsed_data.append(average_time)
-    
-    if include_accel:
-        start_index = 5
-        final_index = 10
-    else:
-        start_index = 4
-        final_index = 9
         
-    for i in range(start_index, final_index):
+    for i in range(start_index, len(l)):
         parsed_data.append(get_chances(l[i]))
     return parsed_data
     
