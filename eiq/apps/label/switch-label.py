@@ -72,6 +72,7 @@ class SwitchLabelImage(Gtk.Window):
             img = Image.open(self.args.image)
         else:
             img = Image.open('/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp')
+        self.imagePath = '/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp'
         new_img = img.resize( (507, 606) )
         new_img.save( 'test.png', 'png')
 
@@ -151,6 +152,7 @@ class SwitchLabelImage(Gtk.Window):
             model = combo.get_model()
             imageName = model[iterr][0]
             print("Selected image: %s" % imageName)
+            self.imagePath = os.path.join(self.images_path, imageName)
             self.set_displayed_image(os.path.join(self.images_path, imageName))
 
     def get_bmp_images(self):
@@ -159,6 +161,7 @@ class SwitchLabelImage(Gtk.Window):
 
     def set_initial_entrys(self):
         for i in range(5):
+            self.labelReturned[i].set_text("")
             self.valueReturned[i].set_editable(False)
             self.valueReturned[i].set_can_focus(False)
             self.valueReturned[i].set_text("0%")
@@ -166,19 +169,21 @@ class SwitchLabelImage(Gtk.Window):
             self.valueReturned[i].set_progress_fraction(-1)
 
     def set_returned_entrys(self, value):
-        for i in range(5):
-            self.labelReturned[i].set_text(str(value[2+i][2]))
+        x = 0
+        for i in value[:2]:
+            self.labelReturned[x].set_text(str(i[2]))
             #TODO: check why the bar is not updating
-            self.valueReturned[i].set_text(str("%.2f" % (float(value[2+i][0])*100))+"%")
+            self.valueReturned[x].set_text(str("%.2f" % (float(i[0])*100))+"%")
+            x = x + 1
 
     def run_inference_cpu(self, window):
         self.set_initial_entrys()
-        self.statusValueLabel.set_text("Running...")
+        self.modelNameLabel.set_text("")
+        self.inferenceValueLabel.set_text("Running...")
         while Gtk.events_pending():
             Gtk.main_iteration()
         print ("Running Inference on CPU")
-        x = run_label_image_no_accel()
-        self.statusValueLabel.set_text("Done")
+        x = run_label_image_no_accel(self.imagePath)
         self.modelNameLabel.set_text(x[0])
         self.inferenceValueLabel.set_text(str("%.2f" % (float(x[1])) + " ms"))
         self.set_returned_entrys(x)
@@ -186,12 +191,12 @@ class SwitchLabelImage(Gtk.Window):
 
     def run_inference_npu(self, window):
         self.set_initial_entrys()
-        self.statusValueLabel.set_text("Running...")
+        self.modelNameLabel.set_text("")
+        self.inferenceValueLabel.set_text("Running...")
         while Gtk.events_pending():
             Gtk.main_iteration()
         print ("Running Inference on {0}".format(self.acceleration))
-        x = run_label_image_accel()
-        self.statusValueLabel.set_text("Done.")
+        x = run_label_image_accel(self.imagePath)
         self.modelNameLabel.set_text(x[0])
         self.inferenceValueLabel.set_text(str("%.2f" % (float(x[1])) + " ms"))
         self.set_returned_entrys(x)
