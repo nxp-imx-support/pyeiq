@@ -39,15 +39,14 @@ The procedures described in this document target a GNU/Linux Distribution Ubuntu
 ~/pyeiq$ virtualenv env
 ~/pyeiq$ source env/bin/activate
 ```
-   * Generate the wheel (_.whl_) file format:
+   * Generate the PyeIQ package:
    ```console
    (env) ~/pyeiq# python3 setup.py sdist bdist_wheel
    ```
-  * Copy the wheel file to the board:
+  * Copy the package to the board:
   ```console
-  (env) ~/pyeiq$ scp dist/eiq-1.0.tar.gz root@<boards_IP>:~
+  (env) ~/pyeiq$ scp dist/eiq-<version>.tar.gz root@<boards_IP>:~
   ```
-  Change the _**<boards_IP>**_ for the actually IP Address.
 
 3. To deactivate the virtual environment:
 ```console
@@ -59,7 +58,7 @@ The procedures described in this document target a GNU/Linux Distribution Ubuntu
 
 1. Install the PyeIQ Wheel file in the board:
 ```console
-root@imx8qmmek:~# pip3 install eiq-1.0.tar.gz
+root@imx8qmmek:~# pip3 install eiq-<version>.tar.gz
 ```
 
 2. Check the installation:
