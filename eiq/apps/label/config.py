@@ -1,3 +1,6 @@
+IMAGES_DRIVE_ID = "1ZEEWKH5r7Ifayx8bIdXVzrGW9Q4jC2pL"
+IMAGES_DRIVE_NAME = "bmp_examples"
+
 DEFAULT_TFLITE_IMAGE = "/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp"
 
 TFLITE_LABEL_IMAGE_ACCEL = "cd /usr/bin/tensorflow-lite-2.1.0/examples/; " \

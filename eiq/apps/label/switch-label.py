@@ -1,3 +1,4 @@
+import os
 from PIL import Image
 from socket import gethostname
 
@@ -6,12 +7,15 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GdkPixbuf
 
 from eiq.apps.label.parser import run_label_image_no_accel, run_label_image_accel
+from eiq.utils import args_parser, retrieve_from_id
+
+from eiq.apps.label import config
 
 class SwitchLabelImage(Gtk.Window):
 
     def __init__(self):
         Gtk.Window.__init__(self, title="Label Image Switch Demo")
-        
+        self.args = args_parser(image=True)
         self.set_default_size(1280, 720)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.connect('destroy', self.destroy)
@@ -22,6 +26,9 @@ class SwitchLabelImage(Gtk.Window):
         self.labelReturned = []
         self.valueReturnedBox = []
         self.labelReturnedBox = []
+
+        images_path = retrieve_from_id(config.IMAGES_DRIVE_ID, "switch-images", config.IMAGES_DRIVE_NAME + ".zip",unzip_flag=True)
+        images_path = os.path.join(images_path, config.IMAGES_DRIVE_NAME)
 
         if gethostname() == "imx8mpevk":
             self.acceleration = "NPU"
@@ -47,8 +54,10 @@ class SwitchLabelImage(Gtk.Window):
             self.valueReturnedBox.append(Gtk.Box())
             self.labelReturnedBox.append(Gtk.Box())
 
-        
-        img = Image.open('/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp')
+        if self.args.image is not None and os.path.exists(self.args.image):
+            img = Image.open(self.args.image)
+        else:
+            img = Image.open('/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp')
         new_img = img.resize( (507, 606) )
         new_img.save( 'test.png', 'png')
 
