@@ -16,14 +16,14 @@
   (env) ~/pyeiq/eiq/train$ python3 train.py --epochs=50
   ```
 
-    This generate (_.pb_) and (_.h5_) models in `output/fire_detection.model/` folder.
+    This generate (_.pb_) and (_.h5_) models in *output/fire_detection.model/* folder.
 
   * To convert the Keras (_.h5_) model to the TensorFlow Lite model, run:
   ```console
   (env) ~/pyeiq/eiq/train$ python3 convert_h5_to_tflite.py
   ```
 
-    This generates a (.tflite) model in `output/fire_detection.model/`.
+    This generates a (.tflite) model in *output/fire_detection.model/*.
 
   * Deploy this model to the board and then:
   ```console
