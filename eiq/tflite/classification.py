@@ -128,7 +128,7 @@ class eIQObjectDetection(object):
 
             self.annotate_objects(frame, results, self.label, className)
 
-            opencv.imshow("eIQ PyTflite 2.1 - SSD Model", frame)
+            opencv.imshow(config.TITLE_OBJECT_DETECTION_CAMERA, frame)
             if (opencv.waitKey(1) & 0xFF == ord('q')):
                 break
 
@@ -315,7 +315,7 @@ class eIQFireDetectionCamera(object):
             opencv.putText(frame, self.message, (50, 50),
                             opencv.FONT_HERSHEY_SIMPLEX, 1, self.color, 2)
 
-            opencv.imshow("eIQ PyTflite 2.1 - " + self.name, frame)
+            opencv.imshow(config.TITLE_FIRE_DETECTION_CAMERA, frame)
             if (opencv.waitKey(1) & 0xFF == ord('q')):
                 break
 
@@ -421,7 +421,7 @@ class eIQObjectDetectionOpenCV(object):
             objs = self.get_output()
             opencv_im = self.append_objs_to_img(opencv_im, objs, labels)
 
-            opencv.imshow(self.name, opencv_im)
+            opencv.imshow(config.TITLE_OBJECT_DETECTION_OPENCV, opencv_im)
             if opencv.waitKey(1) & 0xFF == ord('q'):
                 break
 
