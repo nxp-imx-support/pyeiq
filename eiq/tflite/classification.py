@@ -114,12 +114,10 @@ class eIQObjectDetection(object):
 
     def run(self):
         self.start()
-
         lin = open(self.label).read().strip().split("\n")
         className = [r[r.find(" ") + 1:].split(",")[0] for r in lin]
 
         _, height, width, _ = self.input_details[0]['shape']
-
         while True:
             ret, frame = self.video.read()
             resized_frame = opencv.resize(frame, (width, height))
@@ -131,7 +129,6 @@ class eIQObjectDetection(object):
             opencv.imshow(config.TITLE_OBJECT_DETECTION_CAMERA, frame)
             if (opencv.waitKey(1) & 0xFF == ord('q')):
                 break
-
         opencv.destroyAllWindows()
 
 
@@ -279,17 +276,12 @@ class eIQFireDetectionCamera(object):
 
     def detect_fire(self, image):
         img = resize_image(self.input_details, image, use_opencv=True)
-
         if self.input_details[0]['dtype'] == np.float32:
             img = np.array(img, dtype=np.float32) / 255.0
 
         self.interpreter.set_tensor(self.input_details[0]['index'], img)
         inference.inference(self.interpreter)
-
-        # The function `get_tensor()` returns a copy of the tensor data.
-        # Use `tensor()` in order to get a pointer to the tensor.
         output_data = self.interpreter.get_tensor(self.output_details[0]['index'])
-
         return np.argmax(output_data)
 
     def start(self):
@@ -304,7 +296,6 @@ class eIQFireDetectionCamera(object):
 
         while True:
             ret, frame = self.video.read()
-
             if self.detect_fire(frame) == 0:
                 self.message = "No Fire"
                 self.color = (0, 255, 0)
@@ -314,11 +305,9 @@ class eIQFireDetectionCamera(object):
 
             opencv.putText(frame, self.message, (50, 50),
                             opencv.FONT_HERSHEY_SIMPLEX, 1, self.color, 2)
-
             opencv.imshow(config.TITLE_FIRE_DETECTION_CAMERA, frame)
             if (opencv.waitKey(1) & 0xFF == ord('q')):
                 break
-
         opencv.destroyAllWindows()
 
 
@@ -488,7 +477,7 @@ class eIQObjectDetectionGStreamer(object):
     def avg_fps_counter(self, window_size):
         window = collections.deque(maxlen=window_size)
         prev = time.monotonic()
-        yield 0.0  # First fps value.
+        yield 0.0
 
         while True:
             curr = time.monotonic()
@@ -559,16 +548,14 @@ class eIQObjectDetectionGStreamer(object):
 
     def run(self):
         if not has_svgwrite:
-            sys.exit(
-                "The module svgwrite needed to run this demo was not found. If you want to install it type 'pip3 install svgwrite' at your terminal. Exiting..."
-            )
+            sys.exit("The module svgwrite needed to run this demo was not " \
+                     "found. If you want to install it type 'pip3 install " \
+                     " svgwrite' at your terminal. Exiting...")
 
         self.start()
         labels = self.load_labels(self.label)
-
         w, h, _ = self.input_image_size()
         inference_size = (w, h)
-        # Average fps over last 30 frames.
         fps_counter = self.avg_fps_counter(30)
 
         def user_callback(input_tensor, src_size, inference_box):
@@ -576,8 +563,6 @@ class eIQObjectDetectionGStreamer(object):
             start_time = time.monotonic()
             self.set_input(input_tensor)
             inference.inference(self.interpreter)
-            # For larger input image sizes, use the
-            # edgetpu.classification.engine for better performance
             objs = self.get_output()
             end_time = time.monotonic()
             text_lines = [
