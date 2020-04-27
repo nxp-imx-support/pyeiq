@@ -129,24 +129,26 @@ class SwitchLabelImage(Gtk.Window):
             self.valueReturned[i].set_text(str("%.2f" % (float(value[2+i][0])*100))+"%")
 
     def run_inference_cpu(self, window):
-        #TODO: the next two lines do not work
         self.set_initial_entrys()
         self.statusValueLabel.set_text("Running...")
+        while Gtk.events_pending():
+            Gtk.main_iteration()
         print ("Running Inference on CPU")
         x = run_label_image_no_accel()
-        self.statusValueLabel.set_text("done.")
+        self.statusValueLabel.set_text("Done")
         self.modelNameLabel.set_text(x[0])
         self.inferenceValueLabel.set_text(str("%.2f" % (float(x[1])) + " ms"))
         self.set_returned_entrys(x)
         print(x)
 
     def run_inference_npu(self, window):
-        #TODO: the next two lines do not work
         self.set_initial_entrys()
         self.statusValueLabel.set_text("Running...")
+        while Gtk.events_pending():
+            Gtk.main_iteration()
         print ("Running Inference on {0}".format(self.acceleration))
         x = run_label_image_accel()
-        self.statusValueLabel.set_text("done.")
+        self.statusValueLabel.set_text("Done.")
         self.modelNameLabel.set_text(x[0])
         self.inferenceValueLabel.set_text(str("%.2f" % (float(x[1])) + " ms"))
         self.set_returned_entrys(x)
