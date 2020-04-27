@@ -10,14 +10,16 @@
 ## References:
 ## https://github.com/ARM-software/ML-examples/tree/master/pyarmnn-fire-detection
 
-from eiq.armnn import config
-from timeit import default_timer as timer
-import pyarmnn as ann
-import numpy as np
-import cv2
 import argparse
 from pkg_resources import parse_version
+from timeit import default_timer as timer
+
+import cv2
+import numpy as np
+import pyarmnn as ann
 from pyarmnn import __version__ as pyarmnn_version
+
+from eiq.armnn import config
 
 assert parse_version(pyarmnn_version) >= parse_version('19.11.0'), \
     "This demo requires pyarmnn version >= 19.11.0"
