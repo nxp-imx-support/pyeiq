@@ -17,6 +17,10 @@ class SwitchLabelImage(Gtk.Window):
         
         grid = Gtk.Grid(row_spacing = 10, column_spacing = 10, border_width = 18,)
         self.add(grid)
+        self.valueReturned = []
+        self.labelReturned = []
+        self.valueReturnedBox = []
+        self.labelReturnedBox = []
         grid.set_column_homogeneous(True)
         grid.set_row_homogeneous(True)
         
@@ -30,29 +34,11 @@ class SwitchLabelImage(Gtk.Window):
         inferenceValueBox = Gtk.Box()
         imageBox = Gtk.Box()
 
-        valueReturnedBox_0 = Gtk.Box()
-        valueReturnedBox_1 = Gtk.Box()
-        valueReturnedBox_2 = Gtk.Box()
-        valueReturnedBox_3 = Gtk.Box()
-        valueReturnedBox_4 = Gtk.Box()
-
-        labelReturnedBox_0 = Gtk.Box()
-        labelReturnedBox_1 = Gtk.Box()
-        labelReturnedBox_2 = Gtk.Box()
-        labelReturnedBox_3 = Gtk.Box()
-        labelReturnedBox_4 = Gtk.Box()
-
-        self.valueReturned_0 = Gtk.Entry()
-        self.valueReturned_1 = Gtk.Entry()
-        self.valueReturned_2 = Gtk.Entry()
-        self.valueReturned_3 = Gtk.Entry()
-        self.valueReturned_4 = Gtk.Entry()
-
-        self.labelReturned_0 = Gtk.Label()
-        self.labelReturned_1 = Gtk.Label()
-        self.labelReturned_2 = Gtk.Label()
-        self.labelReturned_3 = Gtk.Label()
-        self.labelReturned_4 = Gtk.Label()
+        for i in range(5):
+            self.valueReturned.append(Gtk.Entry())
+            self.labelReturned.append(Gtk.Label())
+            self.valueReturnedBox.append(Gtk.Box())
+            self.labelReturnedBox.append(Gtk.Box())
 
         
         img = Image.open('/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp')
@@ -89,17 +75,11 @@ class SwitchLabelImage(Gtk.Window):
         inferenceBox.pack_start(inferenceLabel, True, True, 0)
         inferenceValueBox.pack_start(self.inferenceValueLabel, True, True, 0)
 
-        labelReturnedBox_0.pack_start(self.labelReturned_0, True, True, 0)
-        labelReturnedBox_1.pack_start(self.labelReturned_1, True, True, 0)
-        labelReturnedBox_2.pack_start(self.labelReturned_2, True, True, 0)
-        labelReturnedBox_3.pack_start(self.labelReturned_3, True, True, 0)
-        labelReturnedBox_4.pack_start(self.labelReturned_4, True, True, 0)
 
-        valueReturnedBox_0.pack_start(self.valueReturned_0, True, True, 0)
-        valueReturnedBox_1.pack_start(self.valueReturned_1, True, True, 0)
-        valueReturnedBox_2.pack_start(self.valueReturned_2, True, True, 0)
-        valueReturnedBox_3.pack_start(self.valueReturned_3, True, True, 0)
-        valueReturnedBox_4.pack_start(self.valueReturned_4, True, True, 0)
+        for i in range(5):
+            self.labelReturnedBox[i].pack_start(self.labelReturned[i], True, True, 0)
+            self.valueReturnedBox[i].pack_start(self.valueReturned[i], True, True, 0)
+
         imageBox.pack_start(image, True, True, 0)
 
         cpu_button = Gtk.Button(label="CPU")
@@ -117,17 +97,9 @@ class SwitchLabelImage(Gtk.Window):
         grid.attach(resultBox, 6, 3, 1, 1)
         grid.attach(percentageBox, 7, 3, 1, 1)
 
-        grid.attach(labelReturnedBox_0, 6, 4, 1, 1)
-        grid.attach(labelReturnedBox_1, 6, 5, 1, 1)
-        grid.attach(labelReturnedBox_2, 6, 6, 1, 1)
-        grid.attach(labelReturnedBox_3, 6, 7, 1, 1)
-        grid.attach(labelReturnedBox_4, 6, 8, 1, 1)
-
-        grid.attach(valueReturnedBox_0, 7, 4, 1, 1)
-        grid.attach(valueReturnedBox_1, 7, 5, 1, 1)
-        grid.attach(valueReturnedBox_2, 7, 6, 1, 1)
-        grid.attach(valueReturnedBox_3, 7, 7, 1, 1)
-        grid.attach(valueReturnedBox_4, 7, 8, 1, 1)
+        for i in range(5):
+            grid.attach(self.labelReturnedBox[i], 6, (4+i), 1, 1)
+            grid.attach(self.valueReturnedBox[i], 7, (4+i), 1, 1)
 
         grid.attach(statusBox, 3, 11, 1, 1)
         grid.attach(statusValueBox, 4, 11, 1, 1)
@@ -137,48 +109,18 @@ class SwitchLabelImage(Gtk.Window):
         self.show_all()
 
     def set_initial_entrys(self):
-        self.valueReturned_0.set_editable(False)
-        self.valueReturned_0.set_can_focus(False)
-        self.valueReturned_0.set_text("0%")
-        self.valueReturned_0.set_alignment(xalign=0)
-        self.valueReturned_0.set_progress_fraction(-1)
-
-        self.valueReturned_1.set_editable(False)
-        self.valueReturned_1.set_can_focus(False)
-        self.valueReturned_1.set_text("0%")
-        self.valueReturned_1.set_alignment(xalign=0)
-        self.valueReturned_1.set_progress_fraction(-1)
-
-        self.valueReturned_2.set_editable(False)
-        self.valueReturned_2.set_can_focus(False)
-        self.valueReturned_2.set_text("0%")
-        self.valueReturned_2.set_alignment(xalign=0)
-        self.valueReturned_2.set_progress_fraction(-1)
-
-        self.valueReturned_3.set_editable(False)
-        self.valueReturned_3.set_can_focus(False)
-        self.valueReturned_3.set_text("0%")
-        self.valueReturned_3.set_alignment(xalign=0)
-        self.valueReturned_3.set_progress_fraction(-1)
-
-        self.valueReturned_4.set_editable(False)
-        self.valueReturned_4.set_can_focus(False)
-        self.valueReturned_4.set_text("0%")
-        self.valueReturned_4.set_alignment(xalign=0)
-        self.valueReturned_4.set_progress_fraction(-1)
+        for i in range(5):
+            self.valueReturned[i].set_editable(False)
+            self.valueReturned[i].set_can_focus(False)
+            self.valueReturned[i].set_text("0%")
+            self.valueReturned[i].set_alignment(xalign=0)
+            self.valueReturned[i].set_progress_fraction(-1)
 
     def set_returned_entrys(self, value):
-        self.labelReturned_0.set_text(str(value[2][2]))
-        self.labelReturned_1.set_text(str(value[3][2]))
-        self.labelReturned_2.set_text(str(value[4][2]))
-        self.labelReturned_3.set_text(str(value[5][2]))
-        self.labelReturned_4.set_text(str(value[6][2]))
-        #TODO: check why the bar is not updating
-        self.valueReturned_0.set_text(str("%.2f" % (float(value[2][0])*100))+"%")
-        self.valueReturned_1.set_text(str("%.2f" % (float(value[3][0])*100))+"%")
-        self.valueReturned_2.set_text(str("%.2f" % (float(value[4][0])*100))+"%")
-        self.valueReturned_3.set_text(str("%.2f" % (float(value[5][0])*100))+"%")
-        self.valueReturned_4.set_text(str("%.2f" % (float(value[6][0])*100))+"%")
+        for i in range(5):
+            self.labelReturned[i].set_text(str(value[2+i][2]))
+            #TODO: check why the bar is not updating
+            self.valueReturned[i].set_text(str("%.2f" % (float(value[2+i][0])*100))+"%")
 
     def run_inference_cpu(self, window):
         #TODO: the next two lines do not work
