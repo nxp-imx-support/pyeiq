@@ -82,18 +82,18 @@ available demos in PyeIQ:
 
 |  Demo/App Name                    |  Demo/App Type   | i.MX Board | BSP Release | BSP Framework           | Inference | Status |  Notes                                      |
 |-----------------------------------|------------------|------------|-------------|-------------------------|-----------|--------|---------------------------------------------|
-| Label Image                       | File Based       | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  | ![build](https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg "Build")       |                                             |
-| Label Image Switch                | File Based       |            | _5.4_       | TensorFlow Lite _2.1.0_ |           |        |                                             |
+| Label Image                       | File Based       | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  | ![build](https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg "Build")       | -
+| Label Image Switch                | File Based       | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  | ![build](https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg "Build")       | -
 | Object Detection                  | SSD/Camera Based | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  | ![build](https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg "Build")       | Works with low accuracy. Need better model. |
 | Object Detection OpenCV           | SSD/Camera Based | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  | ![build](https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg "Build")       | Higher accuracy than above one.             |
-| Object Detection Native GStreamer | SSD/Camera Based | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  |        | Fixing undetermined GStreamer hangs.        |
-| Object Detection Yolov3           | SSD/File Based   | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  |        | Pending issues.                             |
-| Object Detection Yolov3           | SSD/Camera Based | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  |        | Pending issues.                             |
-| Fire Detection                    | File Based       | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  | ![build](https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg "Build")       |                                             |
-| Fire Detection                    | Camera Based     | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  | ![build](https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg "Build")       |                                             |
-| Fire Detection                    | Camera Based     |            | _5.4_       | PyArmNN _19.08_         |           |        | Requires _19.11_                            |
-| Coral Posenet                     |  Camera Based    |            |             |                         |           |        | Ongoing                                     |
-| NEO DLR                           | Camera Based     |            |             |                         |           |        | Ongoing                                     |
+| Object Detection Native GStreamer | SSD/Camera Based | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  | -       | Fixing undetermined GStreamer hangs.        |
+| Object Detection Yolov3           | SSD/File Based   | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  | -       | Pending issues.                             |
+| Object Detection Yolov3           | SSD/Camera Based | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  | -       | Pending issues.                             |
+| Fire Detection                    | File Based       | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  | ![build](https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg "Build")       | -                                            |
+| Fire Detection                    | Camera Based     | QM, MPlus  | _5.4_       | TensorFlow Lite _2.1.0_ | GPU, NPU  | ![build](https://img.shields.io/travis/asciidoctor/jekyll-asciidoc/master.svg "Build")       | -                                            |
+| Fire Detection                    | Camera Based     | -           | _5.4_       | PyArmNN _19.08_         | -          | -       | Requires _19.11_                            |
+| Coral Posenet                     |  Camera Based    | -           | -            | -                        | -          | -       | Ongoing                                     |
+| NEO DLR                           | Camera Based     | -           | -            | -                        | -          | -       | Ongoing                                     |
 
 1. To run the demos:
     * Choose the demo and execute it:
