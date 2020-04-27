@@ -1,3 +1,6 @@
+# Copyright 2020 NXP Semiconductors
+# SPDX-License-Identifier: BSD-3-Clause
+
 TMP_FILE_PATH = "eiq"
 
 CHUNK_DEFAULT_SIZE = 32768
