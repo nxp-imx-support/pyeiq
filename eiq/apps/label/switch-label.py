@@ -1,3 +1,5 @@
+from PIL import Image
+
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GdkPixbuf
@@ -52,7 +54,13 @@ class SwitchLabelImage(Gtk.Window):
         self.labelReturned_3 = Gtk.Label()
         self.labelReturned_4 = Gtk.Label()
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("mediaplayer.jpg", 640, 480, True)
+        
+        img = Image.open('/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp')
+        new_img = img.resize( (640, 480) )
+        new_img.save( 'test.png', 'png')
+
+
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("test.png", 640, 480, True)
         image = Gtk.Image()
         image.set_from_pixbuf(pixbuf)
 
