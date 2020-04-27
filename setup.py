@@ -1,3 +1,6 @@
+# Copyright 2020 NXP Semiconductors
+# SPDX-License-Identifier: BSD-3-Clause
+
 import os
 from setuptools import setup, find_packages
 from eiq.utils import copy
