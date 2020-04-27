@@ -1,3 +1,6 @@
+# Copyright 2020 NXP Semiconductors
+# SPDX-License-Identifier: BSD-3-Clause
+
 import tensorflow as tf
 
 model = tf.keras.models.load_model(
