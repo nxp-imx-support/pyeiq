@@ -56,23 +56,23 @@ class SwitchLabelImage(Gtk.Window):
 
         
         img = Image.open('/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp')
-        new_img = img.resize( (640, 480) )
+        new_img = img.resize( (507, 606) )
         new_img.save( 'test.png', 'png')
 
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("test.png", 640, 480, True)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("test.png", 507, 606, True)
         image = Gtk.Image()
         image.set_from_pixbuf(pixbuf)
 
         self.set_initial_entrys()
 
-        statusLabel = Gtk.Label("Status: ")
+        statusLabel = Gtk.Label("STATUS")
         self.statusValueLabel = Gtk.Label("Not running")
-        modelLabel = Gtk.Label("Model: ")
+        modelLabel = Gtk.Label("MODEL NAME")
         self.modelNameLabel = Gtk.Label("")
-        resultLabel = Gtk.Label("Results: ")
-        percentageLabel = Gtk.Label("%")
-        inferenceLabel = Gtk.Label("Inference: ")
+        resultLabel = Gtk.Label("LABELS")
+        percentageLabel = Gtk.Label("RESULTS (%)")
+        inferenceLabel = Gtk.Label("INFERENCE TIME")
         self.inferenceValueLabel = Gtk.Label("")
 
         modelBox.pack_start(modelLabel, True, True, 0)
@@ -181,9 +181,9 @@ class SwitchLabelImage(Gtk.Window):
         self.statusValueLabel.set_text("Running...")
         print ("Running Inference on CPU")
         x = run_label_image_no_accel()
-        self.statusValueLabel.set_text("Finished.")
+        self.statusValueLabel.set_text("done.")
         self.modelNameLabel.set_text(x[0])
-        self.inferenceValueLabel.set_text(x[1])
+        self.inferenceValueLabel.set_text(str("%.2f" % (float(x[1])) + " ms"))
         self.set_returned_entrys(x)
         print(x)
 
@@ -193,9 +193,9 @@ class SwitchLabelImage(Gtk.Window):
         self.statusValueLabel.set_text("Running...")
         print ("Running Inference on NPU")
         x = run_label_image_accel()
-        self.statusValueLabel.set_text("Finished.")
+        self.statusValueLabel.set_text("done.")
         self.modelNameLabel.set_text(x[0])
-        self.inferenceValueLabel.set_text(x[1])
+        self.inferenceValueLabel.set_text(str("%.2f" % (float(x[1])) + " ms"))
         self.set_returned_entrys(x)
         print(x)
 
