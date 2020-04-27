@@ -172,7 +172,7 @@ class SwitchLabelImage(Gtk.Window):
         x = 0
         for i in value[2:]:
             self.labelReturned[x].set_text(str(i[2]))
-            #TODO: check why the bar is not updating
+            self.valueReturned[x].set_progress_fraction(float(i[0]))
             self.valueReturned[x].set_text(str("%.2f" % (float(i[0])*100))+"%")
             x = x + 1
 
