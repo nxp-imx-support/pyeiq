@@ -2,6 +2,9 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import os
+import pathlib
+import shutil
+import sys
 from setuptools import setup, find_packages
 from eiq.utils import copy
 
@@ -17,10 +20,18 @@ zip_safe=False)
 
 demos_dir = os.path.join(os.getcwd(), "eiq", "demos")
 apps_dir = os.path.join(os.getcwd(), "eiq", "apps")
+switch_label = "eiq/apps/label/switch-label.py"
 install_dir_base = os.path.join("/opt", "eiq")
 
 install_dir_demos = os.path.join(install_dir_base, "demos")
 install_dir_apps = os.path.join(install_dir_base, "apps")
 
 copy(install_dir_demos, demos_dir)
-copy(install_dir_apps, apps_dir)
+
+if not os.path.exists(install_dir_apps):
+    try:
+        pathlib.Path(install_dir_apps).mkdir(parents=True, exist_ok=True)
+    except OSError:
+        sys.exit("os.mkdir() function has failed: %s" % install_dir_apps)
+
+    shutil.copy(switch_label, install_dir_apps)
