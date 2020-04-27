@@ -1,3 +1,15 @@
+# Copyright 2020 jrosebr1
+#
+## Copyright 2020 NXP Semiconductors
+##
+## This train code was copied from jrosebr1 respecting its rights. All the
+## modified parts below are according to jrosebr1's LICENSE terms (MIT).
+##
+## SPDX-License-Identifier: BSD-3-Clause
+##
+## References:
+## https://github.com/jrosebr1
+
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.optimizers import SGD
 from tensorflow.keras.utils import to_categorical
