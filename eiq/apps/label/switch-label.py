@@ -66,13 +66,18 @@ class SwitchLabelImage(Gtk.Window):
 
         self.set_initial_entrys()
 
-        statusLabel = Gtk.Label("STATUS")
+        statusLabel = Gtk.Label()
+        statusLabel.set_markup("<b>STATUS</b>")
         self.statusValueLabel = Gtk.Label("Not running")
-        modelLabel = Gtk.Label("MODEL NAME")
+        modelLabel = Gtk.Label()
+        modelLabel.set_markup("<b>MODEL NAME</b>")
         self.modelNameLabel = Gtk.Label("")
-        resultLabel = Gtk.Label("LABELS")
-        percentageLabel = Gtk.Label("RESULTS (%)")
-        inferenceLabel = Gtk.Label("INFERENCE TIME")
+        resultLabel = Gtk.Label()
+        resultLabel.set_markup("<b>LABELS</b>")
+        percentageLabel = Gtk.Label()
+        percentageLabel.set_markup("<b>RESULTS (%)</b>")
+        inferenceLabel = Gtk.Label()
+        inferenceLabel.set_markup("<b>INFERENCE TIME</b>")
         self.inferenceValueLabel = Gtk.Label("")
 
         modelBox.pack_start(modelLabel, True, True, 0)
