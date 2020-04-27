@@ -1,4 +1,5 @@
 from PIL import Image
+from socket import gethostname
 
 import gi
 gi.require_version("Gtk", "3.0")
@@ -86,7 +87,10 @@ class SwitchLabelImage(Gtk.Window):
         cpu_button.connect("clicked", self.run_inference_cpu)
         grid.attach(cpu_button, 3, 0, 1, 1)
         
-        npu_button = Gtk.Button(label="NPU")
+        if gethostname() == "imx8mpevk":
+            npu_button = Gtk.Button(label="NPU")
+        else:
+            npu_button = Gtk.Button(label="GPU")
         npu_button.connect("clicked", self.run_inference_npu)
         grid.attach(npu_button, 4, 0, 1, 1)
 
