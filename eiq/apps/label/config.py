@@ -1,3 +1,6 @@
+# Copyright 2020 NXP Semiconductors
+# SPDX-License-Identifier: BSD-3-Clause
+
 IMAGES_DRIVE_ID = "12wRWlzYQp1ABp2hVuZcPiO5FipEy6HIJ"
 IMAGES_DRIVE_NAME = "bmp_examples"
 
