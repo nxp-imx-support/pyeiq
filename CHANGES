@@ -1,0 +1,9 @@
+1.0.0:
+    - Support demos based on TensorFlow Lite (2.1.0) and image classification.      
+    - Support inference running on GPU/NPU and CPU.
+    - Support file and camera as input data.
+    - Support SSD (Single Shot Detection).
+    - Support downloads on the fly (models, labels, dataset, etc).
+    - Support old eIQ demos from eiq_sample_apps CAF repository.
+    - Support model training for host PC.
+    - Support UI for switching inference between GPU/NPU/CPU on TensorFlow Lite.
