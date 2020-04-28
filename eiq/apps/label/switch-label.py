@@ -83,7 +83,6 @@ class SwitchLabelImage(Gtk.Window):
 
         statusLabel = Gtk.Label()
         statusLabel.set_markup("<b>STATUS</b>")
-        self.statusValueLabel = Gtk.Label("Not running")
         modelLabel = Gtk.Label()
         modelLabel.set_markup("<b>MODEL NAME</b>")
         self.modelNameLabel = Gtk.Label("")
@@ -101,7 +100,6 @@ class SwitchLabelImage(Gtk.Window):
         modelBox.pack_start(modelLabel, True, True, 0)
         modelNameBox.pack_start(self.modelNameLabel, True, True, 0)
         statusBox.pack_start(statusLabel, True, True, 0)
-        statusValueBox.pack_start(self.statusValueLabel, True, True, 0)
         resultBox.pack_start(resultLabel, True, True, 0)
         percentageBox.pack_start(percentageLabel, True, True, 0)
         inferenceBox.pack_start(inferenceLabel, True, True, 0)
@@ -115,7 +113,7 @@ class SwitchLabelImage(Gtk.Window):
 
         imageBox.pack_start(self.displayedImage, True, True, 0)
 
-        cpu_button = Gtk.Button(label="CPU")
+        cpu_button = Gtk.Button.new_with_label("CPU")
         cpu_button.connect("clicked", self.run_inference_cpu)
         grid.attach(cpu_button, 3, 0, 1, 1)
         npu_button = Gtk.Button(label=self.acceleration)
