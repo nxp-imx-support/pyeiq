@@ -109,10 +109,10 @@ class SwitchLabelImage(Gtk.Window):
         imageBox.pack_start(self.displayedImage, True, True, 0)
 
         cpu_button = Gtk.Button.new_with_label("CPU")
-        cpu_button.connect("clicked", self.run_inference_cpu)
+        cpu_button.connect("clicked", self.run_cpu_inference)
         grid.attach(cpu_button, 3, 0, 1, 1)
         npu_button = Gtk.Button(label=self.acceleration)
-        npu_button.connect("clicked", self.run_inference_npu)
+        npu_button.connect("clicked", self.run_npu_inference)
         grid.attach(npu_button, 4, 0, 1, 1)
 
         grid.attach(modelBox, 0, 5, 2, 1)
@@ -169,31 +169,30 @@ class SwitchLabelImage(Gtk.Window):
             self.valueReturned[x].set_text(str("%.2f" % (float(i[0])*100))+"%")
             x = x + 1
 
-    def run_inference_cpu(self, window):
+    def run_cpu_inference(self, window):
+        self.run_inference(accel=False)
+
+    def run_inference(self, accel):
         self.set_initial_entrys()
         self.modelNameLabel.set_text("")
         self.inferenceValueLabel.set_text("Running...")
         while Gtk.events_pending():
-            Gtk.main_iteration()
-        print ("Running Inference on CPU")
-        x = run_label_image_no_accel(self.imagePath)
+            Gtk.main_iteration_do(True)
+
+        if accel:
+            print ("Running Inference on {0}".format(self.acceleration))
+            x = run_label_image_accel(self.imagePath)
+        else:
+            print ("Running Inference on CPU")
+            x = run_label_image_no_accel(self.imagePath)
+
         self.modelNameLabel.set_text(x[0])
         self.inferenceValueLabel.set_text(str("%.2f" % (float(x[1])) + " ms"))
         self.set_returned_entrys(x)
         print(x)
 
-    def run_inference_npu(self, window):
-        self.set_initial_entrys()
-        self.modelNameLabel.set_text("")
-        self.inferenceValueLabel.set_text("Running...")
-        while Gtk.events_pending():
-            Gtk.main_iteration()
-        print ("Running Inference on {0}".format(self.acceleration))
-        x = run_label_image_accel(self.imagePath)
-        self.modelNameLabel.set_text(x[0])
-        self.inferenceValueLabel.set_text(str("%.2f" % (float(x[1])) + " ms"))
-        self.set_returned_entrys(x)
-        print(x)
+    def run_npu_inference(self, window):
+        self.run_inference(accel=True)
 
     def destroy(self, window):
         Gtk.main_quit()
