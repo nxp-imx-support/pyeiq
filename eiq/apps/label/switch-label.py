@@ -44,8 +44,6 @@ class SwitchLabelImage(Gtk.Window):
         grid.set_column_homogeneous(True)
         grid.set_row_homogeneous(True)
 
-        statusBox = Gtk.Box()
-        statusValueBox = Gtk.Box()
         modelBox = Gtk.Box()
         modelNameBox = Gtk.Box()
         resultBox = Gtk.Box()
@@ -81,8 +79,6 @@ class SwitchLabelImage(Gtk.Window):
         self.displayedImage.set_from_pixbuf(pixbuf)
         self.set_initial_entrys()
 
-        statusLabel = Gtk.Label()
-        statusLabel.set_markup("<b>STATUS</b>")
         modelLabel = Gtk.Label()
         modelLabel.set_markup("<b>MODEL NAME</b>")
         self.modelNameLabel = Gtk.Label("")
@@ -95,11 +91,10 @@ class SwitchLabelImage(Gtk.Window):
         self.inferenceValueLabel = Gtk.Label("")
         imageLabel = Gtk.Label()
         imageLabel.set_markup("<b>SELECT AN IMAGE</b>")
-        imageLabel.set_alignment(0, 1)
+        imageLabel.set_xalign(0.0)
 
         modelBox.pack_start(modelLabel, True, True, 0)
         modelNameBox.pack_start(self.modelNameLabel, True, True, 0)
-        statusBox.pack_start(statusLabel, True, True, 0)
         resultBox.pack_start(resultLabel, True, True, 0)
         percentageBox.pack_start(percentageLabel, True, True, 0)
         inferenceBox.pack_start(inferenceLabel, True, True, 0)
