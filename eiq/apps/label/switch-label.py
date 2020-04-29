@@ -136,7 +136,7 @@ class SwitchLabelImage(Gtk.Window):
             model = combo.get_model()
             imageName = model[iterr][0]
             print("Selected image: %s" % imageName)
-            self.imagePath = os.path.join(self.images_path, imageName)
+            self.image = os.path.join(self.images_path, imageName)
             self.set_displayed_image(os.path.join(self.images_path, imageName))
 
     def get_bmp_images(self):
