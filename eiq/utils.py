@@ -36,6 +36,13 @@ except ImportError:
 
 
 class GoogleDriveDownloader:
+    '''
+    This Google Driver class was copied from Andrea Palazzi respecting its rights.
+    All the modified parts below are according to MIT's LICENSE terms.
+    
+    Reference:
+    https://github.com/ndrplz/google-drive-downloader/blob/master/LICENSE
+    '''
     CHUNK_SIZE = config.CHUNK_DEFAULT_SIZE
     DOWNLOAD_URL = config.REGULAR_DOWNLOAD_URL
     @staticmethod
