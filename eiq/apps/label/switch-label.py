@@ -22,7 +22,6 @@ class SwitchLabelImage(Gtk.Window):
         self.args = args_parser(image=True)
         self.set_default_size(1280, 720)
         self.set_position(Gtk.WindowPosition.CENTER)
-        self.connect('destroy', self.destroy)
 
         grid = Gtk.Grid(row_spacing = 10, column_spacing = 10, border_width = 18,)
         self.add(grid)
@@ -131,8 +130,6 @@ class SwitchLabelImage(Gtk.Window):
         grid.attach(imageMapBox, 0, 3, 2, 1)
         grid.attach(imageBox, 2, 1, 4, 10)
 
-        self.show_all()
-
     def set_displayed_image(self, image):
         new_img = Image.open(image).resize( (507, 606) )
         new_img.save( 'test.png', 'png')
@@ -201,11 +198,10 @@ class SwitchLabelImage(Gtk.Window):
         thread.daemon = True
         thread.start()
 
-    def destroy(self, window):
-        Gtk.main_quit()
-
 def main():
     app = SwitchLabelImage()
+    app.connect("destroy", Gtk.main_quit)
+    app.show_all()
     Gtk.main()
 
 
