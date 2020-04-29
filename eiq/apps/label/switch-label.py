@@ -8,7 +8,7 @@ import threading
 
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, GdkPixbuf
+from gi.repository import Gtk, GdkPixbuf, GLib
 
 from eiq.apps.label.parser import run_label_image_no_accel, run_label_image_accel
 from eiq.utils import args_parser, retrieve_from_id
@@ -166,7 +166,7 @@ class SwitchLabelImage(Gtk.Window):
             self.valueReturned[x].set_text(str("%.2f" % (float(i[0])*100))+"%")
             x = x + 1
 
-    def set_widgets_to_inference(self):
+    def set_pre_inference(self):
         self.set_initial_entrys()
         self.modelNameLabel.set_text("")
         self.inferenceValueLabel.set_text("Running...")
@@ -174,9 +174,19 @@ class SwitchLabelImage(Gtk.Window):
         self.cpu_button.set_sensitive(False)
         self.npu_button.set_sensitive(False)
 
-    def run_cpu_inference(self, window):
-        self.set_widgets_to_inference()
+    def set_post_inference(self, x):
+        self.modelNameLabel.set_text(x[0])
+        self.inferenceValueLabel.set_text(str("%.2f" % (float(x[1])) + " ms"))
+        self.set_returned_entrys(x)
+        self.imageComboBox.set_sensitive(True)
+        self.cpu_button.set_sensitive(True)
+        self.npu_button.set_sensitive(True)
 
+        for i in x:
+            print(i)
+
+    def run_cpu_inference(self, window):
+        self.set_pre_inference()
         thread = threading.Thread(target=self.run_inference, args=(False,))
         thread.daemon = True
         thread.start()
@@ -189,17 +199,10 @@ class SwitchLabelImage(Gtk.Window):
             print ("Running Inference on CPU")
             x = run_label_image_no_accel(self.image)
 
-        self.modelNameLabel.set_text(x[0])
-        self.inferenceValueLabel.set_text(str("%.2f" % (float(x[1])) + " ms"))
-        self.set_returned_entrys(x)
-        self.imageComboBox.set_sensitive(True)
-        self.cpu_button.set_sensitive(True)
-        self.npu_button.set_sensitive(True)
-        print(x)
+        GLib.idle_add(self.set_post_inference, x)
 
     def run_npu_inference(self, window):
-        self.set_widgets_to_inference()
-
+        self.set_pre_inference()
         thread = threading.Thread(target=self.run_inference, args=(True,))
         thread.daemon = True
         thread.start()
