@@ -30,6 +30,8 @@ class SwitchLabelImage(Gtk.Window):
         self.labelReturned = []
         self.valueReturnedBox = []
         self.labelReturnedBox = []
+        self.displayedImage = Gtk.Image()
+        self.image = config.DEFAULT_TFLITE_IMAGE
         self.imageMap = Gtk.ListStore(str)
 
         self.images_path = retrieve_from_id(config.IMAGES_DRIVE_ID, "switch-images", config.IMAGES_DRIVE_NAME + ".zip",unzip_flag=True)
@@ -50,11 +52,11 @@ class SwitchLabelImage(Gtk.Window):
         imageMapBox = Gtk.Box()
         imageBox = Gtk.Box()
 
-        imageComboBox = Gtk.ComboBox.new_with_model(self.imageMap)
-        imageComboBox.connect("changed", self.on_combo_image_changed)
+        self.imageComboBox = Gtk.ComboBox.new_with_model(self.imageMap)
+        self.imageComboBox.connect("changed", self.on_combo_image_changed)
         imageRenderedList = Gtk.CellRendererText()
-        imageComboBox.pack_start(imageRenderedList, True)
-        imageComboBox.add_attribute(imageRenderedList, "text", 0)
+        self.imageComboBox.pack_start(imageRenderedList, True)
+        self.imageComboBox.add_attribute(imageRenderedList, "text", 0)
 
         for i in range(5):
             self.valueReturned.append(Gtk.Entry())
@@ -65,14 +67,9 @@ class SwitchLabelImage(Gtk.Window):
         if self.args.image is not None and os.path.exists(self.args.image):
             img = Image.open(self.args.image)
         else:
-            img = Image.open('/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp')
-        self.imagePath = '/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp'
-        new_img = img.resize( (507, 606) )
-        new_img.save( 'test.png', 'png')
+            img = Image.open(self.image)
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("test.png", 507, 606, True)
-        self.displayedImage = Gtk.Image()
-        self.displayedImage.set_from_pixbuf(pixbuf)
+        self.set_displayed_image(self.image)
         self.set_initial_entrys()
 
         modelLabel = Gtk.Label()
@@ -96,7 +93,7 @@ class SwitchLabelImage(Gtk.Window):
         inferenceBox.pack_start(inferenceLabel, True, True, 0)
         inferenceValueBox.pack_start(self.inferenceValueLabel, True, True, 0)
         imageLabelBox.pack_start(imageLabel, True, True, 0)
-        imageMapBox.pack_start(imageComboBox, True, True, 0)
+        imageMapBox.pack_start(self.imageComboBox, True, True, 0)
 
         for i in range(5):
             self.labelReturnedBox[i].pack_start(self.labelReturned[i], True, True, 0)
@@ -104,12 +101,12 @@ class SwitchLabelImage(Gtk.Window):
 
         imageBox.pack_start(self.displayedImage, True, True, 0)
 
-        cpu_button = Gtk.Button.new_with_label("CPU")
-        cpu_button.connect("clicked", self.run_cpu_inference)
-        grid.attach(cpu_button, 3, 0, 1, 1)
-        npu_button = Gtk.Button.new_with_label(self.hw_accel)
-        npu_button.connect("clicked", self.run_npu_inference)
-        grid.attach(npu_button, 4, 0, 1, 1)
+        self.cpu_button = Gtk.Button.new_with_label("CPU")
+        self.cpu_button.connect("clicked", self.run_cpu_inference)
+        grid.attach(self.cpu_button, 3, 0, 1, 1)
+        self.npu_button = Gtk.Button.new_with_label(self.hw_accel)
+        self.npu_button.connect("clicked", self.run_npu_inference)
+        grid.attach(self.npu_button, 4, 0, 1, 1)
 
         grid.attach(modelBox, 0, 5, 2, 1)
         grid.attach(modelNameBox, 0, 6, 2, 1)
@@ -169,10 +166,16 @@ class SwitchLabelImage(Gtk.Window):
             self.valueReturned[x].set_text(str("%.2f" % (float(i[0])*100))+"%")
             x = x + 1
 
-    def run_cpu_inference(self, window):
+    def set_widgets_to_inference(self):
         self.set_initial_entrys()
         self.modelNameLabel.set_text("")
         self.inferenceValueLabel.set_text("Running...")
+        self.imageComboBox.set_sensitive(False)
+        self.cpu_button.set_sensitive(False)
+        self.npu_button.set_sensitive(False)
+
+    def run_cpu_inference(self, window):
+        self.set_widgets_to_inference()
 
         thread = threading.Thread(target=self.run_inference, args=(False,))
         thread.daemon = True
@@ -181,20 +184,21 @@ class SwitchLabelImage(Gtk.Window):
     def run_inference(self, accel):
         if accel:
             print ("Running Inference on {0}".format(self.hw_accel))
-            x = run_label_image_accel(self.imagePath)
+            x = run_label_image_accel(self.image)
         else:
             print ("Running Inference on CPU")
-            x = run_label_image_no_accel(self.imagePath)
+            x = run_label_image_no_accel(self.image)
 
         self.modelNameLabel.set_text(x[0])
         self.inferenceValueLabel.set_text(str("%.2f" % (float(x[1])) + " ms"))
         self.set_returned_entrys(x)
+        self.imageComboBox.set_sensitive(True)
+        self.cpu_button.set_sensitive(True)
+        self.npu_button.set_sensitive(True)
         print(x)
 
     def run_npu_inference(self, window):
-        self.set_initial_entrys()
-        self.modelNameLabel.set_text("")
-        self.inferenceValueLabel.set_text("Running...")
+        self.set_widgets_to_inference()
 
         thread = threading.Thread(target=self.run_inference, args=(True,))
         thread.daemon = True
