@@ -25,6 +25,7 @@ class SwitchLabelImage(Gtk.Window):
 
         grid = Gtk.Grid(row_spacing = 10, column_spacing = 10, border_width = 18,)
         self.add(grid)
+        self.hw_accel = self.get_hw_accel()
         self.valueReturned = []
         self.labelReturned = []
         self.valueReturnedBox = []
@@ -35,11 +36,6 @@ class SwitchLabelImage(Gtk.Window):
         self.images_path = os.path.join(self.images_path, config.IMAGES_DRIVE_NAME)
 
         self.get_bmp_images()
-
-        if gethostname() == "imx8mpevk":
-            self.acceleration = "NPU"
-        else:
-            self.acceleration = "GPU"
 
         grid.set_column_homogeneous(True)
         grid.set_row_homogeneous(True)
@@ -111,7 +107,7 @@ class SwitchLabelImage(Gtk.Window):
         cpu_button = Gtk.Button.new_with_label("CPU")
         cpu_button.connect("clicked", self.run_cpu_inference)
         grid.attach(cpu_button, 3, 0, 1, 1)
-        npu_button = Gtk.Button(label=self.acceleration)
+        npu_button = Gtk.Button.new_with_label(self.hw_accel)
         npu_button.connect("clicked", self.run_npu_inference)
         grid.attach(npu_button, 4, 0, 1, 1)
 
@@ -150,6 +146,12 @@ class SwitchLabelImage(Gtk.Window):
         for file in os.listdir(self.images_path):
             self.imageMap.append([file])
 
+    def get_hw_accel(self):
+        if gethostname() == "imx8mpevk":
+            return "NPU"
+
+        return "GPU"
+
     def set_initial_entrys(self):
         for i in range(5):
             self.labelReturned[i].set_text("")
@@ -178,7 +180,7 @@ class SwitchLabelImage(Gtk.Window):
 
     def run_inference(self, accel):
         if accel:
-            print ("Running Inference on {0}".format(self.acceleration))
+            print ("Running Inference on {0}".format(self.hw_accel))
             x = run_label_image_accel(self.imagePath)
         else:
             print ("Running Inference on CPU")
