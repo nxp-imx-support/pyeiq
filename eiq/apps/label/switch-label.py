@@ -4,6 +4,7 @@
 import os
 from PIL import Image
 from socket import gethostname
+import threading
 
 import gi
 gi.require_version("Gtk", "3.0")
@@ -170,15 +171,15 @@ class SwitchLabelImage(Gtk.Window):
             x = x + 1
 
     def run_cpu_inference(self, window):
-        self.run_inference(accel=False)
-
-    def run_inference(self, accel):
         self.set_initial_entrys()
         self.modelNameLabel.set_text("")
         self.inferenceValueLabel.set_text("Running...")
-        while Gtk.events_pending():
-            Gtk.main_iteration_do(True)
 
+        thread = threading.Thread(target=self.run_inference, args=(False,))
+        thread.daemon = True
+        thread.start()
+
+    def run_inference(self, accel):
         if accel:
             print ("Running Inference on {0}".format(self.acceleration))
             x = run_label_image_accel(self.imagePath)
@@ -192,7 +193,13 @@ class SwitchLabelImage(Gtk.Window):
         print(x)
 
     def run_npu_inference(self, window):
-        self.run_inference(accel=True)
+        self.set_initial_entrys()
+        self.modelNameLabel.set_text("")
+        self.inferenceValueLabel.set_text("Running...")
+
+        thread = threading.Thread(target=self.run_inference, args=(True,))
+        thread.daemon = True
+        thread.start()
 
     def destroy(self, window):
         Gtk.main_quit()
