@@ -65,9 +65,8 @@ class SwitchLabelImage(Gtk.Window):
             self.labelReturnedBox.append(Gtk.Box())
 
         if self.args.image is not None and os.path.exists(self.args.image):
-            img = Image.open(self.args.image)
-        else:
-            img = Image.open(self.image)
+            if str(self.args.image).endswith(".bmp"):
+                self.image = self.args.image
 
         self.set_displayed_image(self.image)
         self.set_initial_entrys()
