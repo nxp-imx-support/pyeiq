@@ -19,7 +19,7 @@ from eiq.utils import args_parser, retrieve_from_id
 class SwitchLabelImage(Gtk.Window):
 
     def __init__(self):
-        Gtk.Window.__init__(self, title="Label Image Switch Demo")
+        Gtk.Window.__init__(self, title=config.TITLE_LABEL_IMAGE_SWITCH)
         self.args = args_parser(image=True)
         self.set_default_size(1280, 720)
         self.set_position(Gtk.WindowPosition.CENTER)
