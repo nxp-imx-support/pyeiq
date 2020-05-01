@@ -18,6 +18,7 @@ class MLPlayer(Gtk.Window):
         self.description = Gtk.Label.new(config.DEFAULT_DEMOS_DESCRIPTION)
         self.image = config.DEFAULT_IMAGE
 
+        self.displayed_image = Gtk.Image()
         self.grid = Gtk.Grid(
             row_spacing = 10, column_spacing = 10,
             border_width = 18, expand=True
@@ -68,16 +69,24 @@ class MLPlayer(Gtk.Window):
         filter_any.set_name("Any files")
         filter_any.add_pattern("*")
         dialog.add_filter(filter_any)
-        
+
     def add_image_box(self, col=0, row=0, width=1, height=1):
         image_box = Gtk.Box(
             orientation=Gtk.Orientation.VERTICAL,
             spacing=10, expand=True
         )
 
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+            config.DEFAULT_IMAGE,
+            config.DEFAULT_IMAGE_HEIGHT,
+            config.DEFAULT_IMAGE_WIDTH,
+        )
+        self.displayed_image.set_from_pixbuf(pixbuf)
+
         choose_image_button = Gtk.Button.new_with_label("Choose an image")
         choose_image_button.connect("clicked", self.on_choose_image_clicked)
         image_box.pack_start(choose_image_button, False, False, True)
+        image_box.pack_start(self.displayed_image, False, False, True)
 
         self.grid.attach(image_box, col, row, width, height)
 
@@ -92,7 +101,7 @@ class MLPlayer(Gtk.Window):
                     demos_list.append(demo)
 
         return demos_list
-                    
+
     def on_choose_image_clicked(self, widget):
         dialog = Gtk.FileChooserDialog(
             "Please choose an image",
@@ -111,6 +120,13 @@ class MLPlayer(Gtk.Window):
 
         if response == Gtk.ResponseType.OK:
             self.image = dialog.get_filename()
+
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
+                self.image,
+                config.DEFAULT_IMAGE_HEIGHT,
+                config.DEFAULT_IMAGE_WIDTH,
+            )
+            self.displayed_image.set_from_pixbuf(pixbuf)
         elif response == Gtk.ResponseType.CANCEL:
             pass
 

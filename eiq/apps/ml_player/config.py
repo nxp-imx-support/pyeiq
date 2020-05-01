@@ -4,6 +4,8 @@ DEFAULT_DEMOS_DIR = "/opt/eiq/demos"
 DEFAULT_DEMOS_DESCRIPTION = "Demos\nDescription"
 
 DEFAULT_IMAGE = "/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp"
+DEFAULT_IMAGE_HEIGHT = 400
+DEFAULT_IMAGE_WIDTH = 300
 
 # Gtk Widgets Alignment Constants
 ALIGN_LEFT = 0.0
