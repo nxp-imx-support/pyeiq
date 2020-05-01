@@ -4,6 +4,8 @@
 import re
 import subprocess
 
+from PIL import Image
+
 from eiq.apps import config
 
 
@@ -56,3 +58,10 @@ def run_label_image_accel(image_path: str = None):
     to_be_parsed_accel = run(True, image_path)
     to_be_parsed_accel_decoded = to_be_parsed_accel.decode('utf-8')
     return parser_cpu_gpu(to_be_parsed_accel_decoded, True)
+
+def convert_image_to_png(image: str, width: int = 640, height: int = 480):
+    image_name = "example.png"
+    img_converted = Image.open(image).resize((width, height))
+    img_converted.save(image_name, 'png')
+    return image_name
+    
