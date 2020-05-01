@@ -24,6 +24,9 @@ REGEX_GET_INTEGER_FLOAT = "\d+\.\d+|\d+"
 
 REGEX_GET_STRING = "[^a-zA-Z\s]"
 
+# Apps Titles
+TITLE_LABEL_IMAGE_SWITCH = "PyeIQ - Label Image Switch App"
+
 # ML Player
 
 MAIN_WINDOW_TITLE = "PyeIQ ML Player"

@@ -20,9 +20,6 @@ CAMERA_GSTREAMER_MODEL = "https://dl.google.com/coral/canned_models/all_models.t
 CAMERA_GSTREAMER_DEFAULT_MODEL = "mobilenet_ssd_v2_coco_quant_postprocess.tflite"
 CAMERA_GSTREAMER_DEFAULT_LABEL = "coco_labels.txt"
 
-# Apps Titles
-TITLE_LABEL_IMAGE_SWITCH = "PyeIQ - Label Image Switch App"
-
 # Demos Titles
 TITLE_OBJECT_DETECTION_CAMERA = "PyeIQ - Object Detection Camera"
 TITLE_OBJECT_DETECTION_OPENCV = "PyeIQ - Object Detection OpenCV"
