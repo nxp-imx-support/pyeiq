@@ -1,8 +1,10 @@
 import os
+import subprocess
+import threading
 
 import gi
 gi.require_versions({'GdkPixbuf': '2.0', 'Gtk': '3.0'})
-from gi.repository import GdkPixbuf, Gtk
+from gi.repository import GdkPixbuf, Gtk, GLib
 
 import config
 
@@ -23,8 +25,11 @@ class MLPlayer(Gtk.Window):
             row_spacing = 10, column_spacing = 10,
             border_width = 18, expand=True
         )
-        self.add(self.grid)
+        self.inference_results = Gtk.Label.new(None)
+        self.run_demo_button = Gtk.Button.new_with_label("Run Demo")
+        self.run_demo_button.connect("clicked", self.on_run_demo_clicked)
 
+        self.add(self.grid)
         self.add_demo_box(0,0,1,1)
         self.add_image_box(6, 0, 3, 3)
 
@@ -55,6 +60,7 @@ class MLPlayer(Gtk.Window):
         demos_description_frame.add(self.description)
         self.description.set_xalign(0.05)
         demos_box.pack_start(demos_description_frame, False, False, True)
+        demos_box.pack_start(self.run_demo_button, False, False, True)
 
         self.grid.attach(demos_box, col, row, width, height)
 
@@ -85,8 +91,14 @@ class MLPlayer(Gtk.Window):
 
         choose_image_button = Gtk.Button.new_with_label("Choose an image")
         choose_image_button.connect("clicked", self.on_choose_image_clicked)
+
+        inference_frame = Gtk.Frame.new("Inference Output")
+        inference_frame.set_label_align(config.ALIGN_CENTER, config.ALIGN_CENTER)
+        inference_frame.add(self.inference_results)
+
         image_box.pack_start(choose_image_button, False, False, True)
         image_box.pack_start(self.displayed_image, False, False, True)
+        image_box.pack_start(inference_frame, False, False, True)
 
         self.grid.attach(image_box, col, row, width, height)
 
@@ -137,6 +149,35 @@ class MLPlayer(Gtk.Window):
 
         if demo is not None:
             self.demo_to_run = demo
+
+    def on_run_demo_clicked(self, window):
+        self.set_pre_inference()
+
+        thread = threading.Thread(target=self.run_demo)
+        thread.daemon = True
+        thread.start()
+
+    def run_demo(self):
+        if self.demo_to_run is not None:
+            results = subprocess.check_output(
+                config.RUN_DEMO.format(self.demo_to_run, self.image),
+                stderr=subprocess.STDOUT,
+                shell=True
+            )
+            self.inference_results.set_text(results.decode('utf-8'))
+        else:
+            self.inference_results.set_text("No demo selected")
+
+        GLib.idle_add(self.set_post_inference)
+
+    def set_pre_inference(self):
+        self.run_demo_button.set_label("Running...")
+        self.run_demo_button.set_sensitive(False)
+
+    def set_post_inference(self):
+        self.run_demo_button.set_label("Run Demo")
+        self.run_demo_button.set_sensitive(True)
+
 
 def main():
     app = MLPlayer()
