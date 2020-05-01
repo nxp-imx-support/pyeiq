@@ -16,7 +16,7 @@ from eiq.apps.utils import run_label_image_no_accel, run_label_image_accel
 from eiq.utils import args_parser, retrieve_from_id
 
 
-class SwitchLabelImage(Gtk.Window):
+class eIQSwitchLabelImage(Gtk.Window):
 
     def __init__(self):
         Gtk.Window.__init__(self, title=config.TITLE_LABEL_IMAGE_SWITCH)
