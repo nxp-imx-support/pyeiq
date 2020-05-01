@@ -11,6 +11,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GdkPixbuf, GLib
 
 from eiq.apps import config
+from eiq.apps.utils import convert_image_to_png
 from eiq.apps.utils import run_label_image_no_accel, run_label_image_accel
 from eiq.utils import args_parser, retrieve_from_id
 
@@ -123,10 +124,8 @@ class SwitchLabelImage(Gtk.Window):
         grid.attach(imageBox, 2, 1, 4, 10)
 
     def set_displayed_image(self, image):
-        new_img = Image.open(image).resize( (507, 606) )
-        new_img.save( 'test.png', 'png')
-
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("test.png", 507, 606, True)
+        image_converted = convert_image_to_png(image)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(image_converted, 507, 606, True)
         self.displayedImage.set_from_pixbuf(pixbuf)
 
     def on_combo_image_changed(self, combo):
