@@ -6,7 +6,7 @@ import gi
 gi.require_versions({'GdkPixbuf': '2.0', 'Gtk': '3.0'})
 from gi.repository import GdkPixbuf, Gtk, GLib
 
-import config
+from eiq.apps import config
 
 
 class MLPlayer(Gtk.Window):
