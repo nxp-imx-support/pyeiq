@@ -10,10 +10,10 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GdkPixbuf, GLib
 
-from eiq.apps.label.parser import run_label_image_no_accel, run_label_image_accel
+from eiq.apps import config
+from eiq.apps.utils import run_label_image_no_accel, run_label_image_accel
 from eiq.utils import args_parser, retrieve_from_id
 
-from eiq.apps.label import config
 
 class SwitchLabelImage(Gtk.Window):
 
