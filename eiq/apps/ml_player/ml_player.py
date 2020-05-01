@@ -17,14 +17,20 @@ class MLPlayer(Gtk.Window):
         self.demos_list = self.get_demos()
         self.description = Gtk.Label.new(config.DEFAULT_DEMOS_DESCRIPTION)
 
-        self.grid = Gtk.Grid(row_spacing = 10, column_spacing = 10, border_width = 18, expand=True)
+        self.grid = Gtk.Grid(
+            row_spacing = 10, column_spacing = 10,
+            border_width = 18, expand=True
+        )
         self.add(self.grid)
 
         self.add_demo_box(0,0,1,1)
 
 
     def add_demo_box(self, col=0, row=0, width=1, height=1):
-        demos_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, expand=True)
+        demos_box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=10, expand=True
+        )
 
         demos_label = Gtk.Label.new(None)
         demos_label.set_markup("<b>Select a demo</b>")
@@ -40,7 +46,9 @@ class MLPlayer(Gtk.Window):
         demos_box.pack_start(demos_combo, False, False, True)
 
         demos_description_frame = Gtk.Frame.new("Demo Description")
-        demos_description_frame.set_label_align(config.ALIGN_CENTER, config.ALIGN_CENTER)
+        demos_description_frame.set_label_align(
+            config.ALIGN_CENTER, config.ALIGN_CENTER
+        )
         demos_description_frame.add(self.description)
         self.description.set_xalign(0.05)
         demos_box.pack_start(demos_description_frame, False, False, True)
