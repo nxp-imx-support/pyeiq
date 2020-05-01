@@ -1,0 +1,1 @@
+MAIN_WINDOW_TITLE = "PyeIQ ML Player"
