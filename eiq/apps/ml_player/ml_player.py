@@ -7,6 +7,7 @@ gi.require_versions({'GdkPixbuf': '2.0', 'Gtk': '3.0'})
 from gi.repository import GdkPixbuf, Gtk, GLib
 
 from eiq.apps import config
+from eiq.apps.utils import convert_image_to_png
 
 
 class MLPlayer(Gtk.Window):
@@ -81,9 +82,9 @@ class MLPlayer(Gtk.Window):
             orientation=Gtk.Orientation.VERTICAL,
             spacing=10, expand=True
         )
-
+        img_converted = convert_image_to_png(config.DEFAULT_IMAGE, 400, 300)
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
-            config.DEFAULT_IMAGE,
+            img_converted,
             config.DEFAULT_IMAGE_HEIGHT,
             config.DEFAULT_IMAGE_WIDTH,
         )
@@ -132,7 +133,7 @@ class MLPlayer(Gtk.Window):
 
         if response == Gtk.ResponseType.OK:
             self.image = dialog.get_filename()
-
+            self.image = convert_image_to_png(self.image)
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(
                 self.image,
                 config.DEFAULT_IMAGE_HEIGHT,
