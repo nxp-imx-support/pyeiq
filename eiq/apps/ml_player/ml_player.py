@@ -1,8 +1,8 @@
 import os
 
 import gi
-gi.require_version('Gtk','3.0')
-from gi.repository import Gtk
+gi.require_versions({'GdkPixbuf': '2.0', 'Gtk': '3.0'})
+from gi.repository import GdkPixbuf, Gtk
 
 import config
 
@@ -16,6 +16,7 @@ class MLPlayer(Gtk.Window):
         self.demo_to_run = None
         self.demos_list = self.get_demos()
         self.description = Gtk.Label.new(config.DEFAULT_DEMOS_DESCRIPTION)
+        self.image = config.DEFAULT_IMAGE
 
         self.grid = Gtk.Grid(
             row_spacing = 10, column_spacing = 10,
@@ -24,6 +25,7 @@ class MLPlayer(Gtk.Window):
         self.add(self.grid)
 
         self.add_demo_box(0,0,1,1)
+        self.add_image_box(6, 0, 3, 3)
 
 
     def add_demo_box(self, col=0, row=0, width=1, height=1):
@@ -55,6 +57,30 @@ class MLPlayer(Gtk.Window):
 
         self.grid.attach(demos_box, col, row, width, height)
 
+    def add_filters(self, dialog):
+        filter_images = Gtk.FileFilter()
+        filter_images.set_name("Image files")
+        for ext in GdkPixbuf.Pixbuf.get_formats():
+            filter_images.add_pattern("*." + str(ext.get_name()))
+        dialog.add_filter(filter_images)
+
+        filter_any = Gtk.FileFilter()
+        filter_any.set_name("Any files")
+        filter_any.add_pattern("*")
+        dialog.add_filter(filter_any)
+        
+    def add_image_box(self, col=0, row=0, width=1, height=1):
+        image_box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=10, expand=True
+        )
+
+        choose_image_button = Gtk.Button.new_with_label("Choose an image")
+        choose_image_button.connect("clicked", self.on_choose_image_clicked)
+        image_box.pack_start(choose_image_button, False, False, True)
+
+        self.grid.attach(image_box, col, row, width, height)
+
     def get_demos(self):
         demos_list = []
 
@@ -66,6 +92,29 @@ class MLPlayer(Gtk.Window):
                     demos_list.append(demo)
 
         return demos_list
+                    
+    def on_choose_image_clicked(self, widget):
+        dialog = Gtk.FileChooserDialog(
+            "Please choose an image",
+            self,
+            Gtk.FileChooserAction.OPEN,
+            (
+                Gtk.STOCK_CANCEL,
+                Gtk.ResponseType.CANCEL,
+                Gtk.STOCK_OPEN,
+                Gtk.ResponseType.OK,
+            ),
+        )
+        dialog.set_current_folder(os.getenv('HOME'))
+        self.add_filters(dialog)
+        response = dialog.run()
+
+        if response == Gtk.ResponseType.OK:
+            self.image = dialog.get_filename()
+        elif response == Gtk.ResponseType.CANCEL:
+            pass
+
+        dialog.destroy()
 
     def on_demos_combo_changed(self, combo):
         demo = combo.get_active_text()
