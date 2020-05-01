@@ -1,3 +1,5 @@
+import os
+
 import gi
 gi.require_version('Gtk','3.0')
 from gi.repository import Gtk
@@ -11,6 +13,50 @@ class MLPlayer(Gtk.Window):
         self.set_default_size(640, 480)
         self.set_position(Gtk.WindowPosition.CENTER)
 
+        self.demo_to_run = None
+        self.demos_list = self.get_demos()
+
+        self.grid = Gtk.Grid(row_spacing = 10, column_spacing = 10, border_width = 18, expand=True)
+        self.add(self.grid)
+
+        self.add_demo_box(0,0,1,1)
+
+
+    def add_demo_box(self, col=0, row=0, width=1, height=1):
+        demos_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10, expand=True)
+
+        demos_label = Gtk.Label.new(None)
+        demos_label.set_markup("<b>Select a demo</b>")
+        demos_label.set_xalign(config.ALIGN_LEFT)
+        demos_box.pack_start(demos_label, False, False, True)
+
+        # Create ComboBox to select demo
+        demos_combo = Gtk.ComboBoxText()
+        demos_combo.set_entry_text_column(0)
+        demos_combo.connect("changed", self.on_demos_combo_changed)
+        for demo in self.demos_list:
+            demos_combo.append_text(demo)
+        demos_box.pack_start(demos_combo, False, False, True)
+
+        self.grid.attach(demos_box, col, row, width, height)
+
+    def get_demos(self):
+        demos_list = []
+
+        if not os.path.isdir(config.DEFAULT_DEMOS_DIR):
+            demos_list.append("No PyeIQ demo found")
+        else:
+            for demo in os.listdir(config.DEFAULT_DEMOS_DIR):
+                if "image" in demo:
+                    demos_list.append(demo)
+
+        return demos_list
+
+    def on_demos_combo_changed(self, combo):
+        demo = combo.get_active_text()
+
+        if demo is not None:
+            self.demo_to_run = demo
 
 def main():
     app = MLPlayer()
