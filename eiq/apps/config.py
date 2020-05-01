@@ -24,6 +24,16 @@ REGEX_GET_INTEGER_FLOAT = "\d+\.\d+|\d+"
 
 REGEX_GET_STRING = "[^a-zA-Z\s]"
 
+SWITCH_MODEL_NAME = "<b>MODEL NAME</b>"
+
+SWITCH_LABELS = "<b>LABELS</b>"
+
+SWITCH_RESULTS = "<b>RESULTS (%)</b>"
+
+SWITCH_INFERENCE_TIME = "<b>INFERENCE TIME</b>"
+
+SWITCH_SELECT_IMAGE = "<b>SELECT AN IMAGE</b>"
+
 # Apps Titles
 
 TITLE_LABEL_IMAGE_SWITCH = "PyeIQ - Label Image Switch App"
