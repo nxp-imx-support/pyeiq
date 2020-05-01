@@ -1,6 +1,8 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
+# Switch Label Image
+
 IMAGES_DRIVE_ID = "12wRWlzYQp1ABp2hVuZcPiO5FipEy6HIJ"
 IMAGES_DRIVE_NAME = "bmp_examples"
 
@@ -22,3 +24,19 @@ REGEX_GET_INTEGER_FLOAT = "\d+\.\d+|\d+"
 
 REGEX_GET_STRING = "[^a-zA-Z\s]"
 
+# ML Player
+
+MAIN_WINDOW_TITLE = "PyeIQ ML Player"
+
+DEFAULT_DEMOS_DIR = "/opt/eiq/demos"
+DEFAULT_DEMOS_DESCRIPTION = "Demos\nDescription"
+
+DEFAULT_IMAGE = "/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp"
+DEFAULT_IMAGE_HEIGHT = 400
+DEFAULT_IMAGE_WIDTH = 300
+
+RUN_DEMO = "python3 /opt/eiq/demos/{} -i {}"
+
+ALIGN_LEFT = 0.0
+ALIGN_CENTER = 0.5
+ALIGN_RIGHT = 1.0
