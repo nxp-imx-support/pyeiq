@@ -21,6 +21,7 @@ class SwitchLabelImage(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title=config.TITLE_LABEL_IMAGE_SWITCH)
         self.args = args_parser(image=True)
+        self.name = self.__class__.__name__
         self.set_default_size(1280, 720)
         self.set_position(Gtk.WindowPosition.CENTER)
 
@@ -35,7 +36,8 @@ class SwitchLabelImage(Gtk.Window):
         self.image = config.DEFAULT_TFLITE_IMAGE
         self.imageMap = Gtk.ListStore(str)
 
-        self.images_path = retrieve_from_id(config.IMAGES_DRIVE_ID, "switch-images", config.IMAGES_DRIVE_NAME + ".zip",unzip_flag=True)
+        self.images_path = retrieve_from_id(config.IMAGES_DRIVE_ID, self.name,
+            config.IMAGES_DRIVE_NAME + ".zip",unzip_flag=True)
         self.images_path = os.path.join(self.images_path, config.IMAGES_DRIVE_NAME)
 
         self.get_bmp_images()
