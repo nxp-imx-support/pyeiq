@@ -21,6 +21,7 @@ CAMERA_GSTREAMER_DEFAULT_MODEL = "mobilenet_ssd_v2_coco_quant_postprocess.tflite
 CAMERA_GSTREAMER_DEFAULT_LABEL = "coco_labels.txt"
 
 # Demos Titles
+
 TITLE_OBJECT_DETECTION_CAMERA = "PyeIQ - Object Detection Camera"
 TITLE_OBJECT_DETECTION_OPENCV = "PyeIQ - Object Detection OpenCV"
 TITLE_FIRE_DETECTION_CAMERA = "PyeIQ - Fire Detection Camera"
