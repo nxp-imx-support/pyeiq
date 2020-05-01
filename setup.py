@@ -23,7 +23,7 @@ apps_dir = os.path.join(os.getcwd(), "eiq", "apps")
 base_dir = os.path.join("/opt", "eiq")
 demos_dir = os.path.join(os.getcwd(), "eiq", "demos")
 switch_label = "eiq/apps/label/switch-label.py"
-ml_player = "eiq/apps/label/ml_player.py"
+ml_player = "eiq/apps/ml_player/ml_player.py"
 
 install_dir_demos = os.path.join(base_dir, "demos")
 install_dir_apps = os.path.join(base_dir, "apps")
