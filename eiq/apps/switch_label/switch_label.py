@@ -208,7 +208,7 @@ class eIQSwitchLabelImage(Gtk.Window):
         thread.start()
 
 def main():
-    app = SwitchLabelImage()
+    app = eIQSwitchLabelImage()
     app.connect("destroy", Gtk.main_quit)
     app.show_all()
     Gtk.main()
