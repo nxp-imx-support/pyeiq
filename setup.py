@@ -22,8 +22,8 @@ zip_safe=False)
 apps_dir = os.path.join(os.getcwd(), "eiq", "apps")
 base_dir = os.path.join("/opt", "eiq")
 demos_dir = os.path.join(os.getcwd(), "eiq", "demos")
-switch_label = "eiq/apps/label/switch-label.py"
-ml_player = "eiq/apps/ml_player/ml_player.py"
+switch_label = "eiq/apps/switch_label/switch_label.py"
+images_player = "eiq/apps/images_player/images_player.py"
 
 install_dir_demos = os.path.join(base_dir, "demos")
 install_dir_apps = os.path.join(base_dir, "apps")
@@ -44,4 +44,4 @@ if not os.path.exists(install_dir_apps):
         sys.exit("pathlib.Path.mkdir() function has failed: %s : %s" % (install_dir_apps, e.strerror))
 
     shutil.copy(switch_label, install_dir_apps)
-    shutil.copy(ml_player, install_dir_apps)
+    shutil.copy(images_player, install_dir_apps)
