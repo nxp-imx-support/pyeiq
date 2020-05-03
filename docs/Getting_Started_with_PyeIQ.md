@@ -22,20 +22,23 @@ The procedures described in this document target a GNU/Linux Distribution Ubuntu
 ## Building the PyeIQ Package
 
 1. Clone the PyeIQ repository from CAF.
+```console
+~$ git clone https://source.codeaurora.org/external/imxsupport/pyeiq
+```
 
 2. Use _Virtualenv_ tool to create an isolated Python environment:
 ```console
 ~/pyeiq$ virtualenv env
 ~/pyeiq$ source env/bin/activate
 ```
-    * Generate the PyeIQ package:
-    ```console
-    (env) ~/pyeiq# python3 setup.py sdist bdist_wheel
-    ```
-    * Copy the package to the board:
-    ```console
-    (env) ~/pyeiq$ scp dist/eiq-<version>.tar.gz root@<boards_IP>:~
-    ```
+3. Generate the PyeIQ package:
+```console
+(env) ~/pyeiq# python3 setup.py sdist bdist_wheel
+```
+4. Copy the package to the board:
+```console
+(env) ~/pyeiq$ scp dist/eiq-<version>.tar.gz root@<boards_IP>:~
+```
 
 3. To deactivate the virtual environment:
 ```console
