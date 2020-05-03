@@ -24,6 +24,8 @@ The procedures described in this document target a GNU/Linux Distribution Ubuntu
 1. Clone the PyeIQ repository from CAF.
 ```console
 ~$ git clone https://source.codeaurora.org/external/imxsupport/pyeiq
+~$ cd pyeiq/
+~/pyeiq$ git checkout tag_v<latest_version>
 ```
 
 2. Use _Virtualenv_ tool to create an isolated Python environment:
