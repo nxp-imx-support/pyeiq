@@ -3,16 +3,22 @@
 PyeIQ gathers everything needed by itself. It provides a simplified way to run
 ML applications, which avoids the user spending time on preparing the environment.
 
+## Release Date
 
-| **i.MX Board** | **BSP Release**   | **Building Status** |
-|----------------|-------------------|---------------------|
-| 8 QM           | _5.4.3_2.0.0_     | **passing**         |
-| 8 MPlus        | _5.4.3_2.0.0_     | **passing**         |
-| 8 M Mini       | _5.4.3_2.0.0_     | -                   |
+| PyeIQ Version | Release Date | Note |
+|---------------|--------------|------|
+| tag_v1.0      | Apr 29, 2020 | -    |
+
+## BSP Support
+
+| **i.MX Board** | **BSP Release**   | **PyeIQ Version Support** | **Building Status** |
+|----------------|-------------------|---------------------------|---------------------|
+| 8 QM           | _5.4.3_2.0.0_     | tag_v1.0                  | **passing**         |
+| 8 MPlus        | _5.4.3_2.0.0_     | tag_v1.0                  | **passing**         |
+| 8 M Mini       | _5.4.3_2.0.0_     | tag_v1.0                  | -                   |
 
 
 ## Applications Status
-
 
 | Application Name                  | Application Type   | i.MX Board | BSP Release   | BSP Framework           | Inference Core | Status      |  Notes                 |
 |-----------------------------------|--------------------|------------|---------------|-------------------------|----------------|-------------|------------------------|
