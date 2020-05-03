@@ -1,8 +1,6 @@
 # How to Contribute
 
-## Coding Convention
-
-### Requirements
+## Coding Convention and Requirements
 
 * Write object-oriented code.
   - This has the advantages of data hiding and modularity. It allows reusability, modularity, polymorphism, data encapsulation, and inheritance. Also, you should write modular and non-repetitive code. Use classes and functions in your code.
