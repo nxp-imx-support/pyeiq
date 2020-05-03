@@ -5,9 +5,9 @@ ML applications, which avoids the user spending time on preparing the environmen
 
 ## Release Date
 
-| PyeIQ Version | Release Date | Note |
-|---------------|--------------|------|
-| tag_v1.0      | Apr 29, 2020 | -    |
+| PyeIQ Version | Release Date | Notes |
+|---------------|--------------|-------|
+| tag_v1.0      | Apr 29, 2020 | -     |
 
 ## BSP Support
 
