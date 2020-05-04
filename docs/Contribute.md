@@ -2,19 +2,20 @@
 
 ## Coding Convention and Requirements
 
-* Write object-oriented code.
-  - This has the advantages of data hiding and modularity. It allows reusability, modularity, polymorphism, data encapsulation, and inheritance. Also, you should write modular and non-repetitive code. Use classes and functions in your code.
+* Write object-oriented code. This has the advantages of data hiding and modularity. It allows reusability, modularity, polymorphism, data encapsulation, and inheritance.
+  - You must write modular and non-repetitive code;
+  - You must use classes and functions in your code.
 * Write the code according to PEP 8. For more information, read the [PEP 8](https://www.python.org/dev/peps/pep-0008/) page.
   - E.g: PyeIQ uses *snake_case* for variable names, function names, method names, and module or package names.
 * Each feature should come with test cases that can be executed as unit tests during build.
-* Each feature should come with small codes for executing the classes.
+* Each feature should come with small codes for executing the classes and functions.
 * Avoid as much as you can adding dependencies that are not currently supported by NXP BSP.
-  - This must be handle as optional feature using _accert_ or _try_ methods to verify if it is installed or not.
-* The submitter has the first responsibility of keeping the created pull request or patch:
-  - Clean and neat, which means that must be readable;
-  - Must not apply general rules of git commits and common senses;
-  - Must not write a lengthy commit; must have a single topic per commit;
-  - Must provide enough background information and references.
+  - You must handle this as optional feature using _accert_ or _try_ methods to verify if it is installed or not.
+* Before sending the pull request or patch follow the above recommendations:
+  - You must keep your code clean and neat, which means that must be readable;
+  - You must not apply general rules of git commits and common senses;
+  - You must not write a lengthy commit - only one single topic per commit;
+  - You must provide enough background information and references.
 
 ## Signing-off Commits
 
