@@ -28,13 +28,13 @@ class eIQSwitchLabelImage(Gtk.Window):
         grid = Gtk.Grid(row_spacing = 10, column_spacing = 10, border_width = 18,)
         self.add(grid)
         self.hw_accel = self.get_hw_accel()
-        self.valueReturned = []
-        self.labelReturned = []
-        self.valueReturnedBox = []
-        self.labelReturnedBox = []
-        self.displayedImage = Gtk.Image()
+        self.value_returned = []
+        self.label_returned = []
+        self.value_returned_box = []
+        self.label_returned_box = []
+        self.displayed_image = Gtk.Image()
         self.image = config.DEFAULT_TFLITE_IMAGE
-        self.imageMap = Gtk.ListStore(str)
+        self.image_map = Gtk.ListStore(str)
 
         self.images_path = retrieve_from_id(config.IMAGES_DRIVE_ID, self.name,
             config.IMAGES_DRIVE_NAME + ".zip",unzip_flag=True)
@@ -45,27 +45,27 @@ class eIQSwitchLabelImage(Gtk.Window):
         grid.set_column_homogeneous(True)
         grid.set_row_homogeneous(True)
 
-        modelBox = Gtk.Box()
-        modelNameBox = Gtk.Box()
-        resultBox = Gtk.Box()
-        percentageBox = Gtk.Box()
-        inferenceBox = Gtk.Box()
-        inferenceValueBox = Gtk.Box()
-        imageLabelBox = Gtk.Box()
-        imageMapBox = Gtk.Box()
-        imageBox = Gtk.Box()
+        model_box = Gtk.Box()
+        model_name_box = Gtk.Box()
+        result_box = Gtk.Box()
+        percentage_box = Gtk.Box()
+        inference_box = Gtk.Box()
+        inference_value_box = Gtk.Box()
+        image_label_box = Gtk.Box()
+        image_map_box = Gtk.Box()
+        image_box = Gtk.Box()
 
-        self.imageComboBox = Gtk.ComboBox.new_with_model(self.imageMap)
-        self.imageComboBox.connect("changed", self.on_combo_image_changed)
-        imageRenderedList = Gtk.CellRendererText()
-        self.imageComboBox.pack_start(imageRenderedList, True)
-        self.imageComboBox.add_attribute(imageRenderedList, "text", 0)
+        self.image_combo_box = Gtk.ComboBox.new_with_model(self.image_map)
+        self.image_combo_box.connect("changed", self.on_combo_image_changed)
+        image_rendered_list = Gtk.CellRendererText()
+        self.image_combo_box.pack_start(image_rendered_list, True)
+        self.image_combo_box.add_attribute(image_rendered_list, "text", 0)
 
         for i in range(5):
-            self.valueReturned.append(Gtk.Entry())
-            self.labelReturned.append(Gtk.Label())
-            self.valueReturnedBox.append(Gtk.Box())
-            self.labelReturnedBox.append(Gtk.Box())
+            self.value_returned.append(Gtk.Entry())
+            self.label_returned.append(Gtk.Label())
+            self.value_returned_box.append(Gtk.Box())
+            self.label_returned_box.append(Gtk.Box())
 
         if self.args.image is not None and os.path.exists(self.args.image):
             if str(self.args.image).endswith(".bmp"):
@@ -74,34 +74,34 @@ class eIQSwitchLabelImage(Gtk.Window):
         self.set_displayed_image(self.image)
         self.set_initial_entrys()
 
-        modelLabel = Gtk.Label()
-        modelLabel.set_markup(config.SWITCH_MODEL_NAME)
-        self.modelNameLabel = Gtk.Label.new(None)
-        resultLabel = Gtk.Label()
-        resultLabel.set_markup(config.SWITCH_LABELS)
-        percentageLabel = Gtk.Label()
-        percentageLabel.set_markup(config.SWITCH_RESULTS)
-        inferenceLabel = Gtk.Label()
-        inferenceLabel.set_markup(config.SWITCH_INFERENCE_TIME)
-        self.inferenceValueLabel = Gtk.Label.new(None)
-        imageLabel = Gtk.Label()
-        imageLabel.set_markup(config.SWITCH_SELECT_IMAGE)
-        imageLabel.set_xalign(0.0)
+        model_label = Gtk.Label()
+        model_label.set_markup(config.SWITCH_MODEL_NAME)
+        self.model_name_label  = Gtk.Label.new(None)
+        result_label = Gtk.Label()
+        result_label.set_markup(config.SWITCH_LABELS)
+        percentage_label = Gtk.Label()
+        percentage_label.set_markup(config.SWITCH_RESULTS)
+        inference_label = Gtk.Label()
+        inference_label.set_markup(config.SWITCH_INFERENCE_TIME)
+        self.inference_value_label = Gtk.Label.new(None)
+        image_label = Gtk.Label()
+        image_label.set_markup(config.SWITCH_SELECT_IMAGE)
+        image_label.set_xalign(0.0)
 
-        modelBox.pack_start(modelLabel, True, True, 0)
-        modelNameBox.pack_start(self.modelNameLabel, True, True, 0)
-        resultBox.pack_start(resultLabel, True, True, 0)
-        percentageBox.pack_start(percentageLabel, True, True, 0)
-        inferenceBox.pack_start(inferenceLabel, True, True, 0)
-        inferenceValueBox.pack_start(self.inferenceValueLabel, True, True, 0)
-        imageLabelBox.pack_start(imageLabel, True, True, 0)
-        imageMapBox.pack_start(self.imageComboBox, True, True, 0)
+        model_box.pack_start(model_label, True, True, 0)
+        model_name_box.pack_start(self.model_name_label , True, True, 0)
+        result_box.pack_start(result_label, True, True, 0)
+        percentage_box.pack_start(percentage_label, True, True, 0)
+        inference_box.pack_start(inference_label, True, True, 0)
+        inference_value_box.pack_start(self.inference_value_label, True, True, 0)
+        image_label_box.pack_start(image_label, True, True, 0)
+        image_map_box.pack_start(self.image_combo_box, True, True, 0)
 
         for i in range(5):
-            self.labelReturnedBox[i].pack_start(self.labelReturned[i], True, True, 0)
-            self.valueReturnedBox[i].pack_start(self.valueReturned[i], True, True, 0)
+            self.label_returned_box[i].pack_start(self.label_returned[i], True, True, 0)
+            self.value_returned_box[i].pack_start(self.value_returned[i], True, True, 0)
 
-        imageBox.pack_start(self.displayedImage, True, True, 0)
+        image_box.pack_start(self.displayed_image, True, True, 0)
 
         self.cpu_button = Gtk.Button.new_with_label("CPU")
         self.cpu_button.connect("clicked", self.run_cpu_inference)
@@ -110,25 +110,25 @@ class eIQSwitchLabelImage(Gtk.Window):
         self.npu_button.connect("clicked", self.run_npu_inference)
         grid.attach(self.npu_button, 4, 0, 1, 1)
 
-        grid.attach(modelBox, 0, 5, 2, 1)
-        grid.attach(modelNameBox, 0, 6, 2, 1)
-        grid.attach(inferenceBox, 0, 7, 2, 1)
-        grid.attach(inferenceValueBox, 0, 8, 2, 1)
-        grid.attach(resultBox, 6, 3, 1, 1)
-        grid.attach(percentageBox, 7, 3, 1, 1)
+        grid.attach(model_box, 0, 5, 2, 1)
+        grid.attach(model_name_box, 0, 6, 2, 1)
+        grid.attach(inference_box, 0, 7, 2, 1)
+        grid.attach(inference_value_box, 0, 8, 2, 1)
+        grid.attach(result_box, 6, 3, 1, 1)
+        grid.attach(percentage_box, 7, 3, 1, 1)
 
         for i in range(5):
-            grid.attach(self.labelReturnedBox[i], 6, (4+i), 1, 1)
-            grid.attach(self.valueReturnedBox[i], 7, (4+i), 1, 1)
+            grid.attach(self.label_returned_box[i], 6, (4+i), 1, 1)
+            grid.attach(self.value_returned_box[i], 7, (4+i), 1, 1)
 
-        grid.attach(imageLabelBox, 0, 2, 2, 1)
-        grid.attach(imageMapBox, 0, 3, 2, 1)
-        grid.attach(imageBox, 2, 1, 4, 10)
+        grid.attach(image_label_box, 0, 2, 2, 1)
+        grid.attach(image_map_box, 0, 3, 2, 1)
+        grid.attach(image_box, 2, 1, 4, 10)
 
     def set_displayed_image(self, image):
         image_converted = convert_image_to_png(image)
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(image_converted, 507, 606, True)
-        self.displayedImage.set_from_pixbuf(pixbuf)
+        self.displayed_image.set_from_pixbuf(pixbuf)
 
     def on_combo_image_changed(self, combo):
         iterr = combo.get_active_iter()
@@ -141,7 +141,7 @@ class eIQSwitchLabelImage(Gtk.Window):
 
     def get_bmp_images(self):
         for file in os.listdir(self.images_path):
-            self.imageMap.append([file])
+            self.image_map.append([file])
 
     def get_hw_accel(self):
         if gethostname() == "imx8mpevk":
@@ -151,34 +151,34 @@ class eIQSwitchLabelImage(Gtk.Window):
 
     def set_initial_entrys(self):
         for i in range(5):
-            self.labelReturned[i].set_text("")
-            self.valueReturned[i].set_editable(False)
-            self.valueReturned[i].set_can_focus(False)
-            self.valueReturned[i].set_text("0%")
-            self.valueReturned[i].set_alignment(xalign=0)
-            self.valueReturned[i].set_progress_fraction(-1)
+            self.label_returned[i].set_text("")
+            self.value_returned[i].set_editable(False)
+            self.value_returned[i].set_can_focus(False)
+            self.value_returned[i].set_text("0%")
+            self.value_returned[i].set_alignment(xalign=0)
+            self.value_returned[i].set_progress_fraction(-1)
 
     def set_returned_entrys(self, value):
         x = 0
         for i in value[2:]:
-            self.labelReturned[x].set_text(str(i[2]))
-            self.valueReturned[x].set_progress_fraction(float(i[0]))
-            self.valueReturned[x].set_text(str("%.2f" % (float(i[0])*100))+"%")
+            self.label_returned[x].set_text(str(i[2]))
+            self.value_returned[x].set_progress_fraction(float(i[0]))
+            self.value_returned[x].set_text(str("%.2f" % (float(i[0])*100))+"%")
             x = x + 1
 
     def set_pre_inference(self):
         self.set_initial_entrys()
-        self.modelNameLabel.set_text("")
-        self.inferenceValueLabel.set_text("Running...")
-        self.imageComboBox.set_sensitive(False)
+        self.model_name_label .set_text("")
+        self.inference_value_label.set_text("Running...")
+        self.image_combo_box.set_sensitive(False)
         self.cpu_button.set_sensitive(False)
         self.npu_button.set_sensitive(False)
 
     def set_post_inference(self, x):
-        self.modelNameLabel.set_text(x[0])
-        self.inferenceValueLabel.set_text(str("%.2f" % (float(x[1])) + " ms"))
+        self.model_name_label.set_text(x[0])
+        self.inference_value_label.set_text(str("%.2f" % (float(x[1])) + " ms"))
         self.set_returned_entrys(x)
-        self.imageComboBox.set_sensitive(True)
+        self.image_combo_box.set_sensitive(True)
         self.cpu_button.set_sensitive(True)
         self.npu_button.set_sensitive(True)
 
