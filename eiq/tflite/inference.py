@@ -1,9 +1,9 @@
-from eiq.utils import timeit
-import numpy as np
 import cv2 as opencv
+import numpy as np
 from PIL import Image
 from tflite_runtime.interpreter import Interpreter
 
+from eiq.utils import timeit
 
 def get_details(interpreter):
     return interpreter.get_input_details(), interpreter.get_output_details()
