@@ -22,7 +22,7 @@ zip_safe=False)
 apps_dir = os.path.join(os.getcwd(), "eiq", "apps")
 base_dir = os.path.join("/opt", "eiq")
 demos_dir = os.path.join(os.getcwd(), "eiq", "demos")
-switch_label = "eiq/apps/switch_label/switch_label.py"
+switch_label = "eiq/apps/switch_image/switch_image.py"
 images_player = "eiq/apps/images_player/images_player.py"
 
 install_dir_demos = os.path.join(base_dir, "demos")
