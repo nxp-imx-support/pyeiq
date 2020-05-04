@@ -99,6 +99,7 @@ The demos and applications are installed in the `/opt/eiq/` folder.
 ```console
 root@imx8qmmek:~# python3
 ```
+
 2. Create an object using the demo or application class and run it:
 ```console
 >>> from eiq.<framework>.<machine_learning_type> import <pyeiq_class>
