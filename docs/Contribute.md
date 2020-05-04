@@ -22,13 +22,13 @@
 Each commit is required to be *signed-off* by the corresponding author:
   - Properly configure your development environment, you can add sign-off for a
 commit with *-s* option: e.g., *git commit -s*;
-  ```bash
-  $ vi ~/.gitconfig
-    [user]
-            name = Your Name
-            email = Your_Email@nxp.com
-  $ git commit -s <file_name>  // -s (--signoff) means automated signed-off-by statement.
-  ```
+    ```bash
+    $ vi ~/.gitconfig
+      [user]
+              name = Your Name
+              email = Your_Email@nxp.com
+    $ git commit -s <file_name>  // -s (--signoff) means automated signed-off-by statement.
+    ```
 
 Including a "Signed-off-by:" tag in your commit means that you are making the Developer Certificate of Origin (DCO) certification for that commit. A copy of the DCO text can be found at [Developer Certificate](https://developercertificate.org/).
 
