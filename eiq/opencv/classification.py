@@ -8,7 +8,7 @@ from eiq.opencv.config import *
 from eiq.utils import args_parser, retrieve_from_id, retrieve_from_url
 
 
-class singleShotObjectDetection(object):
+class eIQSingleShotObjectDetection(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
