@@ -19,26 +19,25 @@
 
 ## Signing-off Commits
 
-* Each commit is required to be *signed-off* by the corresponding author:
+Each commit is required to be *signed-off* by the corresponding author:
   - Properly configure your development environment, you can add sign-off for a
 commit with *-s* option: e.g., *git commit -s*;
-  - Make sure to configure your *.gitconfig* file correctly:
-```bash
-$ vi ~/.gitconfig
-  [user]
-          name = Your Name
-          email = Your_Email@nxp.com
-$ git commit -s <file_name>
-// -s (--signoff) means automated signed-off-by statement.
-```
+  ```bash
+  $ vi ~/.gitconfig
+    [user]
+            name = Your Name
+            email = Your_Email@nxp.com
+  $ git commit -s <file_name>  // -s (--signoff) means automated signed-off-by statement.
+  ```
+
 Including a "Signed-off-by:" tag in your commit means that you are making the Developer Certificate of Origin (DCO) certification for that commit. A copy of the DCO text can be found at [Developer Certificate](https://developercertificate.org/).
 
-## Code Reviews and Pull Requests/Patches
+## Code Reviews, Pull Requests and Patches
 
 * The patches or pull requests are reviewed by the maintainers, committers and reviewers.
 * If you are a committer or a reviewer of the specific component, you are:
   - **Obligated** to review incoming related pull requests or patches.
-  - **Give** feedback on pull requests or patches especially on similar topics/components.
+  - **Obligated** to give feedback on pull requests or patches especially on similar topics/components.
 
 ### Merge Criteria
 
@@ -50,4 +49,5 @@ A pull request must be according to the following statements to be accepted:
   - If the pull request is messy, you will need to wait indefinitely to get reviews.
 * There is no rejections from any official reviewers.
 * There is no pending negative feed-backs (unresolved issues) from reviewers.
-* A committer with merging privilege will, then, be able to merge the given pull request.
+
+After these above requirements, then a committer with merging privilege will be able to merge the given pull request or patch.
