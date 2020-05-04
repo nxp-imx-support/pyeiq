@@ -8,6 +8,7 @@
 ## SPDX-License-Identifier:    Apache-2.0
 ##
 ## References:
+## https://www.apache.org/licenses/LICENSE-2.0
 ## https://github.com/ARM-software/ML-examples/tree/master/pyarmnn-fire-detection
 
 import argparse
