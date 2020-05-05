@@ -305,7 +305,7 @@ class eIQObjectDetectionSSD(object):
 		                    opencv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0),
                             2, opencv.LINE_AA)
 
-                opencv.imshow("Object detection - ssdlite_mobilenet_v2", frame)
+                opencv.imshow(TITLE_OBJECT_DETECTION_SSD, frame)
                 if opencv.waitKey(1) & 0xFF == ord('q'):
                     break
 

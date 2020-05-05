@@ -19,3 +19,4 @@ OBJ_DETECTION_SSD_MODEL_NAME = 'ssd_mobilenet_v2.tflite'
 
 TITLE_OBJECT_DETECTION_CAM = "PyeIQ - Object Detection Camera"
 TITLE_OBJECT_DETECTION_CV = "PyeIQ - Object Detection OpenCV"
+TITLE_OBJECT_DETECTION_SSD = "PyeIQ - Object Detection SSD"
