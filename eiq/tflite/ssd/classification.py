@@ -23,7 +23,6 @@ class eIQObjectDetectionCamera(object):
     def __init__(self):
         self.args = args_parser(
             camera=True, label=True, model=True, webcam=True)
-        self.name = self.__class__.__name__
         self.interpreter = None
         self.input_details = None
         self.output_details = None
@@ -250,7 +249,6 @@ class eIQObjectDetectionSSD(object):
         self.args = args_parser(
             camera=True, camera_inference=True, image=True,
             label=True, model=True, webcam=True)
-        self.name = self.__class__.__name__
         self.interpreter = None
         self.input_details = None
         self.output_details = None
