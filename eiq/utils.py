@@ -163,12 +163,17 @@ def copy(target_dir, src_dir):
 def args_parser(camera: bool = False, webcam: bool = False,
                 image: bool = False, model: bool = False,
                 label: bool = False, epochs: bool = False,
-                videopath: bool = False):
+                videopath: bool = False, camera_inference: bool = False):
     parser = ArgumentParser()
     if camera:
         parser.add_argument(
             '-c', '--camera', type=int, default=0,
             help="set the number your camera is identified at /dev/video<x>.")
+    if camera_inference:
+        parser.add_argument(
+            '-ci', '--camera_inference', type=bool, default=False,
+            help="set to True if you want to run inference on your camera, " \
+                 "otherwise it is going to run inference on a single image.")
     if webcam:
         parser.add_argument(
             '-w', '--webcam', type=int, default=-1,
