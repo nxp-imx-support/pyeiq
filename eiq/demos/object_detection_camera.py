@@ -1,11 +1,11 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
-from eiq.tflite.classification import eIQObjectDetection
+from eiq.tflite.ssd.classification import eIQObjectDetectionCamera
 
 
 def main():
-    app = eIQObjectDetection()
+    app = eIQObjectDetectionCamera()
     app.run()
 
 
