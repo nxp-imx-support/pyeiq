@@ -343,6 +343,8 @@ class eIQObjectDetectionGStreamer(object):
         self.videosrc = None
         self.videofile = None
         self.videofmt = "raw"
+        self.src_width = 640
+        self.src_height = 480
 
     def retrieve_data(self):
         path = os.path.dirname(
@@ -359,6 +361,8 @@ class eIQObjectDetectionGStreamer(object):
     def video_file_config(self):
         if self.args.videopath != 0 and os.path.exists(self.args.videopath):
             self.videofile = self.args.videopath
+            self.src_width = 1920
+            self.src_height = 1080
 
     def input_image_size(self):
         """Returns input size as (width, height, channels) tuple."""
@@ -489,7 +493,7 @@ class eIQObjectDetectionGStreamer(object):
                 src_size, inference_size, inference_box, objs, labels, text_lines)
 
         result = gstreamer.run_pipeline(user_callback,
-                                        src_size=(640, 480),
+                                        src_size=(self.src_width, self.src_height),
                                         appsink_size=inference_size,
                                         videosrc=self.videosrc,
                                         videofile=self.videofile,
