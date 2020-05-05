@@ -115,7 +115,8 @@ def retrieve_from_id(gd_id_url: str=None, pathname: str = None,
         return fp
 
 
-def retrieve_from_url(url: str = None, name: str = None, filename: str = None):
+def retrieve_from_url(url: str = None, name: str = None,
+                      filename: str = None, unzip: bool=False):
     dirpath = os.path.join(config.TMP_FILE_PATH, name)
     if filename is None:
         filename_parsed = urlparse(url)
@@ -132,7 +133,14 @@ def retrieve_from_url(url: str = None, name: str = None, filename: str = None):
     if (os.path.isfile(fp)):
         return fp
     else:
-        return download_url(fp, filename, url, filename_parsed.netloc)
+        file = download_url(fp, filename, url, filename_parsed.netloc)
+
+        if unzip:
+            path = os.path.dirname(file)
+            shutil.unpack_archive(file, path)
+            return path
+
+        return file
 
 
 def check_connection(url: str = None):
