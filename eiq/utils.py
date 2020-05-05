@@ -162,7 +162,8 @@ def copy(target_dir, src_dir):
 
 def args_parser(camera: bool = False, webcam: bool = False,
                 image: bool = False, model: bool = False,
-                label: bool = False, epochs: bool = False):
+                label: bool = False, epochs: bool = False,
+                videopath: bool = False):
     parser = ArgumentParser()
     if camera:
         parser.add_argument(
@@ -189,5 +190,9 @@ def args_parser(camera: bool = False, webcam: bool = False,
         parser.add_argument(
             '-e', '--epochs', type=int, default=50,
             help="number of epochs for the traning")
+    if videopath:
+        parser.add_argument(
+            '-v', '--videopath', type=None, default=0,
+            help="path of the video file")
 
     return parser.parse_args()

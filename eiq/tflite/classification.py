@@ -430,7 +430,7 @@ class eIQObjectDetectionOpenCV(object):
 class eIQObjectDetectionGStreamer(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
-        self.args = args_parser(camera=True, webcam=True)
+        self.args = args_parser(camera=True, webcam=True, videopath=True)
         self.name = self.__class__.__name__
         self.interpreter = None
         self.input_details = None
@@ -441,6 +441,7 @@ class eIQObjectDetectionGStreamer(object):
         self.label = None
 
         self.videosrc = None
+        self.videofile = None
         self.videofmt = "raw"
 
     def retrieve_data(self):
@@ -454,6 +455,10 @@ class eIQObjectDetectionGStreamer(object):
             self.videosrc = "/dev/video" + str(self.args.webcam)
         else:
             self.videosrc = "/dev/video" + str(self.args.camera)
+
+    def video_file_config(self):
+        if self.args.videopath != 0 and os.path.exists(self.args.videopath):
+            self.videofile = self.args.videopath
 
     def input_image_size(self):
         """Returns input size as (width, height, channels) tuple."""
@@ -551,6 +556,7 @@ class eIQObjectDetectionGStreamer(object):
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.video_src_config()
+        self.video_file_config()
         self.retrieve_data()
         self.interpreter = inference.load_model(self.model)
         self.input_details, self.output_details = inference.get_details(self.interpreter)
@@ -586,4 +592,5 @@ class eIQObjectDetectionGStreamer(object):
                                         src_size=(640, 480),
                                         appsink_size=inference_size,
                                         videosrc=self.videosrc,
+                                        videofile=self.videofile,
                                         videofmt=self.videofmt)
