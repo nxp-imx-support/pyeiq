@@ -19,6 +19,8 @@ license="BDS-3-Clause",
 packages=find_packages(),
 zip_safe=False)
 
+os.system("pip3 install https://neo-ai-dlr-release.s3-us-west-2.amazonaws.com/v1.1.0/a1-aarch64-ubuntu18_04-glibc2_27-libstdcpp3_4/dlr-1.1.0-py2.py3-none-any.whl")
+
 apps_dir = os.path.join(os.getcwd(), "eiq", "apps")
 base_dir = os.path.join("/opt", "eiq")
 demos_dir = os.path.join(os.getcwd(), "eiq", "demos")
