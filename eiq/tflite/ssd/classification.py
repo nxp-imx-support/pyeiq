@@ -3,14 +3,16 @@
 
 from pathlib import Path
 import os
+import re
 import sys
 import time
 
 import cv2 as opencv
 import numpy as np
+from PIL import Image
 from tflite_runtime.interpreter import Interpreter
 
-from eiq.multimedia.utils import gstreamer_configurations
+from eiq.multimedia.utils import gstreamer_configurations, make_boxes
 import eiq.tflite.inference as inference
 from eiq.tflite.ssd.config import *
 from eiq.tflite.ssd.utils import *
@@ -123,6 +125,123 @@ class eIQObjectDetectionCamera(object):
             if (opencv.waitKey(1) & 0xFF == ord('q')):
                 break
 
+        opencv.destroyAllWindows()
+
+
+class eIQObjectDetectionOpenCV(object):
+    def __init__(self):
+        self.args = args_parser(camera=True, webcam=True)
+        self.interpreter = None
+        self.input_details = None
+        self.output_details = None
+
+        self.base_path = os.path.join(TMP_DIR, self.__class__.__name__)
+        self.model_path = os.path.join(self.base_path, "model")
+
+        self.video = None
+        self.model = None
+        self.label = None
+
+    def retrieve_data(self):
+        retrieve_from_url(url=OBJ_DETECTION_CV_MODEL,
+                          name=self.model_path, unzip=True)
+        self.model = os.path.join(self.model_path,
+                                  OBJ_DETECTION_CV_MODEL_NAME)
+        self.label = os.path.join(self.model_path,
+                                  OBJ_DETECTION_CV_LABEL_NAME)
+
+    def set_input(self, image, resample=Image.NEAREST):
+        """Copies data to input tensor."""
+        image = image.resize(
+            (self.input_image_size()[0:2]), resample)
+        self.input_tensor()[:, :] = image
+
+    def input_image_size(self):
+        """Returns input image size as (width, height, channels) tuple."""
+        _, height, width, channels = self.input_details[0]['shape']
+        return width, height, channels
+
+    def input_tensor(self):
+        """Returns input tensor view as numpy array of shape (height, width, 3)."""
+        return self.interpreter.tensor(self.input_details[0]['index'])()[0]
+
+    def output_tensor(self, i):
+        """Returns dequantized output tensor if quantized before."""
+        output_data = np.squeeze(self.interpreter.tensor(
+                                    self.output_details[i]['index'])())
+        if 'quantization' not in self.output_details:
+            return output_data
+        scale, zero_point = self.output_details['quantization']
+        if scale == 0:
+            return output_data - zero_point
+        return scale * (output_data - zero_point)
+
+    def load_labels(self, path):
+        p = re.compile(r'\s*(\d+)(.+)')
+        with open(path, 'r', encoding='utf-8') as f:
+            lines = (p.match(line).groups() for line in f.readlines())
+            return {int(num): text.strip() for num, text in lines}
+
+    def get_output(self, score_threshold=0.1, top_k=3, image_scale=1.0):
+        """Returns list of detected objects."""
+        boxes = self.output_tensor(0)
+        class_ids = self.output_tensor(1)
+        scores = self.output_tensor(2)
+        count = int(self.output_tensor(3))
+
+        return [make_boxes(
+                    i, boxes, class_ids, scores) for i in range(
+                    top_k) if scores[i] >= score_threshold]
+
+    def append_objs_to_img(self, opencv_im, objs, labels):
+        height, width, channels = opencv_im.shape
+        for obj in objs:
+            x0, y0, x1, y1 = list(obj.bbox)
+            x0, y0, x1, y1 = int(
+                x0 * width), int(
+                y0 * height), int(x1 * width), int(y1 * height)
+
+            percent = int(100 * obj.score)
+            label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))
+
+            opencv_im = opencv.rectangle(
+                opencv_im, (x0, y0), (x1, y1), (0, 255, 0), 2)
+            opencv_im = opencv.putText(opencv_im, label, (x0, y0 + 30),
+                                       opencv.FONT_HERSHEY_SIMPLEX, 1.0,
+                                       (255, 0, 0), 2)
+        return opencv_im
+
+    def start(self):
+        os.environ['VSI_NN_LOG_LEVEL'] = "0"
+        self.video = gstreamer_configurations(self.args)
+        self.retrieve_data()
+        self.interpreter = inference.load_model(self.model)
+        self.input_details, self.output_details = inference.get_details(
+                                                    self.interpreter)
+
+    def run(self):
+        self.start()
+        labels = self.load_labels(self.label)
+
+        while self.video.isOpened():
+            ret, frame = self.video.read()
+            if not ret:
+                break
+            opencv_im = frame
+
+            opencv_im_rgb = opencv.cvtColor(opencv_im, opencv.COLOR_BGR2RGB)
+            pil_im = Image.fromarray(opencv_im_rgb)
+
+            self.set_input(pil_im)
+            inference.inference(self.interpreter)
+            objs = self.get_output()
+            opencv_im = self.append_objs_to_img(opencv_im, objs, labels)
+
+            opencv.imshow(TITLE_OBJECT_DETECTION_CV, opencv_im)
+            if opencv.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        self.video.release()
         opencv.destroyAllWindows()
 
 
