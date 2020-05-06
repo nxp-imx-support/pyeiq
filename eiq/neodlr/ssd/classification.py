@@ -24,10 +24,16 @@ class eIQObjectDetectionDLR(object):
         self.model_path = os.path.join(self.base_path, "model")
 
         self.model = None
-
+        self.videosrc = None
         self.appsource = None
         self.pipeline0 = None
         self.pipeline1 = None
+
+    def video_src_config(self):
+        if self.args.webcam >= 0:
+            self.videosrc = "/dev/video" + str(self.args.webcam)
+        else:
+            self.videosrc = "/dev/video" + str(self.args.camera)
 
     def inference(self, img):
         #prepare image to input.Resize adding borders and normalize.
@@ -103,7 +109,7 @@ class eIQObjectDetectionDLR(object):
         # Gstreamer Init
         Gst.init(None)
 
-        pipeline1_cmd="v4l2src device=/dev/video0 do-timestamp=True ! videoconvert ! \
+        pipeline1_cmd="v4l2src device="+self.videosrc+" do-timestamp=True ! videoconvert ! \
             videoscale n-threads=4 method=nearest-neighbour ! \
             video/x-raw,format=RGB,width="+str(WIDTH)+",height="+str(HEIGHT)+" ! \
             queue leaky=downstream max-size-buffers=1 ! appsink name=sink \
@@ -167,6 +173,7 @@ class eIQObjectDetectionDLR(object):
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
+        self.video_src_config()
         self.retrieve_data()
 
     def run(self):
