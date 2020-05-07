@@ -30,66 +30,14 @@ from eiq.multimedia.v4l2 import set_pipeline
 from eiq.utils import retrieve_from_url, retrieve_from_id, timeit, args_parser
 
 import eiq.tflite.config as config
-import eiq.tflite.inference as inference
+import eiq.engines.tflite.inference as inference
 from eiq.tflite.utils import get_label, get_model_from_path, get_model_from_zip
-
 
 try:
     import svgwrite
     has_svgwrite = True
 except ImportError:
     has_svgwrite = False
-
-
-class eIQFireDetection(object):
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
-        self.args = args_parser(image=True, model=True)
-        self.name = self.__class__.__name__
-        self.interpreter = None
-        self.input_details = None
-        self.output_details = None
-        self.to_fetch = {'image': config.FIRE_DETECTION_DEFAULT_IMAGE,
-                         'model': config.FIRE_DETECTION_MODEL,
-                         }
-
-        self.image = None
-        self.model = None
-
-    def retrieve_data(self):
-        if self.args.image is not None and os.path.isfile(self.args.image):
-            self.image = self.args.image
-        else:
-            self.image = retrieve_from_url(self.to_fetch['image'], self.name)
-
-        if self.args.model is not None and os.path.isfile(self.args.model):
-            self.model = self.args.model
-        else:
-            self.model = get_model_from_path(retrieve_from_id(self.to_fetch['model'], self.name, self.name + ".tflite"))
-
-    def start(self):
-        os.environ['VSI_NN_LOG_LEVEL'] = "0"
-        self.retrieve_data()
-        self.interpreter = inference.load_model(self.model)
-        self.input_details, self.output_details = inference.get_details(self.interpreter)
-
-    def run(self):
-        self.start()
-
-        image = opencv.imread(self.image)
-        image = resize_image(self.input_details, image, use_opencv=True)
-
-        if self.input_details[0]['dtype'] == np.float32:
-            image = np.array(image, dtype=np.float32) / 255.0
-
-        self.interpreter.set_tensor(self.input_details[0]['index'], image)
-        inference.inference(self.interpreter)
-        output_data = self.interpreter.get_tensor(self.output_details[0]['index'])
-
-        if np.argmax(output_data) == 0:
-            print("Non-Fire")
-        else:
-            print("Fire")
 
 
 class eIQFireDetectionCamera(object):
