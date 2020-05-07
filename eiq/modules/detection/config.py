@@ -1,7 +1,3 @@
-from os.path import join
-
-TMP_DIR = join('/tmp', 'eiq')
-
 OBJ_DETECTION_CAM_LABEL_NAME = "labelmap.txt"
 OBJ_DETECTION_CAM_MODEL = "https://storage.googleapis.com/download.tensorflow.org/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip"
 OBJ_DETECTION_CAM_MODEL_NAME = "detect.tflite"

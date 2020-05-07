@@ -24,13 +24,6 @@ def generate_colors(class_names):
     random.seed(None)  # Reset seed to default.
     return colors
 
-def preprocess_image(image, model_image_size=(300,300)):    
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    #image = cv2.resize(image, tuple(reversed(model_image_size)), interpolation=cv2.INTER_AREA)
-    image = np.array(image, dtype='float32')
-    image = np.expand_dims(image, 0)  # Add batch dimension.
-
-    return image
 
 def preprocess_image_for_tflite(image, model_image_size=300):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
