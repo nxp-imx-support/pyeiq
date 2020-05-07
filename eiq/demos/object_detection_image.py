@@ -1,7 +1,7 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
-from eiq.opencv.classification import singleShotObjectDetection
+from eiq.opencv.classification import eIQSingleShotObjectDetection
 
 
 def main():
