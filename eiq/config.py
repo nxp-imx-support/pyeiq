@@ -1,7 +1,12 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
+import os
+import tempfile
+
 TMP_FILE_PATH = "eiq"
+
+BASE_DIR = os.path.join(os.path.abspath(os.sep), tempfile.gettempdir(), TMP_FILE_PATH)
 
 CHUNK_DEFAULT_SIZE = 32768
 
