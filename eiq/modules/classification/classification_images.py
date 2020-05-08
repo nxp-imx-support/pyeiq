@@ -16,21 +16,19 @@ from eiq.config import BASE_DIR
 from eiq.engines.tflite import inference
 from eiq.modules.classification.config import *
 from eiq.multimedia.utils import resize_image
-from eiq.utils import args_parser, retrieve_from_id, retrieve_from_url
+from eiq.utils import args_parser, retrieve_from_id
 
 
 class eIQLabelImage(object):
-    def __init__(self, **kwargs):
+    def __init__(self):
         self.args = args_parser(image=True, label=True, model=True)
-        self.__dict__.update(kwargs)
-        self.name = self.__class__.__name__
         self.interpreter = None
         self.input_details = None
         self.output_details = None
-        self.to_fetch = {'image': LABEL_IMAGE_DEFAULT_IMAGE,
-                         'labels': LABEL_IMAGE_LABELS,
-                         'model': LABEL_IMAGE_MODEL
-                         }
+
+        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.media_path = os.path.join(self.base_path, "media")
+        self.model_path = os.path.join(self.base_path, "model")
 
         self.image = None
         self.label = None
@@ -44,20 +42,23 @@ class eIQLabelImage(object):
             return [line.strip() for line in f.readlines()]
 
     def retrieve_data(self):
+        retrieve_from_id(LABEL_IMAGE_MODEL_ID, self.base_path,
+                         self.__class__.__name__ + ZIP, True)
+
         if self.args.image is not None and os.path.isfile(self.args.image):
             self.image = self.args.image
         else:
-            self.image = retrieve_from_url(self.to_fetch['image'], self.name)
+            self.image = os.path.join(self.media_path, LABEL_IMAGE_MEDIA_NAME)
 
         if self.args.label is not None and os.path.isfile(self.args.label):
             self.label = self.args.label
         else:
-            self.label = retrieve_from_url(self.to_fetch['labels'], self.name)
+            self.label = os.path.join(self.model_path, LABEL_IMAGE_LABEL_NAME)
 
         if self.args.model is not None and os.path.isfile(self.args.model):
             self.model = self.args.model
         else:
-            self.model = retrieve_from_url(self.to_fetch['model'], self.name)
+            self.model = os.path.join(self.model_path, LABEL_IMAGE_MODEL_NAME)
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -89,16 +90,15 @@ class eIQLabelImage(object):
 
 
 class eIQFireDetection(object):
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
+    def __init__(self):
         self.args = args_parser(image=True, model=True)
         self.interpreter = None
         self.input_details = None
         self.output_details = None
 
         self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.media_path = os.path.join(self.base_path, 'media')
-        self.model_path = os.path.join(self.base_path, 'model')
+        self.media_path = os.path.join(self.base_path, "media")
+        self.model_path = os.path.join(self.base_path, "model")
 
         self.image = None
         self.model = None
@@ -107,8 +107,10 @@ class eIQFireDetection(object):
         if self.args.image is not None and os.path.isfile(self.args.image):
             self.image = self.args.image
         else:
-            self.image = retrieve_from_url(FIRE_DETECTION_DEFAULT_IMAGE,
-                                           self.media_path)
+            retrieve_from_id(FIRE_DETECTION_MEDIA_ID, self.media_path,
+                             FIRE_DETECTION_MEDIA_NAME)
+            self.image = os.path.join(self.media_path,
+                                      FIRE_DETECTION_MEDIA_NAME)
 
         if self.args.model is not None and os.path.isfile(self.args.model):
             self.model = self.args.model

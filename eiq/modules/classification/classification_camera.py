@@ -16,7 +16,7 @@ from eiq.config import BASE_DIR
 from eiq.engines.tflite import inference
 from eiq.modules.classification.config import *
 from eiq.multimedia.utils import gstreamer_configurations, resize_image
-from eiq.utils import args_parser, retrieve_from_id, retrieve_from_url
+from eiq.utils import args_parser, retrieve_from_id
 
 
 class eIQFireDetection(object):

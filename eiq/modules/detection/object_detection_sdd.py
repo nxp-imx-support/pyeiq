@@ -166,12 +166,12 @@ class eIQObjectDetectionGStreamer(object):
         self.src_height = 480
 
     def retrieve_data(self):
-        retrieve_from_url(url=OBJ_DETECTION_GST_MODEL,
-                          name=self.model_path, unzip=True)
+        retrieve_from_id(OBJ_DETECTION_CV_GST_MODEL_ID, self.model_path,
+                         self.__class__.__name__ + ZIP, True)
         self.model = os.path.join(self.model_path,
-                                  OBJ_DETECTION_GST_MODEL_NAME)
+                                  OBJ_DETECTION_CV_GST_MODEL_NAME)
         self.label = os.path.join(self.model_path,
-                                  OBJ_DETECTION_GST_LABEL_NAME)
+                                  OBJ_DETECTION_CV_GST_LABEL_NAME)
 
     def video_src_config(self):
         if self.args.webcam >= 0:
@@ -438,22 +438,22 @@ class eIQObjectDetectionImage(object):
         self.coordinates.append(int(self.hf * int(d[0, 0, i, 6] * r)))
 
     def retrieve_data(self):
+        retrieve_from_id(OBJ_DETECTION_IMG_MODEL_ID, self.base_path,
+                         self.__class__.__name__ + ZIP, True)
+
         if self.args.label is not None and os.path.isfile(self.args.label):
             self.labels = self.args.label
         else:
-            self.labels = retrieve_from_id(OBJ_DETECTION_IMG_LABEL_ID,
-                            self.model_path, "labels.txt")
-            self.labels = os.path.join(self.labels, "labels.txt")
+            self.labels = os.path.join(self.model_path,
+                                       OBJ_DETECTION_IMG_LABEL_NAME)
 
         if self.args.model is not None and os.path.isfile(self.args.model):
             self.model_caffe = self.args.model
         else:
-            self.model_caffe = retrieve_from_url(OBJ_DETECTION_IMG_CAFFE,
-                                    self.model_path)
-            self.model_proto = retrieve_from_url(OBJ_DETECTION_IMG_PROTO,
-                                    self.model_path)
-
-        retrieve_from_url(OBJ_DETECTION_IMG_DEFAULT_IMAGE, self.media_path)
+            self.model_caffe =  os.path.join(self.model_path,
+                                             OBJ_DETECTION_IMG_CAFFE_NAME)
+            self.model_proto =  os.path.join(self.model_path,
+                                             OBJ_DETECTION_IMG_PROTO_NAME)
 
     def save_labeled_image(self, i, n):
         if not os.path.exists(self.labeled_media_path):
@@ -497,12 +497,12 @@ class eIQObjectDetectionOpenCV(object):
         self.label = None
 
     def retrieve_data(self):
-        retrieve_from_url(url=OBJ_DETECTION_CV_MODEL,
-                          name=self.model_path, unzip=True)
+        retrieve_from_id(OBJ_DETECTION_CV_GST_MODEL_ID, self.model_path,
+                         self.__class__.__name__ + ZIP, True)
         self.model = os.path.join(self.model_path,
-                                  OBJ_DETECTION_CV_MODEL_NAME)
+                                  OBJ_DETECTION_CV_GST_MODEL_NAME)
         self.label = os.path.join(self.model_path,
-                                  OBJ_DETECTION_CV_LABEL_NAME)
+                                  OBJ_DETECTION_CV_GST_LABEL_NAME)
 
     def set_input(self, image, resample=Image.NEAREST):
         """Copies data to input tensor."""
@@ -668,25 +668,26 @@ class eIQObjectDetectionSSD(object):
         opencv.destroyAllWindows()
 
     def retrieve_data(self):
+        retrieve_from_id(OBJ_DETECTION_SSD_MODEL_ID, self.base_path,
+                         self.__class__.__name__ + ZIP, True)
+
         if self.args.image is not None and os.path.exists(self.args.image):
             self.image = self.args.image
         else:
-            self.image = retrieve_from_url(OBJ_DETECTION_SSD_IMAGE,
-                            self.media_path)
+            self.image = os.path.join(self.media_path,
+                                      OBJ_DETECTION_SSD_MEDIA_NAME)
 
         if self.args.label is not None and os.path.exists(self.args.label):
             self.label = self.args.label
         else:
-            self.label = retrieve_from_url(OBJ_DETECTION_SSD_LABEL,
-                            self.model_path)
+            self.label = os.path.join(self.model_path,
+                                      OBJ_DETECTION_SSD_LABEL_NAME)
 
         if self.args.model is not None and os.path.exists(self.args.model):
             self.model = self.args.model
         else:
-            self.model = retrieve_from_id(OBJ_DETECTION_SSD_MODEL_ID,
-                            self.model_path, OBJ_DETECTION_SSD_MODEL_NAME)
-            self.model = os.path.join(self.model,
-                            OBJ_DETECTION_SSD_MODEL_NAME)
+            self.model = os.path.join(self.model_path,
+                                      OBJ_DETECTION_SSD_MODEL_NAME)
 
     def run_detection(self, image):
         self.interpreter.set_tensor(self.input_details[0]['index'], image)
