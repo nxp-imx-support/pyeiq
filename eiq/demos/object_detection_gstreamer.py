@@ -1,7 +1,7 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
-from eiq.tflite.classification import eIQObjectDetectionGStreamer
+from eiq.modules.detection.object_detection_sdd import eIQObjectDetectionGStreamer
 
 
 def main():

@@ -1,11 +1,22 @@
-# Copyright 2020 NXP Semiconductors
-# SPDX-License-Identifier: BSD-3-Clause
+# Copyright 2018 The TensorFlow Authors
+#
+## Copyright 2020 NXP Semiconductors
+##
+## This file was copied from TensorFlow respecting its rights. All the modified
+## parts below are according to TensorFlow's LICENSE terms.
+##
+## SPDX-License-Identifier:    Apache-2.0
 
+import collections
 from pathlib import Path
 import os
 import re
 import sys
 import time
+
+import gi
+gi.require_version('Gst', '1.0')
+from gi.repository import Gst
 
 import cv2 as opencv
 import numpy as np
@@ -16,8 +27,15 @@ from eiq.config import BASE_DIR
 import eiq.engines.tflite.inference as inference
 from eiq.modules.detection.config import *
 from eiq.modules.detection.utils import *
+from eiq.multimedia import gstreamer
 from eiq.multimedia.utils import gstreamer_configurations, make_boxes
 from eiq.utils import args_parser, retrieve_from_url, retrieve_from_id
+
+try:
+    import svgwrite
+    has_svgwrite = True
+except ImportError:
+    has_svgwrite = False
 
 
 class eIQObjectDetectionCamera(object):
@@ -126,6 +144,182 @@ class eIQObjectDetectionCamera(object):
                 break
 
         opencv.destroyAllWindows()
+
+
+class eIQObjectDetectionGStreamer(object):
+    def __init__(self):
+        self.args = args_parser(camera=True, videopath=True, webcam=True)
+        self.interpreter = None
+        self.input_details = None
+        self.output_details = None
+
+        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.model_path = os.path.join(self.base_path, "model")
+
+        self.model = None
+        self.label = None
+
+        self.videosrc = None
+        self.videofile = None
+        self.videofmt = "raw"
+        self.src_width = 640
+        self.src_height = 480
+
+    def retrieve_data(self):
+        retrieve_from_url(url=OBJ_DETECTION_GST_MODEL,
+                          name=self.model_path, unzip=True)
+        self.model = os.path.join(self.model_path,
+                                  OBJ_DETECTION_GST_MODEL_NAME)
+        self.label = os.path.join(self.model_path,
+                                  OBJ_DETECTION_GST_LABEL_NAME)
+
+    def video_src_config(self):
+        if self.args.webcam >= 0:
+            self.videosrc = "/dev/video" + str(self.args.webcam)
+        else:
+            self.videosrc = "/dev/video" + str(self.args.camera)
+
+    def video_file_config(self):
+        if self.args.videopath != 0 and os.path.exists(self.args.videopath):
+            self.videofile = self.args.videopath
+            self.src_width = 1920
+            self.src_height = 1080
+
+    def input_image_size(self):
+        """Returns input size as (width, height, channels) tuple."""
+        _, height, width, channels = self.input_details[0]['shape']
+        return width, height, channels
+
+    def input_tensor(self):
+        """Returns input tensor view as numpy array of shape (height, width, channels)."""
+        return self.interpreter.tensor(self.input_details[0]['index'])()[0]
+
+    def set_input(self, buf):
+        """Copies data to input tensor."""
+        result, mapinfo = buf.map(Gst.MapFlags.READ)
+        if result:
+            np_buffer = np.reshape(np.frombuffer(
+                mapinfo.data, dtype=np.uint8), self.input_image_size())
+            self.input_tensor()[:, :] = np_buffer
+            buf.unmap(mapinfo)
+
+    def output_tensor(self, i):
+        """Returns dequantized output tensor if quantized before."""
+        output_data = np.squeeze(self.interpreter.tensor(self.output_details[i]['index'])())
+        if 'quantization' not in self.output_details:
+            return output_data
+        scale, zero_point = self.output_details['quantization']
+        if scale == 0:
+            return output_data - zero_point
+        return scale * (output_data - zero_point)
+
+    def avg_fps_counter(self, window_size):
+        window = collections.deque(maxlen=window_size)
+        prev = time.monotonic()
+        yield 0.0
+
+        while True:
+            curr = time.monotonic()
+            window.append(curr - prev)
+            prev = curr
+            yield len(window) / sum(window)
+
+    def load_labels(self, path):
+        p = re.compile(r'\s*(\d+)(.+)')
+        with open(path, 'r', encoding='utf-8') as f:
+            lines = (p.match(line).groups() for line in f.readlines())
+            return {int(num): text.strip() for num, text in lines}
+
+    def shadow_text(self, dwg, x, y, text, font_size=20):
+        dwg.add(dwg.text(text, insert=(x + 1, y + 1),
+                         fill='black', font_size=font_size))
+        dwg.add(
+            dwg.text(
+                text,
+                insert=(
+                    x,
+                    y),
+                fill='white',
+                font_size=font_size))
+
+    def generate_svg(self, src_size, inference_size,
+                     inference_box, objs, labels, text_lines):
+        dwg = svgwrite.Drawing('', size=src_size)
+        src_w, src_h = src_size
+        inf_w, inf_h = inference_size
+        box_x, box_y, box_w, box_h = inference_box
+        scale_x, scale_y = src_w / box_w, src_h / box_h
+
+        for y, line in enumerate(text_lines, start=1):
+            self.shadow_text(dwg, 10, y * 20, line)
+        for obj in objs:
+            x0, y0, x1, y1 = list(obj.bbox)
+            # Relative coordinates.
+            x, y, w, h = x0, y0, x1 - x0, y1 - y0
+            # Absolute coordinates, input tensor space.
+            x, y, w, h = int(x * inf_w), int(y *
+                                             inf_h), int(w * inf_w), int(h * inf_h)
+            # Subtract boxing offset.
+            x, y = x - box_x, y - box_y
+            # Scale to source coordinate space.
+            x, y, w, h = x * scale_x, y * scale_y, w * scale_x, h * scale_y
+            percent = int(100 * obj.score)
+            label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))
+            self.shadow_text(dwg, x, y - 5, label)
+            dwg.add(dwg.rect(insert=(x, y), size=(w, h),
+                             fill='none', stroke='red', stroke_width='2'))
+        return dwg.tostring()
+
+    def get_output(self, score_threshold=0.1, top_k=3, image_scale=1.0):
+        """Returns list of detected objects."""
+        boxes = self.output_tensor(0)
+        category_ids = self.output_tensor(1)
+        scores = self.output_tensor(2)
+
+        return [make_boxes(i, boxes, category_ids, scores) for i in range(top_k) if scores[i] >= score_threshold]
+
+    def start(self):
+        os.environ['VSI_NN_LOG_LEVEL'] = "0"
+        self.video_src_config()
+        self.video_file_config()
+        self.retrieve_data()
+        self.interpreter = inference.load_model(self.model)
+        self.input_details, self.output_details = inference.get_details(self.interpreter)
+
+    def run(self):
+        if not has_svgwrite:
+            sys.exit("The module svgwrite needed to run this demo was not " \
+                     "found. If you want to install it type 'pip3 install " \
+                     " svgwrite' at your terminal. Exiting...")
+
+        self.start()
+        labels = self.load_labels(self.label)
+        w, h, _ = self.input_image_size()
+        inference_size = (w, h)
+        fps_counter = self.avg_fps_counter(30)
+
+        def user_callback(input_tensor, src_size, inference_box):
+            nonlocal fps_counter
+            start_time = time.monotonic()
+            self.set_input(input_tensor)
+            inference.inference(self.interpreter)
+            objs = self.get_output()
+            end_time = time.monotonic()
+            text_lines = [
+                'Inference: {:.2f} ms'.format((end_time - start_time) * 1000),
+                'FPS: {} fps'.format(round(next(fps_counter))),
+            ]
+            print(' '.join(text_lines))
+            return self.generate_svg(
+                src_size, inference_size, inference_box, objs, labels, text_lines)
+
+        result = gstreamer.run_pipeline(user_callback,
+                                        src_size=(self.src_width, self.src_height),
+                                        appsink_size=inference_size,
+                                        videosrc=self.videosrc,
+                                        videofile=self.videofile,
+                                        videofmt=self.videofmt)
+
 
 
 class eIQObjectDetectionOpenCV(object):
