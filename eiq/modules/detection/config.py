@@ -10,6 +10,11 @@ OBJ_DETECTION_GST_LABEL_NAME = "coco_labels.txt"
 OBJ_DETECTION_GST_MODEL = "https://dl.google.com/coral/canned_models/all_models.tar.gz"
 OBJ_DETECTION_GST_MODEL_NAME = "mobilenet_ssd_v2_coco_quant_postprocess.tflite"
 
+OBJ_DETECTION_IMG_PROTO = "https://github.com/diegohdorta/models/raw/master/caffe/MobileNetSSD_deploy.prototxt"
+OBJ_DETECTION_IMG_CAFFE = "https://github.com/diegohdorta/models/raw/master/caffe/MobileNetSSD_deploy.caffemodel"
+OBJ_DETECTION_IMG_LABEL_ID = "1VrC68eKofWNzYhTEW3ky7JvYOSSaNqKq"
+OBJ_DETECTION_IMG_DEFAULT_IMAGE = "https://raw.githubusercontent.com/tensorflow/tensorflow/master/tensorflow/lite/examples/label_image/testdata/grace_hopper.bmp"
+
 OBJ_DETECTION_SSD_IMAGE = 'https://github.com/kaka-lin/object-detection/raw/master/images/dog.jpg'
 OBJ_DETECTION_SSD_LABEL = 'https://github.com/kaka-lin/object-detection/raw/master/model_data/coco_classes.txt'
 OBJ_DETECTION_SSD_MODEL_ID = '1Ha9yfjkweCatEo6UoZgZyHMeyIBGe5FO'
