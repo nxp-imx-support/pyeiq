@@ -13,23 +13,20 @@ import cv2 as opencv
 import numpy as np
 
 from eiq.config import BASE_DIR
-from eiq.engines.tflite import inference
+from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.classification.config import *
 from eiq.multimedia.utils import resize_image
 from eiq.utils import args_parser, retrieve_from_id
 
 
-class eIQLabelImage(object):
+class eIQLabelImage:
     def __init__(self):
         self.args = args_parser(image=True, label=True, model=True)
-        self.interpreter = None
-        self.input_details = None
-        self.output_details = None
-
         self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_path = os.path.join(self.base_path, "media")
         self.model_path = os.path.join(self.base_path, "model")
 
+        self.interpreter = None
         self.image = None
         self.label = None
         self.model = None
@@ -63,22 +60,21 @@ class eIQLabelImage(object):
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.retrieve_data()
-        self.interpreter = inference.load_model(self.model)
-        self.input_details, self.output_details = inference.get_details(self.interpreter)
+        self.interpreter = TFLiteInterpreter(self.model)
 
     def run(self):
         self.start()
 
-        image = resize_image(self.input_details, self.image, use_opencv=False)
-        floating_model = self.input_details[0]['dtype'] == np.float32
+        image = resize_image(self.interpreter.input_details,
+                             self.image, use_opencv=False)
+        floating_model = self.interpreter.dtype() == np.float32
 
         if floating_model:
             image = (np.float32(image) - self.input_mean) / self.input_std
 
-        self.interpreter.set_tensor(self.input_details[0]['index'], image)
-        inference.inference(self.interpreter)
-        output_data = self.interpreter.get_tensor(self.output_details[0]['index'])
-        results = np.squeeze(output_data)
+        self.interpreter.set_tensor(image)
+        self.interpreter.run_inference()
+        results = self.interpreter.get_tensor(0, squeeze=True)
         top_k = results.argsort()[-5:][::-1]
         labels = self.load_labels(self.label)
 
@@ -89,17 +85,14 @@ class eIQLabelImage(object):
                 print('{:08.6f}: {}'.format(float(results[i] / 255.0), labels[i]))
 
 
-class eIQFireDetection(object):
+class eIQFireDetection:
     def __init__(self):
         self.args = args_parser(image=True, model=True)
-        self.interpreter = None
-        self.input_details = None
-        self.output_details = None
-
         self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_path = os.path.join(self.base_path, "media")
         self.model_path = os.path.join(self.base_path, "model")
 
+        self.interpreter = None
         self.image = None
         self.model = None
 
@@ -123,23 +116,22 @@ class eIQFireDetection(object):
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.retrieve_data()
-        self.interpreter = inference.load_model(self.model)
-        self.input_details, self.output_details = inference.get_details(self.interpreter)
+        self.interpreter = TFLiteInterpreter(self.model)
 
     def run(self):
         self.start()
 
         image = opencv.imread(self.image)
-        image = resize_image(self.input_details, image, use_opencv=True)
+        image = resize_image(self.interpreter.input_details,
+                             image, use_opencv=True)
 
-        if self.input_details[0]['dtype'] == np.float32:
+        if self.interpreter.dtype() == np.float32:
             image = np.array(image, dtype=np.float32) / 255.0
 
-        self.interpreter.set_tensor(self.input_details[0]['index'], image)
-        inference.inference(self.interpreter)
-        output_data = self.interpreter.get_tensor(self.output_details[0]['index'])
+        self.interpreter.set_tensor(image)
+        self.interpreter.run_inference()
 
-        if np.argmax(output_data) == 0:
+        if np.argmax(self.interpreter.get_tensor(0)) == 0:
             print("Non-Fire")
         else:
             print("Fire")

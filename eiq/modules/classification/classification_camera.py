@@ -13,27 +13,21 @@ import cv2 as opencv
 import numpy as np
 
 from eiq.config import BASE_DIR
-from eiq.engines.tflite import inference
+from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.classification.config import *
 from eiq.multimedia.utils import gstreamer_configurations, resize_image
 from eiq.utils import args_parser, retrieve_from_id
 
 
-class eIQFireDetection(object):
+class eIQFireDetection:
     def __init__(self):
         self.args = args_parser(camera=True, model=True, webcam=True)
-        self.interpreter = None
-        self.input_details = None
-        self.output_details = None
-
         self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
         self.model_path = os.path.join(self.base_path, 'model')
 
+        self.interpreter = None
         self.model = None
         self.video = None
-
-        self.msg = "No Fire"
-        self.msg_color = (0, 255, 0)
 
     def retrieve_data(self):
         if self.args.model is not None and os.path.isfile(self.args.model):
@@ -45,37 +39,41 @@ class eIQFireDetection(object):
                                       FIRE_DETECTION_MODEL_NAME)
 
     def detect_fire(self, image):
-        img = resize_image(self.input_details, image, use_opencv=True)
-        if self.input_details[0]['dtype'] == np.float32:
-            img = np.array(img, dtype=np.float32) / 255.0
+        image = resize_image(self.interpreter.input_details,
+                             image, use_opencv=True)
 
-        self.interpreter.set_tensor(self.input_details[0]['index'], img)
-        inference.inference(self.interpreter)
-        output_data = self.interpreter.get_tensor(self.output_details[0]['index'])
-        return np.argmax(output_data)
+        if self.interpreter.dtype() == np.float32:
+            image = np.array(image, dtype=np.float32) / 255.0
+
+        self.interpreter.set_tensor(image)
+        self.interpreter.run_inference()
+
+        return np.argmax(self.interpreter.get_tensor(0))
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.video = gstreamer_configurations(self.args)
         self.retrieve_data()
-        self.interpreter = inference.load_model(self.model)
-        self.input_details, self.output_details = inference.get_details(self.interpreter)
+        self.interpreter = TFLiteInterpreter(self.model)
 
     def run(self):
         self.start()
 
         while True:
             ret, frame = self.video.read()
-            if self.detect_fire(frame) == 0:
-                self.message = "No Fire"
-                self.color = (0, 255, 0)
-            else:
-                self.message = "Fire Detected!"
-                self.color = (0, 0, 255)
 
-            opencv.putText(frame, self.message, (50, 50),
-                            opencv.FONT_HERSHEY_SIMPLEX, 1, self.color, 2)
+            if self.detect_fire(frame) == 0:
+                message = "No Fire"
+                color = (0, 255, 0)
+            else:
+                message = "Fire Detected!"
+                color = (0, 0, 255)
+
+            opencv.putText(frame, message, (50, 50),
+                           opencv.FONT_HERSHEY_SIMPLEX, 1, color, 2)
             opencv.imshow(TITLE_FIRE_DETECTION_CAMERA, frame)
+
             if (opencv.waitKey(1) & 0xFF == ord('q')):
                 break
+
         opencv.destroyAllWindows()
