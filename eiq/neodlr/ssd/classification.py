@@ -15,7 +15,7 @@ from eiq.utils import args_parser, retrieve_from_id
 from .config import *
 
 
-class eIQObjectDetectionDLR(object):
+class eIQObjectDetectionDLR:
     def __init__(self):
         self.args = args_parser(
             camera=True, label=True, model=True, webcam=True)

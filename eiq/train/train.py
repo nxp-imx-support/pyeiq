@@ -25,7 +25,7 @@ import config
 from os.path import join
 
 
-class GenerateFireDetectionModel(object):
+class GenerateFireDetectionModel:
     def __init__(self, epochs_num, **kwargs):
         self.__dict__.update(kwargs)
         self.epochs_num = epochs_num

@@ -26,7 +26,7 @@ assert parse_version(pyarmnn_version) >= parse_version('19.11.0'), \
     "This demo requires pyarmnn version >= 19.11.0"
 
 
-class eIQFireDetection(object):
+class eIQFireDetection:
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
         self.args = args_parser(image=True, model=True)

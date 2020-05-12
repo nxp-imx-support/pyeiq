@@ -38,7 +38,7 @@ except ImportError:
     has_svgwrite = False
 
 
-class eIQObjectDetectionCamera(object):
+class eIQObjectDetectionCamera:
     def __init__(self):
         self.args = args_parser(
             camera=True, label=True, model=True, webcam=True)
@@ -146,7 +146,7 @@ class eIQObjectDetectionCamera(object):
         opencv.destroyAllWindows()
 
 
-class eIQObjectDetectionGStreamer(object):
+class eIQObjectDetectionGStreamer:
     def __init__(self):
         self.args = args_parser(camera=True, videopath=True, webcam=True)
         self.interpreter = None
@@ -321,7 +321,7 @@ class eIQObjectDetectionGStreamer(object):
                                         videofmt=self.videofmt)
 
 
-class eIQObjectDetectionImage(object):
+class eIQObjectDetectionImage:
     def __init__(self):
         self.args = args_parser( label=True, model=True)
         self.labels = None
@@ -482,7 +482,7 @@ class eIQObjectDetectionImage(object):
             self.caffeInference(img, img_name, self.nn)
 
 
-class eIQObjectDetectionOpenCV(object):
+class eIQObjectDetectionOpenCV:
     def __init__(self):
         self.args = args_parser(camera=True, webcam=True)
         self.interpreter = None
@@ -599,7 +599,7 @@ class eIQObjectDetectionOpenCV(object):
         opencv.destroyAllWindows()
 
 
-class eIQObjectDetectionSSD(object):
+class eIQObjectDetectionSSD:
     def __init__(self):
         self.args = args_parser(
             camera=True, camera_inference=True, image=True,
