@@ -15,6 +15,7 @@ import numpy as np
 from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.classification.config import *
+from eiq.modules.classification.utils import load_labels
 from eiq.multimedia.utils import resize_image
 from eiq.utils import args_parser, retrieve_from_id
 
@@ -33,10 +34,6 @@ class eIQLabelImage:
 
         self.input_mean = 127.5
         self.input_std = 127.5
-
-    def load_labels(self, filename):
-        with open(filename, 'r') as f:
-            return [line.strip() for line in f.readlines()]
 
     def retrieve_data(self):
         retrieve_from_id(LABEL_IMAGE_MODEL_ID, self.base_path,
@@ -76,7 +73,7 @@ class eIQLabelImage:
         self.interpreter.run_inference()
         results = self.interpreter.get_tensor(0, squeeze=True)
         top_k = results.argsort()[-5:][::-1]
-        labels = self.load_labels(self.label)
+        labels = load_labels(self.label)
 
         for i in top_k:
             if floating_model:
