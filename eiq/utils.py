@@ -24,7 +24,7 @@ from urllib.parse import urlparse
 import urllib.request
 
 from eiq import config
-from eiq.ext.google_drive_downloader import GoogleDriveDownloader
+from eiq.helper.google_drive_downloader import GoogleDriveDownloader
 
 try:
     import progressbar
