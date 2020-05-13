@@ -12,11 +12,18 @@ class TFLiteInterpreter:
         if model is not None:
             self.interpreter = Interpreter(model)
             self.interpreter.allocate_tensors()
+
             self.input_details = self.interpreter.get_input_details()
             self.output_details = self.interpreter.get_output_details()
 
     def dtype(self):
         return self.input_details[0]['dtype']
+
+    def height(self):
+        return self.input_details[0]['shape'][1]
+
+    def width(self):
+        return self.input_details[0]['shape'][2]
 
     def get_tensor(self, index, squeeze=False):
         if squeeze:
