@@ -19,7 +19,7 @@ import sys
 from sys import stdout
 import tempfile
 from time import monotonic
-import urllib.error
+from urllib.error import URLError, HTTPError
 from urllib.parse import urlparse
 import urllib.request
 
