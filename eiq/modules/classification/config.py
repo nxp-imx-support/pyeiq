@@ -1,6 +1,11 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
+IMAGE_CLASSIFICATION_LABEL_NAME = "labels_mobilenet_quant_v1_224.txt"
+IMAGE_CLASSIFICATION_MEDIA_NAME = "cat.jpg"
+IMAGE_CLASSIFICATION_MODEL_ID = "1yhQkJZwtuSyOvTOKi0ZVcIvZUR7GXv6z"
+IMAGE_CLASSIFICATION_MODEL_NAME = "mobilenet_v1_1.0_224_quant.tflite"
+
 LABEL_IMAGE_LABEL_NAME = "imagenet_labels.txt"
 LABEL_IMAGE_MEDIA_NAME = "grace_hopper.bmp"
 LABEL_IMAGE_MODEL_ID = "1mKCQ6ji5ZQ1IMkZ8HHV3q5CGl1OiNgz-"
@@ -11,8 +16,13 @@ FIRE_DETECTION_MEDIA_NAME = "fire.jpg"
 FIRE_DETECTION_MODEL_ID = "1WDG7QEhP8zHPU1I8J55Ju7nZ7TxRjOeV"
 FIRE_DETECTION_MODEL_NAME = "fire_detection.tflite"
 
+
+CAMERA_WIDTH = 640
+CAMERA_HEIGHT = 480
+
 ZIP = ".zip"
 
 # Demos's Titles
 
+TITLE_IMAGE_CLASSIFICATION = "PyeIQ Image Classification"
 TITLE_FIRE_DETECTION_CAMERA = "PyeIQ - Fire Detection Camera"

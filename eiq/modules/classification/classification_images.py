@@ -11,6 +11,7 @@ import os
 
 import cv2 as opencv
 import numpy as np
+from PIL import Image
 
 from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
@@ -18,6 +19,117 @@ from eiq.modules.classification.config import *
 from eiq.modules.classification.utils import load_labels
 from eiq.multimedia.utils import resize_image
 from eiq.utils import args_parser, retrieve_from_id
+
+
+class eIQObjectsClassification:
+    def __init__(self):
+        self.args = args_parser(camera_inference=True, image=True,
+                                label=True, model=True)
+        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.media_path = os.path.join(self.base_path, "media")
+        self.model_path = os.path.join(self.base_path, "model")
+
+        self.interpreter = None
+        self.image = None
+        self.label = None
+        self.model = None
+
+    def retrieve_data(self):
+        retrieve_from_id(IMAGE_CLASSIFICATION_MODEL_ID, self.base_path,
+                         self.__class__.__name__ + ZIP, True)
+
+        if self.args.image is not None and os.path.isfile(self.args.image):
+            self.image = self.args.image
+        else:
+            self.image = os.path.join(self.media_path, IMAGE_CLASSIFICATION_MEDIA_NAME)
+
+        if self.args.label is not None and os.path.isfile(self.args.label):
+            self.label = self.args.label
+        else:
+            self.label = os.path.join(self.model_path, IMAGE_CLASSIFICATION_LABEL_NAME)
+
+        if self.args.model is not None and os.path.isfile(self.args.model):
+            self.model = self.args.model
+        else:
+            self.model = os.path.join(self.model_path, IMAGE_CLASSIFICATION_MODEL_NAME)
+
+    def process_image(self, image, k=3):
+        """Process an image, Return top K result in a list of 2-Tuple(confidence_score, label)"""
+        input_data = np.expand_dims(image, axis=0)  # expand to 4-dim
+
+        self.interpreter.set_tensor(input_data)
+        self.interpreter.run_inference()
+
+        # Get outputs
+        output_data = self.interpreter.get_tensor(0, squeeze=True)
+
+        # Get top K result
+        top_k = output_data.argsort()[-k:][::-1]  # Top_k index
+        result = []
+        for i in top_k:
+            score = float(output_data[i] / 255.0)
+            result.append((i, score))
+
+        return result
+
+    def display_result(self, top_result, frame, labels):
+        """Display top K result in top right corner"""
+        font = opencv.FONT_HERSHEY_SIMPLEX
+        size = 0.6
+        color = (255, 0, 0)  # Blue color
+        thickness = 1
+
+        for idx, (i, score) in enumerate(top_result):
+            x = 12
+            y = 24 * idx + 24
+            opencv.putText(frame, '{} - {:0.4f}'.format(labels[i], score),
+                        (x, y), font, size, color, thickness)
+
+        opencv.imshow(TITLE_IMAGE_CLASSIFICATION, frame)
+
+    def classificate_image(self, frame):
+        image = Image.fromarray(opencv.cvtColor(frame, opencv.COLOR_BGR2RGB))
+        image = image.resize((self.interpreter.width(),
+                              self.interpreter.height()))
+
+        top_result = self.process_image(image)
+        self.display_result(top_result, frame, self.label)
+
+    def real_time_classification(self):
+        cap = opencv.VideoCapture(0)
+        cap.set(opencv.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
+        cap.set(opencv.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
+        cap.set(opencv.CAP_PROP_FPS, 15)
+
+        # Process Stream
+        while True:
+            ret, frame = cap.read()
+
+            if ret:
+                self.classificate_image(frame)
+
+            if (opencv.waitKey(1) & 0xFF) == ord('q'):
+                break
+
+        cap.release()
+
+    def start(self):
+        os.environ['VSI_NN_LOG_LEVEL'] = "0"
+        self.retrieve_data()
+        self.interpreter = TFLiteInterpreter(self.model)
+        self.label = load_labels(self.label)
+
+    def run(self):
+        self.start()
+
+        if self.args.camera_inference:
+            self.real_time_classification()
+        else:
+            frame = opencv.imread(self.image, opencv.IMREAD_COLOR)
+            self.classificate_image(frame)
+            opencv.waitKey()
+
+        opencv.destroyAllWindows()
 
 
 class eIQLabelImage:
