@@ -35,7 +35,7 @@ The procedures described in this document target a GNU/Linux Distribution Ubuntu
 ```
 3. Generate the PyeIQ package:
 ```console
-(env) ~/pyeiq# python3 setup.py sdist bdist_wheel
+(env) ~/pyeiq# python3 setup.py sdist
 ```
 4. Copy the package to the board:
 ```console
