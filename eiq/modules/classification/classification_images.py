@@ -17,8 +17,93 @@ from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.classification.config import *
 from eiq.modules.classification.utils import load_labels
-from eiq.multimedia.utils import resize_image
+from eiq.multimedia.utils import gstreamer_configurations, resize_image
 from eiq.utils import args_parser, retrieve_from_id
+
+
+class eIQFireClassification:
+    def __init__(self):
+        self.args = args_parser(camera = True, camera_inference = True,
+                                image=True, model=True, webcam = True)
+        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.media_path = os.path.join(self.base_path, "media")
+        self.model_path = os.path.join(self.base_path, "model")
+
+        self.interpreter = None
+        self.image = None
+        self.model = None
+        self.video = None
+
+    def retrieve_data(self):
+        if self.args.image is not None and os.path.isfile(self.args.image):
+            self.image = self.args.image
+        else:
+            retrieve_from_id(FIRE_DETECTION_MEDIA_ID, self.media_path,
+                             FIRE_DETECTION_MEDIA_NAME)
+            self.image = os.path.join(self.media_path,
+                                      FIRE_DETECTION_MEDIA_NAME)
+
+        if self.args.model is not None and os.path.isfile(self.args.model):
+            self.model = self.args.model
+        else:
+            retrieve_from_id(FIRE_DETECTION_MODEL_ID, self.model_path,
+                             FIRE_DETECTION_MODEL_NAME)
+            self.model = os.path.join(self.model_path,
+                                      FIRE_DETECTION_MODEL_NAME)
+
+    def fire_classification(self, frame):
+        image = resize_image(self.interpreter.input_details,
+                             frame, use_opencv=True)
+
+        if self.interpreter.dtype() == np.float32:
+            image = np.array(image, dtype=np.float32) / 255.0
+
+        self.interpreter.set_tensor(image)
+        self.interpreter.run_inference()
+
+        if np.argmax(self.interpreter.get_tensor(0)) == 0:
+            opencv.putText(frame, NO_FIRE, (50, 50),
+                           opencv.FONT_HERSHEY_SIMPLEX, 1, CV_GREEN, 2)
+        else:
+            opencv.putText(frame, FIRE, (50, 50),
+                           opencv.FONT_HERSHEY_SIMPLEX, 1, CV_RED, 2)
+
+        opencv.imshow(TITLE_FIRE_CLASSIFICATION, frame)
+
+    def real_time_classification(self):
+        self.video = gstreamer_configurations(self.args)
+
+        while True:
+            ret, frame = self.video.read()
+
+            if ret:
+                self.fire_classification(frame)
+            else:
+                print("Your video device could not capture any image.\n"\
+                      "Please, check your device configurations." )
+                break
+
+            if (opencv.waitKey(1) & 0xFF == ord('q')):
+                break
+
+        self.video.release()
+
+    def start(self):
+        os.environ['VSI_NN_LOG_LEVEL'] = "0"
+        self.retrieve_data()
+        self.interpreter = TFLiteInterpreter(self.model)
+
+    def run(self):
+        self.start()
+
+        if self.args.camera_inference:
+            self.real_time_classification()
+        else:
+            frame = opencv.imread(self.image)
+            self.fire_classification(frame)
+            opencv.waitKey()
+
+        opencv.destroyAllWindows()
 
 
 class eIQObjectsClassification:
@@ -192,55 +277,3 @@ class eIQLabelImage:
                 print('{:08.6f}: {}'.format(float(results[i]), labels[i]))
             else:
                 print('{:08.6f}: {}'.format(float(results[i] / 255.0), labels[i]))
-
-
-class eIQFireDetection:
-    def __init__(self):
-        self.args = args_parser(image=True, model=True)
-        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.media_path = os.path.join(self.base_path, "media")
-        self.model_path = os.path.join(self.base_path, "model")
-
-        self.interpreter = None
-        self.image = None
-        self.model = None
-
-    def retrieve_data(self):
-        if self.args.image is not None and os.path.isfile(self.args.image):
-            self.image = self.args.image
-        else:
-            retrieve_from_id(FIRE_DETECTION_MEDIA_ID, self.media_path,
-                             FIRE_DETECTION_MEDIA_NAME)
-            self.image = os.path.join(self.media_path,
-                                      FIRE_DETECTION_MEDIA_NAME)
-
-        if self.args.model is not None and os.path.isfile(self.args.model):
-            self.model = self.args.model
-        else:
-            retrieve_from_id(FIRE_DETECTION_MODEL_ID, self.model_path,
-                             FIRE_DETECTION_MODEL_NAME)
-            self.model = os.path.join(self.model_path,
-                                      FIRE_DETECTION_MODEL_NAME)
-
-    def start(self):
-        os.environ['VSI_NN_LOG_LEVEL'] = "0"
-        self.retrieve_data()
-        self.interpreter = TFLiteInterpreter(self.model)
-
-    def run(self):
-        self.start()
-
-        image = opencv.imread(self.image)
-        image = resize_image(self.interpreter.input_details,
-                             image, use_opencv=True)
-
-        if self.interpreter.dtype() == np.float32:
-            image = np.array(image, dtype=np.float32) / 255.0
-
-        self.interpreter.set_tensor(image)
-        self.interpreter.run_inference()
-
-        if np.argmax(self.interpreter.get_tensor(0)) == 0:
-            print("Non-Fire")
-        else:
-            print("Fire")

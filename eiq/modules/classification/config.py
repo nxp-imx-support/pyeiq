@@ -16,13 +16,18 @@ FIRE_DETECTION_MEDIA_NAME = "fire.jpg"
 FIRE_DETECTION_MODEL_ID = "1WDG7QEhP8zHPU1I8J55Ju7nZ7TxRjOeV"
 FIRE_DETECTION_MODEL_NAME = "fire_detection.tflite"
 
-
 CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480
+
+CV_GREEN = (0, 255, 0)
+CV_RED = (0, 0, 255)
+
+FIRE = "Fire Detected!"
+NO_FIRE = "No Fire"
 
 ZIP = ".zip"
 
 # Demos's Titles
 
+TITLE_FIRE_CLASSIFICATION = "PyeIQ Fire Classification"
 TITLE_IMAGE_CLASSIFICATION = "PyeIQ Image Classification"
-TITLE_FIRE_DETECTION_CAMERA = "PyeIQ - Fire Detection Camera"
