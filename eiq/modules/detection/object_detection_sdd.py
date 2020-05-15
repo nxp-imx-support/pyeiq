@@ -21,10 +21,10 @@ from gi.repository import Gst
 import cv2 as opencv
 import numpy as np
 from PIL import Image
-from tflite_runtime.interpreter import Interpreter
 
 from eiq.config import BASE_DIR
 import eiq.engines.tflite.inference as inference
+from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.detection.config import *
 from eiq.modules.detection.utils import *
 from eiq.multimedia import gstreamer
@@ -36,6 +36,173 @@ try:
     has_svgwrite = True
 except ImportError:
     has_svgwrite = False
+
+
+class eIQObjectsDetection:
+    def __init__(self):
+        self.args = args_parser(camera=True, camera_inference=True, image=True,
+                                label=True, model=True, webcam=True)
+        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.media_path = os.path.join(self.base_path, "media")
+        self.model_path = os.path.join(self.base_path, "model")
+
+        self.interpreter = None
+        self.image = None
+        self.label = None
+        self.model = None
+        self.video = None
+
+        self.class_names = None
+        self.class_names_dict = {}
+        self.colors = None
+
+        self.font = cv2.FONT_HERSHEY_SIMPLEX
+        self.font_size = 0.8
+        self.font_color = (0, 0, 0)
+        self.font_thickness = 2
+
+    def retrieve_data(self):
+        retrieve_from_id(OBJ_DETECTION_MODEL_ID, self.base_path,
+                         self.__class__.__name__ + ZIP, True)
+
+        if self.args.image is not None and os.path.exists(self.args.image):
+            self.image = self.args.image
+        else:
+            self.image = os.path.join(self.media_path,
+                                      OBJ_DETECTION_MEDIA_NAME)
+
+        if self.args.label is not None and os.path.exists(self.args.label):
+            self.label = self.args.label
+        else:
+            self.label = os.path.join(self.model_path,
+                                      OBJ_DETECTION_LABEL_NAME)
+
+        if self.args.model is not None and os.path.exists(self.args.model):
+            self.model = self.args.model
+        else:
+            self.model = os.path.join(self.model_path,
+                                      OBJ_DETECTION_MODEL_NAME)
+        
+    def dictionary(self):
+        with open(self.label) as f:
+            i = 0
+
+            for line in f:
+                _id = line.split()
+                self.class_names_dict[np.float32(_id[0])] = i
+                i = i + 1
+
+    def load_labels(self, label_path):
+        """Returns a list of labels"""
+        with open(label_path) as f:
+            labels = {}
+            for line in f.readlines():
+                m = re.match(r"(\d+)\s+(\w+)", line.strip())
+                labels[int(m.group(1))] = m.group(2)
+            return labels
+
+    def process_image(self, image):
+        """Process an image, Return a list of detected class ids and positions"""
+        self.interpreter.set_tensor(np.expand_dims(image, axis=0))
+        self.interpreter.run_inference()
+        
+        positions = self.interpreter.get_tensor(0, squeeze=True)
+        classes = self.interpreter.get_tensor(1, squeeze=True)
+        scores = self.interpreter.get_tensor(2, squeeze=True)
+
+        result = []
+
+        for idx, score in enumerate(scores):
+            if score > 0.5:
+                result.append({'pos': positions[idx], '_id': classes[idx] })
+
+        return result
+
+    def display_result(self, result, frame, labels):
+        """Display Detected Objects"""
+        width = frame.shape[1]
+        height = frame.shape[0]
+
+        for obj in result:
+            pos = obj['pos']
+            _id = obj['_id']
+
+            x1 = int(pos[1] * width)
+            x2 = int(pos[3] * width)
+            y1 = int(pos[0] * height)
+            y2 = int(pos[2] * height)
+
+            top = max(0, np.floor(y1 + 0.5).astype('int32'))
+            left = max(0, np.floor(x1 + 0.5).astype('int32'))
+            bottom = min(height, np.floor(y2 + 0.5).astype('int32'))
+            right = min(width, np.floor(x2 + 0.5).astype('int32'))
+
+            cv2.rectangle(frame, (left, top), (right, bottom),
+                          self.colors[self.class_names_dict[_id]], 6)
+
+            label_size = cv2.getTextSize(labels[_id], self.font,
+                                         self.font_size,
+                                         self.font_thickness)[0]
+            label_rect_left = int(left - 3)
+            label_rect_top = int(top - 3)
+            label_rect_right = int(left + 3 + label_size[0])
+            label_rect_bottom = int(top - 5 - label_size[1])
+
+            cv2.rectangle(frame, (label_rect_left, label_rect_top),
+                          (label_rect_right, label_rect_bottom),
+                          self.colors[self.class_names_dict[_id]], -1)
+            cv2.putText(frame, labels[_id], (left, int(top - 4)),
+                        self.font, self.font_size, self.font_color,
+                        self.font_thickness)
+
+        cv2.imshow('Object Detection', frame)
+
+    def detect_objects(self, frame):
+        image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+        image = image.resize((self.interpreter.width(),
+                              self.interpreter.height()))
+
+        top_result = self.process_image(image)
+        self.display_result(top_result, frame, self.label)
+
+    def real_time_detection(self):
+        self.video = gstreamer_configurations(self.args)
+
+        while True:
+            ret, frame = self.video.read()
+
+            if ret:
+                self.detect_objects(frame)
+            else:
+                print("Your video device could not capture any image.\n"\
+                      "Please, check your device's configurations." )
+                break
+
+            if (cv2.waitKey(1) & 0xFF) == ord('q'):
+                break
+
+        self.video.release()
+
+    def start(self):
+        os.environ['VSI_NN_LOG_LEVEL'] = "0"
+        self.retrieve_data()
+        self.interpreter = TFLiteInterpreter(self.model)
+        self.class_names = read_classes(self.label)
+        self.colors = generate_colors(self.class_names)
+        self.dictionary()
+        self.label = self.load_labels(self.label)
+
+    def run(self):
+        self.start()
+
+        if self.args.camera_inference:
+            self.real_time_detection()
+        else:
+            frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
+            self.detect_objects(frame)
+            cv2.waitKey()
+
+        cv2.destroyAllWindows()
 
 
 class eIQObjectDetectionCamera:
