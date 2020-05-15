@@ -19,7 +19,7 @@ os.system("pip3 install https://neo-ai-dlr-release.s3-us-west-2.amazonaws.com/" 
 
 apps_dir = os.path.join(os.getcwd(), "eiq", "apps")
 base_dir = os.path.join("/opt", "eiq")
-demos_dir = os.path.join(os.getcwd(), "eiq", "demos")
+demos_dir = os.path.join(os.getcwd(), "examples")
 switch_label = "eiq/apps/switch_image/switch_image.py"
 images_player = "eiq/apps/images_player/images_player.py"
 
