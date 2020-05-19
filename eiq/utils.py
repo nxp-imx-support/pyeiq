@@ -53,18 +53,22 @@ def log(*args):
     logging.info(" ".join("%s" % a for a in args))
 
 
-def convert(elapsed):
-    return str(timedelta(seconds=elapsed))
+class InferenceTimer:
+    def __init__(self):
+        self.time = 0
 
+    @contextmanager
+    def timeit(self, message: str = None):
+        begin = monotonic()
+        try:
+            yield
+        finally:
+            end = monotonic()
+            self.convert(end-begin)
+            print("{0}: {1}".format(message, self.time))
 
-@contextmanager
-def timeit(message: str = None):
-    begin = monotonic()
-    try:
-        yield
-    finally:
-        end = monotonic()
-        print("{0}: {1}".format(message, convert(end-begin)))
+    def convert(self, elapsed):
+        self.time = str(timedelta(seconds=elapsed))
 
 
 def get_temporary_path(*path):
