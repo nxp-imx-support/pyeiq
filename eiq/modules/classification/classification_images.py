@@ -15,6 +15,7 @@ from PIL import Image
 
 from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
+from eiq.helper.overlay import OpenCVOverlay
 from eiq.modules.classification.config import *
 from eiq.modules.classification.utils import load_labels
 from eiq.multimedia.utils import gstreamer_configurations, resize_image
@@ -68,6 +69,8 @@ class eIQFireClassification:
             opencv.putText(frame, FIRE, (50, 50),
                            opencv.FONT_HERSHEY_SIMPLEX, 1, CV_RED, 2)
 
+        inference_time_overlay = OpenCVOverlay(frame, self.interpreter.inference_time)
+        frame = inference_time_overlay.draw_inference_time()
         opencv.imshow(TITLE_FIRE_CLASSIFICATION, frame)
 
     def real_time_classification(self):
