@@ -140,29 +140,22 @@ class eIQObjectsClassification:
             self.model = os.path.join(self.model_path, IMAGE_CLASSIFICATION_MODEL_NAME)
 
     def process_image(self, image, k=3):
-        """Process an image, Return top K result in a list of 2-Tuple(confidence_score, label)"""
-        input_data = np.expand_dims(image, axis=0)  # expand to 4-dim
-
+        input_data = np.expand_dims(image, axis=0)
         self.interpreter.set_tensor(input_data)
         self.interpreter.run_inference()
-
-        # Get outputs
         output_data = self.interpreter.get_tensor(0, squeeze=True)
 
-        # Get top K result
-        top_k = output_data.argsort()[-k:][::-1]  # Top_k index
+        top_k = output_data.argsort()[-k:][::-1]
         result = []
         for i in top_k:
             score = float(output_data[i] / 255.0)
             result.append((i, score))
-
         return result
 
     def display_result(self, top_result, frame, labels):
-        """Display top K result in top right corner"""
         font = opencv.FONT_HERSHEY_SIMPLEX
         size = 0.6
-        color = (255, 0, 0)  # Blue color
+        color = (255, 0, 0)
         thickness = 1
 
         for idx, (i, score) in enumerate(top_result):
@@ -187,16 +180,12 @@ class eIQObjectsClassification:
         cap.set(opencv.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
         cap.set(opencv.CAP_PROP_FPS, 15)
 
-        # Process Stream
         while True:
             ret, frame = cap.read()
-
             if ret:
                 self.classificate_image(frame)
-
             if (opencv.waitKey(1) & 0xFF) == ord('q'):
                 break
-
         cap.release()
 
     def start(self):
@@ -207,14 +196,12 @@ class eIQObjectsClassification:
 
     def run(self):
         self.start()
-
         if self.args.camera_inference:
             self.real_time_classification()
         else:
             frame = opencv.imread(self.image, opencv.IMREAD_COLOR)
             self.classificate_image(frame)
             opencv.waitKey()
-
         opencv.destroyAllWindows()
 
 
