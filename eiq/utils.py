@@ -143,17 +143,26 @@ def retrieve_from_url(url: str = None, name: str = None,
         return file
 
 
-def retrieve_data(url_dict, pathname, filename, unzip_flag=False):
-    src = check_servers(url_dict)
-
-    if src is not None:
-        if src == 'drive':
-            _id = url_dict[src].split('/')[ID]
+def retrieve_data(args, url_dict, pathname, filename, unzip_flag=False):
+    if args.download is not None:
+        if args.download == 'github':
+            retrieve_from_url(url_dict[args.download], pathname, filename, unzip_flag)
+        elif args.download == 'drive':
+            _id = url_dict[args.download].split('/')[ID]
             retrieve_from_id(_id, pathname, filename, unzip_flag)
-        elif src == 'github':
-            retrieve_from_url(url_dict[src], pathname, filename, unzip_flag)
+        else:
+            sys.exit("No servers could be reached to retrieve required data. Exiting...")
     else:
-        sys.exit("No servers could be reached to retrieve required data. Exiting...")
+        src = check_servers(url_dict)
+
+        if src is not None:
+            if src == 'drive':
+                _id = url_dict[src].split('/')[ID]
+                retrieve_from_id(_id, pathname, filename, unzip_flag)
+            elif src == 'github':
+                retrieve_from_url(url_dict[src], pathname, filename, unzip_flag)
+        else:
+            sys.exit("No servers could be reached to retrieve required data. Exiting...")
 
 
 def check_connection(url: str = None):
