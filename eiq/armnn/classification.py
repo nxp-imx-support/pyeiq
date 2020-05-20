@@ -12,6 +12,7 @@
 ## https://github.com/ARM-software/ML-examples/tree/master/pyarmnn-fire-detection
 
 import argparse
+import os
 from pkg_resources import parse_version
 from timeit import default_timer as timer
 
@@ -20,38 +21,46 @@ import numpy as np
 import pyarmnn as ann
 from pyarmnn import __version__ as pyarmnn_version
 
-from eiq.armnn import config
+from eiq.armnn.config import *
+from eiq.config import BASE_DIR
+from eiq.utils import args_parser, Downloader
 
 assert parse_version(pyarmnn_version) >= parse_version('19.11.0'), \
-    "This demo requires pyarmnn version >= 19.11.0"
+       "This demo requires pyarmnn version >= 19.11.0"
 
 
 class eIQFireDetection:
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
-        self.args = args_parser(image=True, model=True)
-        self.name = self.__class__.__name__
-        self.to_fetch = {'image': config.FIRE_DETECTION_DEFAULT_IMAGE,
-                         'model': config.FIRE_DETECTION_MODEL
-                         }
+    def __init__(self):
+        self.args = args_parser(download=True, image=True, model=True)
+        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.media_path = os.path.join(self.base_path, "media")
+        self.model_path = os.path.join(self.base_path, "model")
 
-        self.image = ''
-        self.model = ''
+        self.interpreter = None
+        self.image = None
+        self.model = None
+        self.video = None
 
-    def retrieve_data(self):
+    def gather_data(self):
+        download = Downloader(self.args)
+        download.retrieve_data(FIRE_DETECTION_MODEL_SRC,
+                               self.__class__.__name__ + ZIP, self.base_path,
+                               FIRE_DETECTION_MODEL_SHA1, True)
+
         if self.args.image is not None and os.path.isfile(self.args.image):
             self.image = self.args.image
         else:
-            self.image = retrieve_from_url(self.to_fetch['image'], self.name)
+            self.image = os.path.join(self.media_path,
+                                      FIRE_DETECTION_MEDIA_NAME)
 
         if self.args.model is not None and os.path.isfile(self.args.model):
             self.model = self.args.model
         else:
-            self.model = retrieve_from_url(self.to_fetch['model'], self.name)
+            self.model = os.path.join(self.model_path,
+                                      FIRE_DETECTION_MODEL_NAME)
 
     def start(self):
-        self.retrieve_data()
-        self.tflite_runtime_interpreter()
+        self.gather_data()
 
     def run(self):
         self.start()
