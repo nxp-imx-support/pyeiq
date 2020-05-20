@@ -49,7 +49,8 @@ def get_details(interpreter):
 
 
 def inference(interpreter):
-    with timeit("Inference time"):
+    timer = InferenceTimer()
+    with timer.timeit("Inference time"):
         interpreter.invoke()
 
 
