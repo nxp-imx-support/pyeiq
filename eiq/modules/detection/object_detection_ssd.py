@@ -29,7 +29,7 @@ from eiq.modules.detection.config import *
 from eiq.modules.detection.utils import *
 from eiq.multimedia import gstreamer
 from eiq.multimedia.utils import gstreamer_configurations, make_boxes
-from eiq.utils import args_parser, retrieve_from_url, retrieve_from_id
+from eiq.utils import args_parser, retrieve_data
 
 try:
     import svgwrite
@@ -61,8 +61,8 @@ class eIQObjectsDetection:
         self.font_color = (0, 0, 0)
         self.font_thickness = 2
 
-    def retrieve_data(self):
-        retrieve_from_id(OBJ_DETECTION_MODEL_ID, self.base_path,
+    def gather_data(self):
+        retrieve_data(OBJ_DETECTION_MODEL_SRC, self.base_path,
                          self.__class__.__name__ + ZIP, True)
 
         if self.args.image is not None and os.path.exists(self.args.image):
@@ -185,7 +185,7 @@ class eIQObjectsDetection:
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
-        self.retrieve_data()
+        self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
         self.class_names = read_classes(self.label)
         self.colors = generate_colors(self.class_names)
@@ -224,8 +224,8 @@ class eIQObjectDetectionGStreamer:
         self.src_width = 640
         self.src_height = 480
 
-    def retrieve_data(self):
-        retrieve_from_id(OBJ_DETECTION_CV_GST_MODEL_ID, self.model_path,
+    def gather_data(self):
+        retrieve_data(OBJ_DETECTION_CV_GST_MODEL_SRC, self.model_path,
                          self.__class__.__name__ + ZIP, True)
         self.model = os.path.join(self.model_path,
                                   OBJ_DETECTION_CV_GST_MODEL_NAME)
@@ -341,7 +341,7 @@ class eIQObjectDetectionGStreamer:
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.video_src_config()
         self.video_file_config()
-        self.retrieve_data()
+        self.gather_data()
         self.interpreter = inference.load_model(self.model)
         self.input_details, self.output_details = inference.get_details(self.interpreter)
 
@@ -496,8 +496,8 @@ class eIQObjectDetectionImage:
         self.coordinates.append(int(self.wf * int(d[0, 0, i, 5] * c)))
         self.coordinates.append(int(self.hf * int(d[0, 0, i, 6] * r)))
 
-    def retrieve_data(self):
-        retrieve_from_id(OBJ_DETECTION_IMG_MODEL_ID, self.base_path,
+    def gather_data(self):
+        retrieve_data(OBJ_DETECTION_IMG_MODEL_SRC, self.base_path,
                          self.__class__.__name__ + ZIP, True)
 
         if self.args.label is not None and os.path.isfile(self.args.label):
@@ -525,7 +525,7 @@ class eIQObjectDetectionImage:
         opencv.imwrite(os.path.join(self.labeled_media_path, n), i)
 
     def start(self):
-        self.retrieve_data()
+        self.gather_data()
         self.load_images_from_media_folder()
         self.nn = opencv.dnn.readNetFromCaffe(self.model_proto,
                                               self.model_caffe)
@@ -555,8 +555,8 @@ class eIQObjectDetectionOpenCV:
         self.model = None
         self.label = None
 
-    def retrieve_data(self):
-        retrieve_from_id(OBJ_DETECTION_CV_GST_MODEL_ID, self.model_path,
+    def gather_data(self):
+        retrieve_data(OBJ_DETECTION_CV_GST_MODEL_SRC, self.model_path,
                          self.__class__.__name__ + ZIP, True)
         self.model = os.path.join(self.model_path,
                                   OBJ_DETECTION_CV_GST_MODEL_NAME)
@@ -627,7 +627,7 @@ class eIQObjectDetectionOpenCV:
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.video = gstreamer_configurations(self.args)
-        self.retrieve_data()
+        self.gather_data()
         self.interpreter = inference.load_model(self.model)
         self.input_details, self.output_details = inference.get_details(
                                                     self.interpreter)
@@ -726,8 +726,8 @@ class eIQObjectDetectionSSD:
         self.video.release()
         opencv.destroyAllWindows()
 
-    def retrieve_data(self):
-        retrieve_from_id(OBJ_DETECTION_SSD_MODEL_ID, self.base_path,
+    def gather_data(self):
+        retrieve_data(OBJ_DETECTION_SSD_MODEL_SRC, self.base_path,
                          self.__class__.__name__ + ZIP, True)
 
         if self.args.image is not None and os.path.exists(self.args.image):
@@ -766,7 +766,7 @@ class eIQObjectDetectionSSD:
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
-        self.retrieve_data()
+        self.gather_data()
         self.interpreter = inference.load_model(self.model)
         self.input_details, self.output_details = inference.get_details(self.interpreter)
         self.class_names = read_classes(self.label)
