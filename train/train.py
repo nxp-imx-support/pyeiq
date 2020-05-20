@@ -1,5 +1,4 @@
-# Copyright 2020 jrosebr1
-#
+## Copyright 2020 jrosebr1
 ## Copyright 2020 NXP Semiconductors
 ##
 ## This train code was copied from jrosebr1 respecting its rights. All the
