@@ -3,18 +3,32 @@
 
 IMAGE_CLASSIFICATION_LABEL_NAME = "labels_mobilenet_quant_v1_224.txt"
 IMAGE_CLASSIFICATION_MEDIA_NAME = "cat.jpg"
-IMAGE_CLASSIFICATION_MODEL_ID = "1yhQkJZwtuSyOvTOKi0ZVcIvZUR7GXv6z"
 IMAGE_CLASSIFICATION_MODEL_NAME = "mobilenet_v1_1.0_224_quant.tflite"
+IMAGE_CLASSIFICATION_MODEL_SRC = {'drive': "https://drive.google.com/file/d/" \
+                                           "1yhQkJZwtuSyOvTOKi0ZVcIvZUR7GXv6z/" \
+                                           "view?usp=sharing",
+                                  'github': "https://github.com/diegohdorta/" \
+                                            "models/raw/master/models/" \
+                                            "eIQImageClassification.zip"}
 
 LABEL_IMAGE_LABEL_NAME = "imagenet_labels.txt"
 LABEL_IMAGE_MEDIA_NAME = "grace_hopper.bmp"
-LABEL_IMAGE_MODEL_ID = "1mKCQ6ji5ZQ1IMkZ8HHV3q5CGl1OiNgz-"
 LABEL_IMAGE_MODEL_NAME = "mobilenet_v2_1.0_224_quant.tflite"
+LABEL_IMAGE_MODEL_SRC = {'drive':  "https://drive.google.com/file/d/" \
+                                   "1mKCQ6ji5ZQ1IMkZ8HHV3q5CGl1OiNgz-/" \
+                                   "view?usp=sharing",
+                         'github': "https://github.com/diegohdorta/" \
+                                   "models/raw/master/models/" \
+                                   "label_image.zip"}
 
-FIRE_DETECTION_MEDIA_ID = "11w9LSNDc_5JbgbpK1f1hGIWcKTPZa_Kd"
 FIRE_DETECTION_MEDIA_NAME = "fire.jpg"
-FIRE_DETECTION_MODEL_ID = "19gtKslEa1qUZ17ieve5Glrfc1IWuggg0"
 FIRE_DETECTION_MODEL_NAME = "fire_detection.tflite"
+FIRE_DETECTION_MODEL_SRC = {'drive': "https://drive.google.com/file/d/" \
+                                     "1aDsAB2i9wl1xbkexXbiYfPawKUMYXfwH/" \
+                                     "view?usp=sharing",
+                            'github': "https://github.com/diegohdorta/" \
+                                      "models/raw/master/models/" \
+                                      "eIQFireClassification.zip"}
 
 CAMERA_WIDTH = 640
 CAMERA_HEIGHT = 480

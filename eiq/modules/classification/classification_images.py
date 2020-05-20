@@ -19,7 +19,7 @@ from eiq.helper.overlay import OpenCVOverlay
 from eiq.modules.classification.config import *
 from eiq.modules.classification.utils import load_labels
 from eiq.multimedia.utils import gstreamer_configurations, resize_image
-from eiq.utils import args_parser, retrieve_from_id
+from eiq.utils import args_parser, retrieve_data
 
 
 class eIQFireClassification:
@@ -35,20 +35,18 @@ class eIQFireClassification:
         self.model = None
         self.video = None
 
-    def retrieve_data(self):
+    def gather_data(self):
+        retrieve_data(FIRE_DETECTION_MODEL_SRC, self.base_path,
+                      self.__class__.__name__ + ZIP, True)
         if self.args.image is not None and os.path.isfile(self.args.image):
             self.image = self.args.image
         else:
-            retrieve_from_id(FIRE_DETECTION_MEDIA_ID, self.media_path,
-                             FIRE_DETECTION_MEDIA_NAME)
             self.image = os.path.join(self.media_path,
                                       FIRE_DETECTION_MEDIA_NAME)
 
         if self.args.model is not None and os.path.isfile(self.args.model):
             self.model = self.args.model
         else:
-            retrieve_from_id(FIRE_DETECTION_MODEL_ID, self.model_path,
-                             FIRE_DETECTION_MODEL_NAME)
             self.model = os.path.join(self.model_path,
                                       FIRE_DETECTION_MODEL_NAME)
 
@@ -93,7 +91,7 @@ class eIQFireClassification:
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
-        self.retrieve_data()
+        self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
 
     def run(self):
@@ -122,8 +120,8 @@ class eIQObjectsClassification:
         self.label = None
         self.model = None
 
-    def retrieve_data(self):
-        retrieve_from_id(IMAGE_CLASSIFICATION_MODEL_ID, self.base_path,
+    def gather_data(self):
+        retrieve_data(IMAGE_CLASSIFICATION_MODEL_SRC, self.base_path,
                          self.__class__.__name__ + ZIP, True)
 
         if self.args.image is not None and os.path.isfile(self.args.image):
@@ -203,7 +201,7 @@ class eIQObjectsClassification:
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
-        self.retrieve_data()
+        self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
         self.label = load_labels(self.label)
 
@@ -235,8 +233,8 @@ class eIQLabelImage:
         self.input_mean = 127.5
         self.input_std = 127.5
 
-    def retrieve_data(self):
-        retrieve_from_id(LABEL_IMAGE_MODEL_ID, self.base_path,
+    def gather_data(self):
+        retrieve_data(LABEL_IMAGE_MODEL_SRC, self.base_path,
                          self.__class__.__name__ + ZIP, True)
 
         if self.args.image is not None and os.path.isfile(self.args.image):
@@ -256,7 +254,7 @@ class eIQLabelImage:
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
-        self.retrieve_data()
+        self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
 
     def run(self):
