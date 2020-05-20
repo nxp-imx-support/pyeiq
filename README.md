@@ -1,6 +1,6 @@
 # A Python Framework for eIQ on i.MX Processors
 
-[![Gitter](https://badges.gitter.im/pyeiq-imx/community.svg)](http://img.shields.io/badge/+%20GITTER-JOIN%20CHAT%20%E2%86%92-1DCE73.svg?style=flat-square)
+[![Gitter](https://badges.gitter.im/pyeiq-imx/community.svg)](https://gitter.im/pyeiq-imx/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 ![GitHub repo size](https://img.shields.io/github/repo-size/diegohdorta/pyeiq?style=flat-badge)
 
 PyeIQ provides a simplified way to run ML applications, which avoids the user
