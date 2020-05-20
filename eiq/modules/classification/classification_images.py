@@ -19,7 +19,7 @@ from eiq.helper.overlay import OpenCVOverlay
 from eiq.modules.classification.config import *
 from eiq.modules.classification.utils import load_labels
 from eiq.multimedia.utils import gstreamer_configurations, resize_image
-from eiq.utils import args_parser, retrieve_data
+from eiq.utils import args_parser, Downloader
 
 
 class eIQFireClassification:
@@ -37,8 +37,11 @@ class eIQFireClassification:
         self.video = None
 
     def gather_data(self):
-        retrieve_data(self.args, FIRE_DETECTION_MODEL_SRC, self.base_path,
-                      self.__class__.__name__ + ZIP, True)
+        download = Downloader(self.args)
+        download.retrieve_data(FIRE_DETECTION_MODEL_SRC,
+                               self.__class__.__name__ + ZIP, self.base_path,
+                               FIRE_DETECTION_MODEL_SHA1, True)
+
         if self.args.image is not None and os.path.isfile(self.args.image):
             self.image = self.args.image
         else:
@@ -127,8 +130,10 @@ class eIQObjectsClassification:
         self.font_thickness = 2
 
     def gather_data(self):
-        retrieve_data(self.args, IMAGE_CLASSIFICATION_MODEL_SRC, self.base_path,
-                         self.__class__.__name__ + ZIP, True)
+        download = Downloader(self.args)
+        download.retrieve_data(IMAGE_CLASSIFICATION_MODEL_SRC,
+                               self.__class__.__name__ + ZIP, self.base_path,
+                               IMAGE_CLASSIFICATION_MODEL_SHA1, True)
 
         if self.args.image is not None and os.path.isfile(self.args.image):
             self.image = self.args.image
@@ -225,8 +230,10 @@ class eIQLabelImage:
         self.input_std = 127.5
 
     def gather_data(self):
-        retrieve_data(self.args, LABEL_IMAGE_MODEL_SRC, self.base_path,
-                         self.__class__.__name__ + ZIP, True)
+        download = Downloader(self.args)
+        download.retrieve_data(LABEL_IMAGE_MODEL_SRC,
+                               self.__class__.__name__ + ZIP, self.base_path,
+                               LABEL_IMAGE_MODEL_SHA1, True)
 
         if self.args.image is not None and os.path.isfile(self.args.image):
             self.image = self.args.image
