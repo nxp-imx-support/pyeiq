@@ -87,14 +87,12 @@ class eIQObjectsDetection:
     def dictionary(self):
         with open(self.label) as f:
             i = 0
-
             for line in f:
                 _id = line.split()
                 self.class_names_dict[np.float32(_id[0])] = i
                 i = i + 1
 
     def load_labels(self, label_path):
-        """Returns a list of labels"""
         with open(label_path) as f:
             labels = {}
             for line in f.readlines():
@@ -103,7 +101,6 @@ class eIQObjectsDetection:
             return labels
 
     def process_image(self, image):
-        """Process an image, Return a list of detected class ids and positions"""
         self.interpreter.set_tensor(np.expand_dims(image, axis=0))
         self.interpreter.run_inference()
         
@@ -112,15 +109,12 @@ class eIQObjectsDetection:
         scores = self.interpreter.get_tensor(2, squeeze=True)
 
         result = []
-
         for idx, score in enumerate(scores):
             if score > 0.5:
-                result.append({'pos': positions[idx], '_id': classes[idx] })
-
+                result.append({'pos': positions[idx], '_id': classes[idx]})
         return result
 
     def display_result(self, result, frame, labels):
-        """Display Detected Objects"""
         width = frame.shape[1]
         height = frame.shape[0]
 
@@ -162,28 +156,22 @@ class eIQObjectsDetection:
 
     def detect_objects(self, frame):
         image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-        image = image.resize((self.interpreter.width(),
-                              self.interpreter.height()))
-
+        image = image.resize((self.interpreter.width(), self.interpreter.height()))
         top_result = self.process_image(image)
         self.display_result(top_result, frame, self.label)
 
     def real_time_detection(self):
         self.video = gstreamer_configurations(self.args)
-
         while True:
             ret, frame = self.video.read()
-
             if ret:
                 self.detect_objects(frame)
             else:
                 print("Your video device could not capture any image.\n"\
                       "Please, check your device's configurations." )
                 break
-
             if (cv2.waitKey(1) & 0xFF) == ord('q'):
                 break
-
         self.video.release()
 
     def start(self):
@@ -248,16 +236,13 @@ class eIQObjectDetectionGStreamer:
             self.src_height = 1080
 
     def input_image_size(self):
-        """Returns input size as (width, height, channels) tuple."""
         _, height, width, channels = self.input_details[0]['shape']
         return width, height, channels
 
     def input_tensor(self):
-        """Returns input tensor view as numpy array of shape (height, width, channels)."""
         return self.interpreter.tensor(self.input_details[0]['index'])()[0]
 
     def set_input(self, buf):
-        """Copies data to input tensor."""
         result, mapinfo = buf.map(Gst.MapFlags.READ)
         if result:
             np_buffer = np.reshape(np.frombuffer(
@@ -266,7 +251,6 @@ class eIQObjectDetectionGStreamer:
             buf.unmap(mapinfo)
 
     def output_tensor(self, i):
-        """Returns dequantized output tensor if quantized before."""
         output_data = np.squeeze(self.interpreter.tensor(self.output_details[i]['index'])())
         if 'quantization' not in self.output_details:
             return output_data
@@ -316,14 +300,10 @@ class eIQObjectDetectionGStreamer:
             self.shadow_text(dwg, 10, y * 20, line)
         for obj in objs:
             x0, y0, x1, y1 = list(obj.bbox)
-            # Relative coordinates.
             x, y, w, h = x0, y0, x1 - x0, y1 - y0
-            # Absolute coordinates, input tensor space.
             x, y, w, h = int(x * inf_w), int(y *
                                              inf_h), int(w * inf_w), int(h * inf_h)
-            # Subtract boxing offset.
             x, y = x - box_x, y - box_y
-            # Scale to source coordinate space.
             x, y, w, h = x * scale_x, y * scale_y, w * scale_x, h * scale_y
             percent = int(100 * obj.score)
             label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))
@@ -333,11 +313,9 @@ class eIQObjectDetectionGStreamer:
         return dwg.tostring()
 
     def get_output(self, score_threshold=0.1, top_k=3, image_scale=1.0):
-        """Returns list of detected objects."""
         boxes = self.output_tensor(0)
         category_ids = self.output_tensor(1)
         scores = self.output_tensor(2)
-
         return [make_boxes(i, boxes, category_ids, scores) for i in range(top_k) if scores[i] >= score_threshold]
 
     def start(self):
@@ -567,22 +545,18 @@ class eIQObjectDetectionOpenCV:
                                   OBJ_DETECTION_CV_GST_LABEL_NAME)
 
     def set_input(self, image, resample=Image.NEAREST):
-        """Copies data to input tensor."""
         image = image.resize(
             (self.input_image_size()[0:2]), resample)
         self.input_tensor()[:, :] = image
 
     def input_image_size(self):
-        """Returns input image size as (width, height, channels) tuple."""
         _, height, width, channels = self.input_details[0]['shape']
         return width, height, channels
 
     def input_tensor(self):
-        """Returns input tensor view as numpy array of shape (height, width, 3)."""
         return self.interpreter.tensor(self.input_details[0]['index'])()[0]
 
     def output_tensor(self, i):
-        """Returns dequantized output tensor if quantized before."""
         output_data = np.squeeze(self.interpreter.tensor(
                                     self.output_details[i]['index'])())
         if 'quantization' not in self.output_details:
@@ -599,7 +573,6 @@ class eIQObjectDetectionOpenCV:
             return {int(num): text.strip() for num, text in lines}
 
     def get_output(self, score_threshold=0.1, top_k=3, image_scale=1.0):
-        """Returns list of detected objects."""
         boxes = self.output_tensor(0)
         class_ids = self.output_tensor(1)
         scores = self.output_tensor(2)
@@ -644,7 +617,6 @@ class eIQObjectDetectionOpenCV:
             if not ret:
                 break
             opencv_im = frame
-
             opencv_im_rgb = opencv.cvtColor(opencv_im, opencv.COLOR_BGR2RGB)
             pil_im = Image.fromarray(opencv_im_rgb)
 
@@ -656,7 +628,6 @@ class eIQObjectDetectionOpenCV:
             opencv.imshow(TITLE_OBJECT_DETECTION_CV, opencv_im)
             if opencv.waitKey(1) & 0xFF == ord('q'):
                 break
-
         self.video.release()
         opencv.destroyAllWindows()
 
@@ -707,7 +678,6 @@ class eIQObjectDetectionSSD:
         while self.video.isOpened():
             start = time.time()
             ret, frame = self.video.read()
-
             if ret:
                 image_data = preprocess_image_for_tflite(frame)
                 out_scores, out_boxes, out_classes = self.run_detection(image_data)
@@ -715,17 +685,14 @@ class eIQObjectDetectionSSD:
                 result = draw_boxes(frame, out_scores, out_boxes, out_classes,
                             self.class_names, self.colors)
                 end = time.time()
-
                 t = end - start
                 fps  = "Fps: {:.2f}".format(1 / t)
                 opencv.putText(result, fps, (10, 30),
 		                    opencv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0),
                             2, opencv.LINE_AA)
-
                 opencv.imshow(TITLE_OBJECT_DETECTION_SSD, frame)
                 if opencv.waitKey(1) & 0xFF == ord('q'):
                     break
-
         self.video.release()
         opencv.destroyAllWindows()
 
@@ -753,9 +720,7 @@ class eIQObjectDetectionSSD:
 
     def run_detection(self, image):
         self.interpreter.set_tensor(self.input_details[0]['index'], image)
-
         inference.inference(self.interpreter)
-
         boxes = self.interpreter.get_tensor(self.output_details[0]['index'])
         classes = self.interpreter.get_tensor(self.output_details[1]['index'])
         scores = self.interpreter.get_tensor(self.output_details[2]['index'])
@@ -764,7 +729,6 @@ class eIQObjectDetectionSSD:
         boxes, scores, classes = np.squeeze(boxes), np.squeeze(scores), np.squeeze(classes + 1).astype(np.int32)
         out_scores, out_boxes, out_classes = non_max_suppression(scores,
                                                 boxes, classes)
-
         return out_scores, out_boxes, out_classes
 
     def start(self):
