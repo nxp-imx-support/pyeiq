@@ -6,10 +6,6 @@ OBJ_DETECTION_MEDIA_NAME = "bus.jpg"
 OBJ_DETECTION_MODEL_ID = "1xdjdKPOH2PFPStbU2K2TEuFJN8Las3ag"
 OBJ_DETECTION_MODEL_NAME = "detect.tflite"
 
-OBJ_DETECTION_CAM_LABEL_NAME = "labelmap.txt"
-OBJ_DETECTION_CAM_MODEL = "https://storage.googleapis.com/download.tensorflow.org/models/tflite/coco_ssd_mobilenet_v1_1.0_quant_2018_06_29.zip"
-OBJ_DETECTION_CAM_MODEL_NAME = "detect.tflite"
-
 OBJ_DETECTION_CV_GST_LABEL_NAME = "coco_labels.txt"
 OBJ_DETECTION_CV_GST_MODEL_ID = "1KF1hDfLvwJZ1S6102i8FvMwYoZmtEqLN"
 OBJ_DETECTION_CV_GST_MODEL_NAME = "mobilenet_ssd_v2_coco_quant_postprocess.tflite"
