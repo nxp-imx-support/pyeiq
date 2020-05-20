@@ -120,6 +120,11 @@ class eIQObjectsClassification:
         self.label = None
         self.model = None
 
+        self.font = opencv.FONT_HERSHEY_SIMPLEX
+        self.font_size = 0.8
+        self.font_color = (0, 127, 255)
+        self.font_thickness = 2
+
     def gather_data(self):
         retrieve_data(IMAGE_CLASSIFICATION_MODEL_SRC, self.base_path,
                          self.__class__.__name__ + ZIP, True)
@@ -153,17 +158,14 @@ class eIQObjectsClassification:
         return result
 
     def display_result(self, top_result, frame, labels):
-        font = opencv.FONT_HERSHEY_SIMPLEX
-        size = 0.6
-        color = (255, 0, 0)
-        thickness = 1
-
         for idx, (i, score) in enumerate(top_result):
-            x = 12
-            y = 24 * idx + 24
+            x = 20
+            y = 35 * idx + 35
             opencv.putText(frame, '{} - {:0.4f}'.format(labels[i], score),
-                        (x, y), font, size, color, thickness)
-
+                           (x, y), self.font, self.font_size,
+                           self.font_color, self.font_thickness)
+        inference_time_overlay = OpenCVOverlay(frame, self.interpreter.inference_time)
+        frame = inference_time_overlay.draw_inference_time()
         opencv.imshow(TITLE_IMAGE_CLASSIFICATION, frame)
 
     def classificate_image(self, frame):
