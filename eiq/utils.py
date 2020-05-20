@@ -238,7 +238,7 @@ def args_parser(camera: bool = False, webcam: bool = False,
             help="number of epochs for the traning")
     if videopath:
         parser.add_argument(
-            '-v', '--videopath', type=None, default=0,
+            '-v', '--videopath', default=None,
             help="path of the video file")
 
     return parser.parse_args()

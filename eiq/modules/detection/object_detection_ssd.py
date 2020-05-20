@@ -230,7 +230,7 @@ class eIQObjectDetectionGStreamer:
             self.videosrc = "/dev/video" + str(self.args.camera)
 
     def video_file_config(self):
-        if self.args.videopath != 0 and os.path.exists(self.args.videopath):
+        if self.args.videopath is not None and os.path.exists(self.args.videopath):
             self.videofile = self.args.videopath
             self.src_width = 1920
             self.src_height = 1080
