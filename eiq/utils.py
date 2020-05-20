@@ -23,7 +23,7 @@ from urllib.error import URLError, HTTPError
 from urllib.parse import urlparse
 import urllib.request
 
-from eiq import config
+from eiq.config import *
 from eiq.helper.google_drive_downloader import GoogleDriveDownloader
 
 try:
@@ -76,17 +76,13 @@ def get_temporary_path(*path):
 
 
 def download_url(file_path: str = None, filename: str = None,
-                 url: str = None, netloc: str = None):
-
-    if not check_connection(url):
-        sys.exit("'{0}' could not be reached, " \
-                 " please check your internet connection.".format(netloc))
+                 url: str = None):
+    timer = InferenceTimer()
 
     try:
         log("Downloading '{0}'".format(filename))
-        log("From '{0}' ...".format(netloc))
 
-        with timeit("Download time"):
+        with timer.timeit("Download time"):
             if found is True:
                 urllib.request.urlretrieve(url, file_path, ProgressBar())
             else:
@@ -101,7 +97,7 @@ def download_url(file_path: str = None, filename: str = None,
 
 def retrieve_from_id(gd_id_url: str=None, pathname: str = None,
                      filename: str=None, unzip_flag: bool=False):
-    dirpath = os.path.join(config.TMP_FILE_PATH, pathname)
+    dirpath = os.path.join(TMP_FILE_PATH, pathname)
     tmpdir = get_temporary_path(dirpath)
     if not os.path.exists(dirpath):
         try:
@@ -121,7 +117,7 @@ def retrieve_from_id(gd_id_url: str=None, pathname: str = None,
 
 def retrieve_from_url(url: str = None, name: str = None,
                       filename: str = None, unzip: bool=False):
-    dirpath = os.path.join(config.TMP_FILE_PATH, name)
+    dirpath = os.path.join(TMP_FILE_PATH, name)
     if filename is None:
         filename_parsed = urlparse(url)
         filename = os.path.basename(filename_parsed.path)
@@ -137,7 +133,7 @@ def retrieve_from_url(url: str = None, name: str = None,
     if (os.path.isfile(fp)):
         return fp
     else:
-        file = download_url(fp, filename, url, filename_parsed.netloc)
+        file = download_url(fp, filename, url)
 
         if unzip:
             path = os.path.dirname(file)
@@ -147,12 +143,45 @@ def retrieve_from_url(url: str = None, name: str = None,
         return file
 
 
+def retrieve_data(url_dict, pathname, filename, unzip_flag=False):
+    src = check_servers(url_dict)
+
+    if src is not None:
+        if src == 'drive':
+            _id = url_dict[src].split('/')[ID]
+            retrieve_from_id(_id, pathname, filename, unzip_flag)
+        elif src == 'github':
+            retrieve_from_url(url_dict[src], pathname, filename, unzip_flag)
+    else:
+        sys.exit("No servers could be reached to retrieve required data. Exiting...")
+
+
 def check_connection(url: str = None):
     try:
         urllib.request.urlopen(url)
         return True
     except:
         return False
+
+
+def check_servers(url_dict):
+    elapsed = {}
+    min_time = MAX_TIME
+
+    for key, val in url_dict.items():
+        try:
+            e_time = requests.get(val).elapsed
+            elapsed[e_time] = key
+        except:
+            pass
+
+    for e_time in elapsed:
+        min_time = min(min_time, e_time)
+
+    if min_time == MAX_TIME:
+        return None
+
+    return elapsed[min_time]
 
 
 def copy(target_dir, src_dir):
@@ -168,7 +197,7 @@ def copy(target_dir, src_dir):
             if os.path.isdir(file_path):
                 copy(os.path.join(target_dir, file), file_path)
             else:
-                if file != config.INIT_MODULE_FILE:
+                if file != INIT_MODULE_FILE:
                     shutil.copy(file_path, target_dir)
 
 
