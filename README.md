@@ -1,13 +1,17 @@
-# PyeIQ
+# A Python Framework for eIQ on i.MX Processors
 
-PyeIQ gathers everything needed by itself. It provides a simplified way to run
-ML applications, which avoids the user spending time on preparing the environment.
+[![Gitter](https://badges.gitter.im/pyeiq-imx/community.svg)](http://img.shields.io/badge/+%20GITTER-JOIN%20CHAT%20%E2%86%92-1DCE73.svg?style=flat-square)
+![GitHub repo size](https://img.shields.io/github/repo-size/diegohdorta/pyeiq?style=flat-badge)
+
+PyeIQ provides a simplified way to run ML applications, which avoids the user
+spending time on preparing the environment.
 
 ## Release Date
 
-| PyeIQ Version | Release Date | Notes |
-|---------------|--------------|-------|
-| tag_v1.0      | Apr 29, 2020 | -     |
+| PyeIQ Version | Release Date | Notes                |
+|---------------|--------------|----------------------|
+| tag_v1.0      | Apr 29, 2020 | -                    |
+| tag_v2.0.0    | -            | Planned for June     |
 
 ## BSP Support
 
@@ -15,7 +19,6 @@ ML applications, which avoids the user spending time on preparing the environmen
 |----------------|-------------------|---------------------------|---------------------|
 | 8 QM           | _5.4.3_2.0.0_     | tag_v1.0                  | **passing**         |
 | 8 MPlus        | _5.4.3_2.0.0_     | tag_v1.0                  | **passing**         |
-| 8 M Mini       | _5.4.3_2.0.0_     | tag_v1.0                  | -                   |
 
 
 ## Applications Status
