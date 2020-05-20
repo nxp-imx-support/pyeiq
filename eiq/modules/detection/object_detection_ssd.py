@@ -30,7 +30,7 @@ from eiq.modules.detection.config import *
 from eiq.modules.detection.utils import *
 from eiq.multimedia import gstreamer
 from eiq.multimedia.utils import gstreamer_configurations, make_boxes
-from eiq.utils import args_parser, retrieve_data
+from eiq.utils import args_parser, Downloader
 
 try:
     import svgwrite
@@ -64,8 +64,10 @@ class eIQObjectsDetection:
         self.font_thickness = 2
 
     def gather_data(self):
-        retrieve_data(self.args, OBJ_DETECTION_MODEL_SRC, self.base_path,
-                         self.__class__.__name__ + ZIP, True)
+        download = Downloader(self.args)
+        download.retrieve_data(OBJ_DETECTION_MODEL_SRC,
+                               self.__class__.__name__ + ZIP, self.base_path,
+                               OBJ_DETECTION_MODEL_SHA1, True)
 
         if self.args.image is not None and os.path.exists(self.args.image):
             self.image = self.args.image
@@ -218,8 +220,11 @@ class eIQObjectDetectionGStreamer:
         self.src_height = 480
 
     def gather_data(self):
-        retrieve_data(self.args, OBJ_DETECTION_CV_GST_MODEL_SRC, self.model_path,
-                         self.__class__.__name__ + ZIP, True)
+        download = Downloader(self.args)
+        download.retrieve_data(OBJ_DETECTION_CV_GST_MODEL_SRC,
+                               self.__class__.__name__ + ZIP, self.base_path,
+                               OBJ_DETECTION_CV_GST_MODEL_SHA1, True)
+
         self.model = os.path.join(self.model_path,
                                   OBJ_DETECTION_CV_GST_MODEL_NAME)
         self.label = os.path.join(self.model_path,
@@ -480,8 +485,10 @@ class eIQObjectDetectionImage:
         self.coordinates.append(int(self.hf * int(d[0, 0, i, 6] * r)))
 
     def gather_data(self):
-        retrieve_data(self.args, OBJ_DETECTION_IMG_MODEL_SRC, self.base_path,
-                         self.__class__.__name__ + ZIP, True)
+        download = Downloader(self.args)
+        download.retrieve_data(OBJ_DETECTION_IMG_MODEL_SRC,
+                               self.__class__.__name__ + ZIP, self.base_path,
+                               OBJ_DETECTION_IMG_MODEL_SHA1, True)
 
         if self.args.label is not None and os.path.isfile(self.args.label):
             self.labels = self.args.label
@@ -539,8 +546,11 @@ class eIQObjectDetectionOpenCV:
         self.label = None
 
     def gather_data(self):
-        retrieve_data(self.args, OBJ_DETECTION_CV_GST_MODEL_SRC, self.model_path,
-                         self.__class__.__name__ + ZIP, True)
+        download = Downloader(self.args)
+        download.retrieve_data(OBJ_DETECTION_CV_GST_MODEL_SRC,
+                               self.__class__.__name__ + ZIP, self.base_path,
+                               OBJ_DETECTION_CV_GST_MODEL_SHA1, True)
+
         self.model = os.path.join(self.model_path,
                                   OBJ_DETECTION_CV_GST_MODEL_NAME)
         self.label = os.path.join(self.model_path,
@@ -699,8 +709,10 @@ class eIQObjectDetectionSSD:
         opencv.destroyAllWindows()
 
     def gather_data(self):
-        retrieve_data(self.args, OBJ_DETECTION_SSD_MODEL_SRC, self.base_path,
-                         self.__class__.__name__ + ZIP, True)
+        download = Downloader(self.args)
+        download.retrieve_data(OBJ_DETECTION_SSD_MODEL_SRC,
+                               self.__class__.__name__ + ZIP, self.base_path,
+                               OBJ_DETECTION_SSD_MODEL_SHA1, True)
 
         if self.args.image is not None and os.path.exists(self.args.image):
             self.image = self.args.image
