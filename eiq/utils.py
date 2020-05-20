@@ -190,26 +190,6 @@ def get_temporary_path(*path):
     return os.path.join(tempfile.gettempdir(), *path)
 
 
-def download_url(file_path: str = None, filename: str = None,
-                 url: str = None):
-    timer = InferenceTimer()
-
-    try:
-        log("Downloading '{0}'".format(filename))
-
-        with timer.timeit("Download time"):
-            if found is True:
-                urllib.request.urlretrieve(url, file_path, ProgressBar())
-            else:
-                urllib.request.urlretrieve(url, file_path)
-    except URLError as e:
-        sys.exit("Something went wrong with URLError: " % e)
-    except HTTPError as e:
-        sys.exit("Something went wrong with HTTPError: " % e)
-    finally:
-        return file_path
-
-
 def retrieve_from_id(gd_id_url: str=None, pathname: str = None,
                      filename: str=None, unzip_flag: bool=False):
     dirpath = os.path.join(TMP_FILE_PATH, pathname)
@@ -228,84 +208,6 @@ def retrieve_from_id(gd_id_url: str=None, pathname: str = None,
         gdd.download_file_from_google_drive(
             file_id=gd_id_url, dest_path=dst, unzip=unzip_flag)
         return fp
-
-
-def retrieve_from_url(url: str = None, name: str = None,
-                      filename: str = None, unzip: bool=False):
-    dirpath = os.path.join(TMP_FILE_PATH, name)
-    if filename is None:
-        filename_parsed = urlparse(url)
-        filename = os.path.basename(filename_parsed.path)
-
-    tmpdir = get_temporary_path(dirpath)
-    if not os.path.exists(dirpath):
-        try:
-            pathlib.Path(tmpdir).mkdir(parents=True, exist_ok=True)
-        except OSError:
-            sys.exit("os.mkdir() function has failed: %s" % tmpdir)
-
-    fp = os.path.join(tmpdir, filename)
-    if (os.path.isfile(fp)):
-        return fp
-    else:
-        file = download_url(fp, filename, url)
-
-        if unzip:
-            path = os.path.dirname(file)
-            shutil.unpack_archive(file, path)
-            return path
-
-        return file
-
-
-def retrieve_data(args, url_dict, pathname, filename, unzip_flag=False):
-    if args.download is not None:
-        if args.download == 'github':
-            retrieve_from_url(url_dict[args.download], pathname, filename, unzip_flag)
-        elif args.download == 'drive':
-            _id = url_dict[args.download].split('/')[ID]
-            retrieve_from_id(_id, pathname, filename, unzip_flag)
-        else:
-            sys.exit("No servers could be reached to retrieve required data. Exiting...")
-    else:
-        src = check_servers(url_dict)
-
-        if src is not None:
-            if src == 'drive':
-                _id = url_dict[src].split('/')[ID]
-                retrieve_from_id(_id, pathname, filename, unzip_flag)
-            elif src == 'github':
-                retrieve_from_url(url_dict[src], pathname, filename, unzip_flag)
-        else:
-            sys.exit("No servers could be reached to retrieve required data. Exiting...")
-
-
-def check_connection(url: str = None):
-    try:
-        urllib.request.urlopen(url)
-        return True
-    except:
-        return False
-
-
-def check_servers(url_dict):
-    elapsed = {}
-    min_time = MAX_TIME
-
-    for key, val in url_dict.items():
-        try:
-            e_time = requests.get(val).elapsed
-            elapsed[e_time] = key
-        except:
-            pass
-
-    for e_time in elapsed:
-        min_time = min(min_time, e_time)
-
-    if min_time == MAX_TIME:
-        return None
-
-    return elapsed[min_time]
 
 
 def copy(target_dir, src_dir):
