@@ -9,6 +9,7 @@ from datetime import timedelta
 import logging
 logging.basicConfig(level=logging.INFO)
 
+from hashlib import sha1
 import os
 from os import makedirs
 from os.path import exists
@@ -24,13 +25,127 @@ from urllib.parse import urlparse
 import urllib.request
 
 from eiq.config import *
-from eiq.helper.google_drive_downloader import GoogleDriveDownloader
+from eiq.helper.google_drive_downloader import GoogleDriveDownloader as gdd
 
 try:
     import progressbar
     found = True
 except ImportError:
     found = False
+
+
+class Downloader():
+    def __init__(self, args):
+        self.args = args
+        self.downloaded_file = None
+
+    def check_servers(self, url_dict):
+        elapsed = {}
+        min_time = MAX_TIME
+
+        for key, val in url_dict.items():
+            try:
+                e_time = requests.get(val).elapsed
+                elapsed[e_time] = key
+            except:
+                pass
+
+        for e_time in elapsed:
+            min_time = min(min_time, e_time)
+
+        if min_time == MAX_TIME:
+            return None
+
+        return elapsed[min_time]
+
+    def check_sha1(self, file_path, sha1_hash):
+        with open(file_path, 'rb') as f:
+            file = f.read()
+
+        return sha1(file).hexdigest() == sha1_hash
+
+    def download_from_url(self, url, filename=None, download_path=None):
+        timer = InferenceTimer()
+
+        try:
+            log("Downloading '{0}'".format(filename))
+            with timer.timeit("Download time"):
+                if found is True:
+                    urllib.request.urlretrieve(url, download_path,
+                                               ProgressBar())
+                else:
+                    urllib.request.urlretrieve(url, download_path)
+        except URLError as e:
+            sys.exit("Something went wrong with URLError: " % e)
+        except HTTPError as e:
+            sys.exit("Something went wrong with HTTPError: " % e)
+
+    def download_from_web(self, url, filename=None,
+                          download_path=None, drive=False):
+        if filename is None:
+            filename_parsed = urlparse(url)
+            filename = os.path.basename(filename_parsed.path)
+
+        if download_path is None:
+            download_path = get_temporary_path(TMP_FILE_PATH)
+
+        if not os.path.exists(download_path):
+            try:
+                pathlib.Path(download_path).mkdir(parents=True, exist_ok=True)
+            except OSError:
+                sys.exit("pathlin.Path().mkdir() has failed" \
+                         "trying to create: %s" % download_path)
+
+        download_path = os.path.join(download_path, filename)
+
+        if not (os.path.exists(download_path)):
+            if not drive:
+                self.download_from_url(url, filename, download_path)
+            else:
+                try:
+                    gdd.download_file_from_google_drive(file_id=url,
+                                                        dest_path=download_path)
+                    self.downloaded_file = download_path
+                except:
+                    sys.exit("Google Drive server could not be reached." \
+                             "Your download has been canceled.\n" \
+                             "Exiting...")
+
+        self.downloaded_file = download_path
+
+    def retrieve_data(self, url_dict, filename=None, download_path=None,
+                      sha1=None, unzip=False):
+        drive_flag = False
+        if self.args.download is not None:
+            try:
+                url = url_dict[self.args.download]
+            except:
+                sys.exit("Your download parameter is invalid. Exiting...")
+
+            if self.args.download == 'drive':
+                drive_flag = True
+                url = url.split('/')[ID]
+        else:
+            print("Searching for the best server to download...")
+            src = self.check_servers(url_dict)
+            if src is not None:
+                url = url_dict[src]
+                if src == 'drive':
+                    url = url.split('/')[ID]
+                    drive_flag = True
+            else:
+                sys.exit("No servers were available to download the data.\n" \
+                         "Exiting...")
+        self.download_from_web(url, filename, download_path, drive=drive_flag)
+
+        if self.downloaded_file is not None and unzip:
+            if sha1 is not None and self.check_sha1(self.downloaded_file,
+                                                    sha1):
+                shutil.unpack_archive(self.downloaded_file, download_path)
+            else:
+                os.remove(self.downloaded_file)
+                sys.exit("The checksum of your file failed!"\
+                         "Your file is corrupted.\nRemoving and exiting...")
 
 
 class ProgressBar:
@@ -110,7 +225,7 @@ def retrieve_from_id(gd_id_url: str=None, pathname: str = None,
         return fp
     else:
         dst = os.path.join(tmpdir, filename)
-        GoogleDriveDownloader.download_file_from_google_drive(
+        gdd.download_file_from_google_drive(
             file_id=gd_id_url, dest_path=dst, unzip=unzip_flag)
         return fp
 
