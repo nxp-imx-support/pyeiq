@@ -16,6 +16,7 @@ from os.path import exists
 import pathlib
 import requests
 import shutil
+import subprocess
 import sys
 from sys import stdout
 import tempfile
@@ -117,6 +118,9 @@ class Downloader():
                       sha1=None, unzip=False):
         drive_flag = False
         if self.args.download is not None:
+            if self.args.download == 'wget':
+                self.wget(url_dict['github'], filename, download_path)
+                return
             try:
                 url = url_dict[self.args.download]
             except:
@@ -136,6 +140,7 @@ class Downloader():
             else:
                 sys.exit("No servers were available to download the data.\n" \
                          "Exiting...")
+
         self.download_from_web(url, filename, download_path, drive=drive_flag)
 
         if self.downloaded_file is not None and unzip:
@@ -146,6 +151,18 @@ class Downloader():
                 os.remove(self.downloaded_file)
                 sys.exit("The checksum of your file failed!"\
                          "Your file is corrupted.\nRemoving and exiting...")
+
+    def wget(self, url, filename, download_path):
+        file = os.path.basename(url)
+        newfile = os.path.join(download_path, filename)
+        proc = subprocess.Popen("mkdir -p {}".format(download_path), shell = True)
+        proc.wait()
+        proc = subprocess.Popen("wget {}".format(url), shell = True)
+        proc.wait()
+        proc =subprocess.Popen("mv {} {}".format(file, newfile), shell = True)
+        proc.wait()
+
+        shutil.unpack_archive(newfile, download_path)
 
 
 class ProgressBar:
