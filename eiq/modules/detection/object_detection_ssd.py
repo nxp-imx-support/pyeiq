@@ -41,8 +41,9 @@ except ImportError:
 
 class eIQObjectsDetection:
     def __init__(self):
-        self.args = args_parser(camera=True, camera_inference=True, image=True,
-                                label=True, model=True, webcam=True)
+        self.args = args_parser(camera=True, camera_inference=True,
+                                download=True, image=True,label=True,
+                                model=True, webcam=True)
         self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_path = os.path.join(self.base_path, "media")
         self.model_path = os.path.join(self.base_path, "model")
@@ -63,7 +64,7 @@ class eIQObjectsDetection:
         self.font_thickness = 2
 
     def gather_data(self):
-        retrieve_data(OBJ_DETECTION_MODEL_SRC, self.base_path,
+        retrieve_data(self.args, OBJ_DETECTION_MODEL_SRC, self.base_path,
                          self.__class__.__name__ + ZIP, True)
 
         if self.args.image is not None and os.path.exists(self.args.image):
@@ -198,7 +199,8 @@ class eIQObjectsDetection:
 
 class eIQObjectDetectionGStreamer:
     def __init__(self):
-        self.args = args_parser(camera=True, videopath=True, webcam=True)
+        self.args = args_parser(camera=True, download=True,
+                                videopath=True, webcam=True)
         self.interpreter = None
         self.input_details = None
         self.output_details = None
@@ -216,7 +218,7 @@ class eIQObjectDetectionGStreamer:
         self.src_height = 480
 
     def gather_data(self):
-        retrieve_data(OBJ_DETECTION_CV_GST_MODEL_SRC, self.model_path,
+        retrieve_data(self.args, OBJ_DETECTION_CV_GST_MODEL_SRC, self.model_path,
                          self.__class__.__name__ + ZIP, True)
         self.model = os.path.join(self.model_path,
                                   OBJ_DETECTION_CV_GST_MODEL_NAME)
@@ -363,7 +365,7 @@ class eIQObjectDetectionGStreamer:
 
 class eIQObjectDetectionImage:
     def __init__(self):
-        self.args = args_parser( label=True, model=True)
+        self.args = args_parser(download=True, label=True, model=True)
         self.labels = None
         self.model_caffe = None
         self.model_proto = None
@@ -478,7 +480,7 @@ class eIQObjectDetectionImage:
         self.coordinates.append(int(self.hf * int(d[0, 0, i, 6] * r)))
 
     def gather_data(self):
-        retrieve_data(OBJ_DETECTION_IMG_MODEL_SRC, self.base_path,
+        retrieve_data(self.args, OBJ_DETECTION_IMG_MODEL_SRC, self.base_path,
                          self.__class__.__name__ + ZIP, True)
 
         if self.args.label is not None and os.path.isfile(self.args.label):
@@ -524,7 +526,7 @@ class eIQObjectDetectionImage:
 
 class eIQObjectDetectionOpenCV:
     def __init__(self):
-        self.args = args_parser(camera=True, webcam=True)
+        self.args = args_parser(camera=True, download=True, webcam=True)
         self.interpreter = None
         self.input_details = None
         self.output_details = None
@@ -537,7 +539,7 @@ class eIQObjectDetectionOpenCV:
         self.label = None
 
     def gather_data(self):
-        retrieve_data(OBJ_DETECTION_CV_GST_MODEL_SRC, self.model_path,
+        retrieve_data(self.args, OBJ_DETECTION_CV_GST_MODEL_SRC, self.model_path,
                          self.__class__.__name__ + ZIP, True)
         self.model = os.path.join(self.model_path,
                                   OBJ_DETECTION_CV_GST_MODEL_NAME)
@@ -634,9 +636,9 @@ class eIQObjectDetectionOpenCV:
 
 class eIQObjectDetectionSSD:
     def __init__(self):
-        self.args = args_parser(
-            camera=True, camera_inference=True, image=True,
-            label=True, model=True, webcam=True)
+        self.args = args_parser(camera=True, camera_inference=True,
+                                download=True, image=True, label=True,
+                                model=True, webcam=True)
         self.interpreter = None
         self.input_details = None
         self.output_details = None
@@ -697,7 +699,7 @@ class eIQObjectDetectionSSD:
         opencv.destroyAllWindows()
 
     def gather_data(self):
-        retrieve_data(OBJ_DETECTION_SSD_MODEL_SRC, self.base_path,
+        retrieve_data(self.args, OBJ_DETECTION_SSD_MODEL_SRC, self.base_path,
                          self.__class__.__name__ + ZIP, True)
 
         if self.args.image is not None and os.path.exists(self.args.image):

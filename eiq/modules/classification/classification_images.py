@@ -24,8 +24,9 @@ from eiq.utils import args_parser, retrieve_data
 
 class eIQFireClassification:
     def __init__(self):
-        self.args = args_parser(camera = True, camera_inference = True,
-                                image=True, model=True, webcam = True)
+        self.args = args_parser(camera=True, camera_inference=True,
+                                download=True, image=True, model=True,
+                                webcam=True)
         self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_path = os.path.join(self.base_path, "media")
         self.model_path = os.path.join(self.base_path, "model")
@@ -36,7 +37,7 @@ class eIQFireClassification:
         self.video = None
 
     def gather_data(self):
-        retrieve_data(FIRE_DETECTION_MODEL_SRC, self.base_path,
+        retrieve_data(self.args, FIRE_DETECTION_MODEL_SRC, self.base_path,
                       self.__class__.__name__ + ZIP, True)
         if self.args.image is not None and os.path.isfile(self.args.image):
             self.image = self.args.image
@@ -109,8 +110,8 @@ class eIQFireClassification:
 
 class eIQObjectsClassification:
     def __init__(self):
-        self.args = args_parser(camera_inference=True, image=True,
-                                label=True, model=True)
+        self.args = args_parser(camera_inference=True, download=True,
+                                image=True,label=True, model=True)
         self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_path = os.path.join(self.base_path, "media")
         self.model_path = os.path.join(self.base_path, "model")
@@ -126,7 +127,7 @@ class eIQObjectsClassification:
         self.font_thickness = 2
 
     def gather_data(self):
-        retrieve_data(IMAGE_CLASSIFICATION_MODEL_SRC, self.base_path,
+        retrieve_data(self.args, IMAGE_CLASSIFICATION_MODEL_SRC, self.base_path,
                          self.__class__.__name__ + ZIP, True)
 
         if self.args.image is not None and os.path.isfile(self.args.image):
@@ -209,7 +210,8 @@ class eIQObjectsClassification:
 
 class eIQLabelImage:
     def __init__(self):
-        self.args = args_parser(image=True, label=True, model=True)
+        self.args = args_parser(download=True, image=True,
+                                label=True, model=True)
         self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_path = os.path.join(self.base_path, "media")
         self.model_path = os.path.join(self.base_path, "model")
@@ -223,7 +225,7 @@ class eIQLabelImage:
         self.input_std = 127.5
 
     def gather_data(self):
-        retrieve_data(LABEL_IMAGE_MODEL_SRC, self.base_path,
+        retrieve_data(self.args, LABEL_IMAGE_MODEL_SRC, self.base_path,
                          self.__class__.__name__ + ZIP, True)
 
         if self.args.image is not None and os.path.isfile(self.args.image):
