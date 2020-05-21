@@ -233,7 +233,7 @@ class eIQObjectDetectionGStreamer:
                                   OBJ_DETECTION_CV_GST_LABEL_NAME)
 
     def video_config(self):
-        if self.args.video_src and "/dev/video" in self.args.video_src:
+        if self.args.video_src and self.args.video_src.startswith("/dev/video"):
             self.videosrc = self.args.video_src
         elif self.args.video_src and os.path.exists(self.args.video_src):
             self.videofile = self.args.video_src
