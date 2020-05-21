@@ -9,10 +9,11 @@ def run():
     os.system(pipeline)
 
 
-def set_pipeline(width: int, height: int, device: int = 0,
-                 frate: int = 30,
-                 leaky: str = "leaky=downstream max-size-buffers=1",
-                 sync: str = "sync=false emit-signals=true drop=true max-buffers=1"):
-    dev = "/dev/video" + str(device)
-    return (("""v4l2src device={} ! video/x-raw,width={},height={},framerate={}/1! queue {} ! videoconvert ! appsink {}""").format(dev,
-                                                                                                                                   width, height, frate, leaky, sync))
+def set_pipeline(width=640, height=480, device="/dev/video0",
+                 frate="30/1", leaky="leaky=downstream max-size-buffers=1",
+                 sync="sync=false emit-signals=true drop=true max-buffers=1"):
+
+    return (("v4l2src device={} ! video/x-raw,width={},height={},framerate={} " \
+             "! queue {} ! videoconvert ! appsink {}").format(device, width,
+                                                              height, frate,
+                                                              leaky, sync))
