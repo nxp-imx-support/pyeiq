@@ -176,9 +176,12 @@ def gstreamer_configurations(args):
                                         device=dev.get_name(),
                                         frate=caps.get_framerate())
                 return opencv.VideoCapture(pipeline)
+        if not args.video_src.startswith("/dev/video"):
+            return opencv.VideoCapture(args.video_src)
+        else:
+            print("Invalid video device. Searching for a valid one...")
 
-        return opencv.VideoCapture(args.video_src)
-    elif devices.devices:
+    if devices.devices:
         dev = devices.devices[0]
         caps = dev.get_default_caps()
         pipeline = set_pipeline(width=caps.get_width(),
