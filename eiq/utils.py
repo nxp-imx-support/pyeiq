@@ -116,6 +116,9 @@ class Downloader():
 
     def retrieve_data(self, url_dict, filename=None, download_path=None,
                       sha1=None, unzip=False):
+        if os.path.exists(os.path.join(download_path, filename)):
+            return
+
         drive_flag = False
         if self.args.download is not None:
             if self.args.download == 'wget':
@@ -142,8 +145,7 @@ class Downloader():
                          "Exiting...")
 
         self.download_from_web(url, filename, download_path, drive=drive_flag)
-
-        if self.downloaded_file is not None and unzip:
+        if unzip and self.downloaded_file is not None:
             if sha1 is not None and self.check_sha1(self.downloaded_file,
                                                     sha1):
                 shutil.unpack_archive(self.downloaded_file, download_path)
