@@ -25,9 +25,8 @@ from eiq.utils import args_parser, Downloader
 
 class eIQFireClassification:
     def __init__(self):
-        self.args = args_parser(camera=True, camera_inference=True,
-                                download=True, image=True, model=True,
-                                webcam=True)
+        self.args = args_parser(camera_inference=True, download=True,
+                                image=True, model=True, video_src=True)
         self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_path = os.path.join(self.base_path, "media")
         self.model_path = os.path.join(self.base_path, "model")
@@ -77,8 +76,8 @@ class eIQFireClassification:
         opencv.imshow(TITLE_FIRE_CLASSIFICATION, frame)
 
     def real_time_classification(self):
-        self.video = gstreamer_configurations()
-        if not self.video:
+        self.video = gstreamer_configurations(self.args)
+        if (not self.video) or (not self.video.isOpened()):
             sys.exit("Your video device could not be found. Exiting...")
 
         while True:
