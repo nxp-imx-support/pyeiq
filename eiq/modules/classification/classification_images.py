@@ -8,6 +8,7 @@
 ## SPDX-License-Identifier:    Apache-2.0
 
 import os
+import sys
 
 import cv2 as opencv
 import numpy as np
@@ -76,7 +77,9 @@ class eIQFireClassification:
         opencv.imshow(TITLE_FIRE_CLASSIFICATION, frame)
 
     def real_time_classification(self):
-        self.video = gstreamer_configurations(self.args)
+        self.video = gstreamer_configurations()
+        if not self.video:
+            sys.exit("Your video device could not be found. Exiting...")
 
         while True:
             ret, frame = self.video.read()

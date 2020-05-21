@@ -164,7 +164,10 @@ class eIQObjectsDetection:
         self.display_result(top_result, frame, self.label)
 
     def real_time_detection(self):
-        self.video = gstreamer_configurations(self.args)
+        self.video = gstreamer_configurations()
+        if not self.video:
+            sys.exit("Your video device could not be found. Exiting...")
+
         while True:
             ret, frame = self.video.read()
             if ret:
@@ -225,9 +228,9 @@ class eIQObjectDetectionGStreamer:
                                self.__class__.__name__ + ZIP, self.base_path,
                                OBJ_DETECTION_CV_GST_MODEL_SHA1, True)
 
-        self.model = os.path.join(self.model_path,
+        self.model = os.path.join(self.base_path,
                                   OBJ_DETECTION_CV_GST_MODEL_NAME)
-        self.label = os.path.join(self.model_path,
+        self.label = os.path.join(self.base_path,
                                   OBJ_DETECTION_CV_GST_LABEL_NAME)
 
     def video_src_config(self):
@@ -551,9 +554,9 @@ class eIQObjectDetectionOpenCV:
                                self.__class__.__name__ + ZIP, self.base_path,
                                OBJ_DETECTION_CV_GST_MODEL_SHA1, True)
 
-        self.model = os.path.join(self.model_path,
+        self.model = os.path.join(self.base_path,
                                   OBJ_DETECTION_CV_GST_MODEL_NAME)
-        self.label = os.path.join(self.model_path,
+        self.label = os.path.join(self.base_path,
                                   OBJ_DETECTION_CV_GST_LABEL_NAME)
 
     def set_input(self, image, resample=Image.NEAREST):
@@ -614,7 +617,9 @@ class eIQObjectDetectionOpenCV:
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
-        self.video = gstreamer_configurations(self.args)
+        self.video = gstreamer_configurations()
+        if not self.video:
+            sys.exit("Your video device could not be found. Exiting...")
         self.gather_data()
         self.interpreter = inference.load_model(self.model)
         self.input_details, self.output_details = inference.get_details(
@@ -685,7 +690,9 @@ class eIQObjectDetectionSSD:
             result, [opencv.IMWRITE_JPEG_QUALITY, 90])
 
     def real_time_object_detection(self):
-        self.video = gstreamer_configurations(self.args)
+        self.video = gstreamer_configurations()
+        if not self.video:
+            sys.exit("Your video device could not be found. Exiting...")
 
         while self.video.isOpened():
             start = time.time()
