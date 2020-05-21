@@ -246,15 +246,9 @@ def copy(target_dir, src_dir):
                     shutil.copy(file_path, target_dir)
 
 
-def args_parser(camera: bool = False, download=False, webcam: bool = False,
-                image: bool = False, model: bool = False,
-                label: bool = False, epochs: bool = False,
-                videopath: bool = False, camera_inference: bool = False):
+def args_parser(camera_inference=False, download=False, epochs=False,
+                image=False, label=False, model=False, video_src=False):
     parser = ArgumentParser()
-    if camera:
-        parser.add_argument(
-            '-c', '--camera', type=int, default=0,
-            help="set the number your camera is identified at /dev/video<x>.")
     if camera_inference:
         parser.add_argument(
             '-ci', '--camera_inference', type=bool, default=False,
@@ -265,30 +259,26 @@ def args_parser(camera: bool = False, download=False, webcam: bool = False,
             '-d', '--download', default=None,
             help="Choose from which server the models are going to be " \
                  "downloaded")
-    if webcam:
-        parser.add_argument(
-            '-w', '--webcam', type=int, default=-1,
-            help="if you are using a webcam, set the number your " \
-                 "webcam is identified at /dev/video<x>.")
-    if image:
-        parser.add_argument(
-            '-i', '--image', default=None,
-            help="path of the image to be classified")
-    if model:
-        parser.add_argument(
-            '-m', '--model', default=None,
-            help="path of the .tflite model to be executed")
-    if label:
-        parser.add_argument(
-            '-l', '--label', default=None,
-            help="path of the file containing labels")
     if epochs:
         parser.add_argument(
             '-e', '--epochs', type=int, default=50,
             help="number of epochs for the traning")
-    if videopath:
+    if image:
         parser.add_argument(
-            '-v', '--videopath', default=None,
-            help="path of the video file")
+            '-i', '--image', default=None,
+            help="path of the image to be classified")
+    if label:
+        parser.add_argument(
+            '-l', '--label', default=None,
+            help="path of the file containing labels")
+    if model:
+        parser.add_argument(
+            '-m', '--model', default=None,
+            help="path of the .tflite model to be executed")
+    if video_src:
+        parser.add_argument(
+            '-v', '--video_src', default=None,
+            help="Choose your video source, it can be the path to a video file" \
+                 " or your video device, e.g, /dev/video<x>")
 
     return parser.parse_args()

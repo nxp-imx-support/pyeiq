@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import collections
+import os
 
 import gi
 gi.require_version('Gst', '1.0')
@@ -161,21 +162,32 @@ def make_boxes(i, boxes, class_ids, scores):
                         ymax=np.minimum(1.0, ymax)))
 
 
-def gstreamer_configurations():
+def gstreamer_configurations(args):
     devices = Devices()
     devices.get_video_devices()
 
-    if devices.devices:
+    if args.video_src is not None and os.path.exists(args.video_src):
+        for device in devices.devices:
+            if device.get_name() == args.video_src:
+                dev = device
+                caps = dev.get_default_caps()
+                pipeline = set_pipeline(width=caps.get_width(),
+                                        height=caps.get_height(),
+                                        device=dev.get_name(),
+                                        frate=caps.get_framerate())
+                return opencv.VideoCapture(pipeline)
+
+        return opencv.VideoCapture(args.video_src)
+    elif devices.devices:
         dev = devices.devices[0]
         caps = dev.get_default_caps()
         pipeline = set_pipeline(width=caps.get_width(),
                                 height=caps.get_height(),
                                 device=dev.get_name(),
                                 frate=caps.get_framerate())
-
         return opencv.VideoCapture(pipeline)
-
-    return None
+    else:
+        return None
 
 
 def resize_image(input_details, image, use_opencv=False):
