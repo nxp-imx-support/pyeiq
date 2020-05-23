@@ -1,6 +1,8 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
+import cv2
+
 OBJ_DETECTION_LABEL_NAME = "coco_labels.txt"
 OBJ_DETECTION_MEDIA_NAME = "bus.jpg"
 OBJ_DETECTION_MODEL_NAME = "detect.tflite"
@@ -44,6 +46,22 @@ OBJ_DETECTION_SSD_MODEL_SRC = {'drive': "https://drive.google.com/file/d/" \
                               'github': "https://github.com/diegohdorta/" \
                                         "models/raw/master/models/" \
                                         "object_detection_ssd.zip"}
+                                        
+YOLOV3_OBJ_DETECTION_LABEL_NAME = "labels.txt"
+YOLOV3_OBJ_DETECTION_MEDIA_NAME = "example.jpg"
+YOLOV3_OBJ_DETECTION_MODEL_NAME = "tiny_yolov3.tflite"
+YOLOV3_OBJ_DETECTION_MODEL_SHA1 = "406438b9a5a530f6f6874341219a749e4f209b6e"
+YOLOV3_OBJ_DETECTION_MODEL_SRC = {'drive': "https://drive.google.com/file/d/" \
+                                           "1gzUVbyDZrgAFDyZG3aRpnsClufL9Q7Hx/" \
+                                           "view?usp=sharing",
+                                  'github': "https://github.com/diegohdorta/" \
+                                            "models/raw/master/models/"\
+                                            "eIQObjectDetectionYOLOV3.zip"}
+
+FONT = cv2.FONT_HERSHEY_SIMPLEX
+FONT_SIZE = 0.8
+FONT_COLOR = (0, 0, 0)
+FONT_THICKNESS = 2
 
 ZIP = ".zip"
 
@@ -52,3 +70,4 @@ ZIP = ".zip"
 TITLE_OBJECT_DETECTION_CAM = "PyeIQ - Object Detection Camera"
 TITLE_OBJECT_DETECTION_CV = "PyeIQ - Object Detection OpenCV"
 TITLE_OBJECT_DETECTION_SSD = "PyeIQ - Object Detection SSD"
+TITLE_OBJECT_DETECTION_YOLOV3 = "PyeIQ - Object Detection YOLOV3"
