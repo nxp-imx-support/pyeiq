@@ -115,8 +115,8 @@ class eIQFireClassification:
 
 class eIQObjectsClassification:
     def __init__(self):
-        self.args = args_parser(camera_inference=True, download=True,
-                                image=True,label=True, model=True)
+        self.args = args_parser(download=True, image=True, label=True,
+                                model=True, video_src=True)
         self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_path = os.path.join(self.base_path, "media")
         self.model_path = os.path.join(self.base_path, "model")
@@ -125,6 +125,7 @@ class eIQObjectsClassification:
         self.image = None
         self.label = None
         self.model = None
+        self.video = None
 
         self.font = opencv.FONT_HERSHEY_SIMPLEX
         self.font_size = 0.8
@@ -185,18 +186,17 @@ class eIQObjectsClassification:
         self.display_result(top_result, frame, self.label)
 
     def real_time_classification(self):
-        cap = opencv.VideoCapture(0)
-        cap.set(opencv.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
-        cap.set(opencv.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
-        cap.set(opencv.CAP_PROP_FPS, 15)
+        self.video = gstreamer_configurations(self.args)
+        if (not self.video) or (not self.video.isOpened()):
+            sys.exit("Your video device could not be found. Exiting...")
 
         while True:
-            ret, frame = cap.read()
+            ret, frame = self.video.read()
             if ret:
                 self.classificate_image(frame)
             if (opencv.waitKey(1) & 0xFF) == ord('q'):
                 break
-        cap.release()
+        self.video.release()
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -206,7 +206,7 @@ class eIQObjectsClassification:
 
     def run(self):
         self.start()
-        if self.args.camera_inference:
+        if self.args.video_src:
             self.real_time_classification()
         else:
             frame = opencv.imread(self.image, opencv.IMREAD_COLOR)
