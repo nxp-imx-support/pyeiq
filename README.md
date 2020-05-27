@@ -9,7 +9,7 @@ PyeIQ provides a simplified way to run ML applications, which avoids spending ti
 |-----------------------|------------------|----------------|-----------------|---------------------|-----------|
 | ![tag][tag_v1]        | April 29, 2020   | ![imx][boards] | ![BSP][release] | ![build][passing]   | PoC       |
 | ![tag][tag_v2]        | Planned for June | -              | -               | -                   | -         |
-| ![tag][tag_v2]        | Planned for Sept | -              | -               | -                   | -         |
+| ![tag][tag_v3]        | Planned for Sept | -              | -               | -                   | -         |
 
 ## Installing
 
