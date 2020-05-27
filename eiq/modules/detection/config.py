@@ -4,6 +4,17 @@
 import cv2
 
 
+EMOTIONS_DETECTION_CASCADE_FACE_NAME = "haarcascade_frontalface_default.xml"
+EMOTIONS_DETECTION_MEDIA_NAME = "grace_hopper.jpg"
+EMOTIONS_DETECTION_MODEL_NAME = "model.tflite"
+EMOTIONS_DETECTION_SHA1 = "d112d8e378f8457a48b66aea80bc4e714e8e2e41"
+EMOTIONS_DETECTION_SRC = {'drive': "https://drive.google.com/file/d/" \
+                                    "15VTXVJ7GwS_Rr2vvl9xve9UAcFO3LFzG/" \
+                                    "view?usp=sharing",
+                           'github': "https://github.com/diegohdorta/" \
+                                        "models/raw/master/models/" \
+                                        "eIQEmotionsDetection.zip"}
+
 FACE_EYES_DETECTION_CASCADE_EYES_NAME = "haarcascade_eye.xml"
 FACE_EYES_DETECTION_CASCADE_FACE_NAME = "haarcascade_frontalface_default.xml"
 FACE_EYES_DETECTION_MEDIA_NAME = "grace_hopper.jpg"
@@ -79,8 +90,9 @@ ZIP = ".zip"
 
 # Demos Titles
 
+TITLE_EMOTIONS_DETECTION = "PyeIQ - Emotions Detection"
+TITLE_FACE_EYES_DETECTION = "PyeIQ - Face and Eyes Detection"
 TITLE_OBJECT_DETECTION_CAM = "PyeIQ - Object Detection Camera"
 TITLE_OBJECT_DETECTION_CV = "PyeIQ - Object Detection OpenCV"
 TITLE_OBJECT_DETECTION_SSD = "PyeIQ - Object Detection SSD"
 TITLE_OBJECT_DETECTION_YOLOV3 = "PyeIQ - Object Detection YOLOV3"
-TITLE_FACE_EYES_DETECTION = "PyeIQ - Face and Eyes Detection"
