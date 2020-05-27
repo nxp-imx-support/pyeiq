@@ -10,7 +10,7 @@ from setuptools import setup, find_packages
 from eiq.utils import copy
 
 setup(name="eiq",
-version="1.0",
+version="1.0.1",
 description="eIQ package provides classes and scripts to manage the eIQ Samples Apps.",
 url="",
 author="Alifer Moraes <alifer.moraes@nxp.com>, Diego Dorta <diego.dorta@nxp.com>, Marco Franchi <marco.franchi@nxp.com>",

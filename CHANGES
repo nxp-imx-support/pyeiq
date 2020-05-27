@@ -1,3 +1,5 @@
+1.0.1:
+    - Fix fire detection model ID.
 1.0.0:
     - Support demos based on TensorFlow Lite (2.1.0) and image classification.      
     - Support inference running on GPU/NPU and CPU.
