@@ -7,7 +7,6 @@
 | Object Detection SSD              | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![tag][tag_v2]    | ![Core][gpunpu]    | ![build][passing] |                         |
 | Object Detection YOLOv3           | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![tag][tag_v2]    | ![Core][gpunpu]    | ![build][passing] | Need quantizated model. |
 | Object Detection DNN              | ![Framework][opencv] | ![imx][boards] | ![BSP][release] | ![tag][tag_v2]    | ![Core][cpu]       | ![build][passing] |                         |
-| Object Detection NEO DLR          | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![tag][tag_v2]    | ![Core][cpugpunpu] | ![build][passing] |                         |
 | Emotion Detection                 | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![tag][tag_v2]    | ![Core][gpunpu]    | ![build][passing] |                         |
 | Fire Classification               | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![tag][tag_v1_v2] | ![Core][gpunpu]    | ![build][passing] |                         |
 | PoseNet Detection                 | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![tag][tag_v2]    | ![Core][gpunpu]    | ![build][passing] |                         |
