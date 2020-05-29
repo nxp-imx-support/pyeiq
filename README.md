@@ -5,7 +5,7 @@
 
 PyeIQ provides a simplified way to run ML applications, which avoids spending time on cross-compilations, flashings, deployments or reading extensive guides.
 
-| **PyeIQ Tag Version** | **Release Date** | **i.MX Board** | **BSP Release** | **Building Status** | **Notes** |
+| **PyeIQ Version**     | **Release Date** | **i.MX Board** | **BSP Release** | **Building Status** | **Notes** |
 |-----------------------|------------------|----------------|-----------------|---------------------|-----------|
 | ![tag][tag_v1]        | April 29, 2020   | ![imx][boards] | ![BSP][release] | ![build][passing]   | PoC       |
 | ![tag][tag_v2]        | Planned for June | -              | -               | -                   | -         |
