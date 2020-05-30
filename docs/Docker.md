@@ -1,6 +1,6 @@
 ## PyeIQ Docker
 
-Use Docker to build the latest version of PyeIQ available on [CAF][pyeiqcaf].
+Use [Docker][dockerhub] to build the latest version of PyeIQ available on [CAF][pyeiqcaf].
 
 ### For Building Latest Package
 
@@ -16,3 +16,4 @@ $ docker cp $(docker ps -alq):/pyeiq/dist/ latest-package
 ```
 
 [pyeiqcaf]: https://source.codeaurora.org/external/imxsupport/pyeiq/
+[dockerhub]: https://hub.docker.com/r/pyeiq/pyeiq
