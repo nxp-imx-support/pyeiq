@@ -15,12 +15,4 @@ $ docker run package-latest
 $ docker cp $(docker ps -alq):/pyeiq/dist/ latest-package
 ```
 
-[comment]: <> (### For Building Base
-
-```console
-$ docker build -t base -f docker/Dockerfile.base .
-$ docker tag <ID> pyeiq/pyeiq:base
-$ docker push pyeiq/pyeiq:base
-```)
-
 [pyeiqcaf]: https://source.codeaurora.org/external/imxsupport/pyeiq/

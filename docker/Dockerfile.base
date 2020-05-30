@@ -1,5 +1,10 @@
 FROM ubuntu:20.04
 
+# Steps to build the PyeIQ Docker Base
+# $ docker build -t base -f docker/Dockerfile.base .
+# $ docker tag <ID> pyeiq/pyeiq:base
+# $ docker push pyeiq/pyeiq:base
+
 RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install -y apt-utils
