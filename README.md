@@ -1,6 +1,7 @@
 # PyeIQ
 
-[![Gitter][gitter-image]][gitter-url] ![GitHub issues][license]
+![Build][workflow-build] [![Gitter][gitter-image]][gitter-url] ![GitHub issues][license]
+
 
 ## A Python Framework for eIQ on i.MX Processors
 
@@ -46,6 +47,7 @@ For more details, please access the documents located at `docs` folder.
 Free use of this software is granted under the terms of the BSD 3-Clause License.
 
 [eiq]: https://www.nxp.com/design/software/development-software/eiq-ml-development-environment:EIQ
+[workflow-build]: https://github.com/diegohdorta/pyeiq/workflows/Build/badge.svg
 [pypirepo]: https://pypi.org/project/eiq/#description
 [pypicaf]: https://source.codeaurora.org/external/imxsupport/pyeiq/
 [license]: https://img.shields.io/badge/License-BSD%203--Clause-blue
