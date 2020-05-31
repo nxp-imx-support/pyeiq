@@ -4,7 +4,7 @@
 
 ## A Python Framework for eIQ on i.MX Processors
 
-PyeIQ is written on top of [NXP® eIQ™ ML Software Development Environment][eiq]. Provides
+PyeIQ is written on top of [eIQ™ ML Software Development Environment][eiq]. Provides
 a set of Python classes allowing the user to run Machine Learning applications in
 a simplified and efficiently way without spending time on cross-compilations,
 deployments or reading extensive guides.
