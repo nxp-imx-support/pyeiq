@@ -1,8 +1,0 @@
-tensorflow
-matplotlib
-keras
-sklearn
-imutils
-opencv-python
-progressbar
-requests
