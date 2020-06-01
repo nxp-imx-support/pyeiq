@@ -1,15 +1,19 @@
 # PyeIQ
 
-![Build][workflow-build] ![Unit Tests][workflow-tests] [![Gitter][gitter-image]][gitter-url] ![GitHub issues][license]
+![Build][workflow-build]
+![Unit Tests][workflow-tests]
+![pip3][eiqpackage]
+![GitHub issues][license]
+[![Gitter][gitter-image]][gitter-url]
 
 <h2 align="center">
   A Python Framework for eIQ on i.MX Processors
 </h2>
 
 <div align="center">
-  <a href="docs/Getting_Started_with_PyeIQ.md"><b>Getting Started</b></a> |
-  <a href="docs/Docker.md"><b>Docker</b></a> |
-  <a href="docs/Tables.md"><b>Examples</b></a> |
+  <a href="docs/Getting_Started_with_PyeIQ.md"><b>Getting Started</b></a> •
+  <a href="docs/Docker.md"><b>Docker</b></a> •
+  <a href="docs/Tables.md"><b>Available Demos</b></a> •
   <a href="docs/Contribute.md"><b>Contribute</b></a>
 </div>
 
@@ -60,6 +64,7 @@ Free use of this software is granted under the terms of the BSD 3-Clause License
 [eiq]: https://www.nxp.com/design/software/development-software/eiq-ml-development-environment:EIQ
 [workflow-build]: https://github.com/diegohdorta/pyeiq/workflows/Build/badge.svg
 [workflow-tests]: https://github.com/diegohdorta/pyeiq/workflows/Unit%20Tests/badge.svg
+[eiqpackage]: https://img.shields.io/badge/pip3%20install-eiq-green
 [pypirepo]: https://pypi.org/project/eiq/#description
 [pypicaf]: https://source.codeaurora.org/external/imxsupport/pyeiq/
 [license]: https://img.shields.io/badge/License-BSD%203--Clause-blue
