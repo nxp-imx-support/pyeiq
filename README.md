@@ -3,6 +3,7 @@
 ![Build][workflow-build]
 ![Unit Tests][workflow-tests]
 ![pip3][eiqpackage]
+[![PyPI version](https://badge.fury.io/py/eiq.svg)](https://badge.fury.io/py/eiq)
 ![GitHub issues][license]
 [![Gitter][gitter-image]][gitter-url]
 
@@ -50,10 +51,6 @@ Check the available applications and demos at the table list located at `docs` f
 | Object Classification (~3ms)   | Object Detection (~15ms)  |
 |-------------------------------|--------------------------|
 | ![oc](docs/media/car_classification.gif)  | ![od](docs/media/car_detection.gif) |
-
-### Getting Started
-
-For more details, please access the documents located at `docs` folder.
 
 ### Copyright and License
 
