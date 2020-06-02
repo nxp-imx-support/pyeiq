@@ -1,26 +1,37 @@
 import math
 import time
+import os
 from enum import Enum
 
+from eiq.config import BASE_DIR
 import numpy as np
 from tflite_runtime.interpreter import Interpreter
+from eiq.posenet.config import *
 from PIL import Image, ImageDraw
+from eiq.utils import args_parser, Downloader
 
 MIN_CONFIDENCE = 0.40
 
 class PoseNet:
 	def __init__(self):
+		self.args = args_parser(download=True, image=True, label=True,model=True, video_src=True)
 		self.input_mean = 127.5
 		self.input_std = 127.5
-		self.image_path = "./sample.jpg"
+		self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
+		self.media_dir = os.path.join(self.base_dir, "media")
+		self.model_dir = os.path.join(self.base_dir, "model")
+		#self.image_path = None
+		#self.image_path = "./sample.jpg"
 		self.image_width = 0
 		self.image_height = 0
-		self.interpreter = Interpreter("./posenet_mobilenet_v1_100_257x257_multi_kpt_stripped.tflite") #put function that downloads the file
-		self.interpreter.allocate_tensors()
-		self.input_details = self.interpreter.get_input_details()
-		self.output_details = self.interpreter.get_output_details()
-		print('input_details : ', self.input_details)
-		print('output_details : ', self.output_details)
+		self.model = None
+		#self.interpreter = Interpreter(self.model)
+		#self.interpreter = Interpreter("./posenet_mobilenet_v1_100_257x257_multi_kpt_stripped.tflite")
+		# self.interpreter.allocate_tensors()
+		# self.input_details = self.interpreter.get_input_details()
+		# self.output_details = self.interpreter.get_output_details()
+		# print('input_details : ', self.input_details)
+		# print('output_details : ', self.output_details)
 	def run(self):
 		body_joints = [[self.BodyPart.LEFT_WRIST, self.BodyPart.LEFT_ELBOW],
 				[self.BodyPart.LEFT_ELBOW, self.BodyPart.LEFT_SHOULDER],
@@ -34,8 +45,17 @@ class PoseNet:
 				[self.BodyPart.LEFT_KNEE, self.BodyPart.LEFT_ANKLE],
 				[self.BodyPart.RIGHT_HIP, self.BodyPart.RIGHT_KNEE],
 				[self.BodyPart.RIGHT_KNEE, self.BodyPart.RIGHT_ANKLE]]
+		
+		self.gather_data()
+		self.interpreter = Interpreter(self.model)
+		self.interpreter.allocate_tensors()
+		self.input_details = self.interpreter.get_input_details()
+		self.output_details = self.interpreter.get_output_details()
+		print('input_details : ', self.input_details)
+		print('output_details : ', self.output_details)
 
-		image = Image.open("./sample.jpg")
+		#image = Image.open("./sample.jpg")
+		image = Image.open(self.image_path)
 		draw = ImageDraw.Draw(image)
 
 		person = self.estimate_pose()
@@ -111,9 +131,9 @@ class PoseNet:
 			position_y = int(key_point_positions[i][0])
 			position_x = int(key_point_positions[i][1])
 			y_coords[i] = (position[0] / float(height - 1) * self.image_height +
-			               offset_maps[0][position_y][position_x][i])
+							offset_maps[0][position_y][position_x][i])
 			x_coords[i] = (position[1] / float(width - 1) * self.image_width +
-			               offset_maps[0][position_y][position_x][i + num_key_points])
+							offset_maps[0][position_y][position_x][i + num_key_points])
 			confidenceScores[i] = heat_maps[0][position_y][position_x][i]
 			print("confidenceScores[", i, "] = ", confidenceScores[i])
 
@@ -134,6 +154,20 @@ class PoseNet:
 		person.score = total_score / num_key_points
 
 		return person
+
+	def gather_data(self):
+		download = Downloader(self.args)
+		download.retrieve_data(CORAL_POSENET_MODEL_SRC,
+								self.__class__.__name__ + ZIP,self.base_dir,
+								CORAL_POSENET_SHA1, True)
+		self.model = os.path.join(self.model_dir,
+									CORAL_POSENET_MODEL_NAME)
+
+		if self.args.image is not None and os.path.exists(self.args.image):
+			self.image_path = self.args.image_path
+		else:
+			self.image_path = os.path.join(self.media_dir,
+										CORAL_POSENET_MEDIA_NAME)
 	class BodyPart(Enum):
 		NOSE = 0,
 		LEFT_EYE = 1,
