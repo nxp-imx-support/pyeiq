@@ -11,11 +11,11 @@
   A Python Framework for eIQ on i.MX Processors
 </h2>
 
-<div align="center">
-  <a href="docs/Getting_Started_with_PyeIQ.md"><b>Getting Started</b></a> •
-  <a href="docs/Docker.md"><b>Docker</b></a> •
-  <a href="docs/Tables.md"><b>Available Demos</b></a> •
-  <a href="docs/Contribute.md"><b>Contribute</b></a>
+<div style = "margin-top: -10px;", align="center">
+  <a href="guides/Getting_Started_with_PyeIQ.md"><b>Getting Started</b></a> •
+  <a href="guides/Docker.md"><b>Docker</b></a> •
+  <a href="guides/Tables.md"><b>Available Demos</b></a> •
+  <a href="guides/Contribute.md"><b>Contribute</b></a>
 </div>
 
 <br>
@@ -40,17 +40,15 @@ PyeIQ is hosted on [PyPI][pypirepo] repository referring to the latest tag on [C
 
 1. Use _pip3_ tool to install the package:
 
- ![PyPI](docs/media/pypieiq.gif)
+ ![PyPI](guides/media/pypieiq.gif)
 
 2. Find the installation at `/opt/eiq` folder. Use *--help* to learn how to run the sample applications.
 
 ### Samples
 
-Check the available applications and demos at the table list located at `docs` folder.
-
 | Object Classification (~3ms)   | Object Detection (~15ms)  |
 |-------------------------------|--------------------------|
-| ![oc](docs/media/car_classification.gif)  | ![od](docs/media/car_detection.gif) |
+| ![oc](guides/media/car_classification.gif)  | ![od](guides/media/car_detection.gif) |
 
 ### Copyright and License
 
