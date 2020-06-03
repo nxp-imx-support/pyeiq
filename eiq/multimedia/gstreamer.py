@@ -139,6 +139,26 @@ class GstPipeline:
                 if self.overlaysink:
                     self.overlaysink.set_property('svg', svg)
 
+def camera_pipeline(video_src):
+    PIPELINE = 'v4l2src device=%s ! {src_caps}' % video_src
+    PIPELINE += """ ! tee name=t
+        t. ! {leaky_q} ! imxvideoconvert_g2d ! {scale_caps} ! videobox name=box autocrop=true
+           ! {sink_caps} ! {sink_element}
+        t. ! queue ! imxvideoconvert_g2d
+           ! rsvgoverlay name=overlay ! waylandsink
+        """
+    return PIPELINE
+
+def video_file_pipeline(video_src):
+    PIPELINE = 'filesrc location=%s ! decodebin' % video_src
+    PIPELINE += """ ! tee name=t
+        t. ! {leaky_q} ! imxvideoconvert_g2d ! {scale_caps} ! videobox name=box autocrop=true
+           ! {sink_caps} ! {sink_element}
+        t. ! queue ! imxvideoconvert_g2d
+           ! rsvgoverlay name=overlay ! waylandsink
+    """
+    return PIPELINE
+
 def run_pipeline(user_function,
                  src_size,
                  appsink_size,
@@ -154,21 +174,10 @@ def run_pipeline(user_function,
     scale_caps = 'video/x-raw,width={width},height={height}'.format(
         width=scale[0], height=scale[1])
     if videofile != None:
-        PIPELINE = 'filesrc location=%s ! decodebin' % videofile
-        PIPELINE += """ ! tee name=t
-            t. ! {leaky_q} ! imxvideoconvert_g2d ! {scale_caps} ! videobox name=box autocrop=true
-               ! {sink_caps} ! {sink_element}
-            t. ! queue ! imxvideoconvert_g2d
-               ! rsvgoverlay name=overlay ! waylandsink
-        """
+        PIPELINE = video_file_pipeline(videofile)
+
     else:
-        PIPELINE = 'v4l2src device=%s ! {src_caps}' % videosrc
-        PIPELINE += """ ! tee name=t
-            t. ! {leaky_q} ! videoconvert ! videoscale ! {scale_caps} ! videobox name=box autocrop=true
-               ! {sink_caps} ! {sink_element}
-            t. ! {leaky_q} ! videoconvert
-               ! rsvgoverlay name=overlay ! videoconvert ! autovideosink
-        """
+        PIPELINE = camera_pipeline(videosrc)
 
     SRC_CAPS = 'video/x-raw,width={width},height={height},framerate=30/1'
     SINK_ELEMENT = 'appsink name=appsink emit-signals=true max-buffers=1 drop=true'
