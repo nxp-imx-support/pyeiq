@@ -603,117 +603,95 @@ class eIQObjectDetectionOpenCV:
 class eIQObjectDetectionSSD:
     def __init__(self):
         self.args = args_parser(download=True, image=True, label=True,
-                                model=True, video_scr=True)
+                                model=True, video_src=True)
+        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.media_dir = os.path.join(self.base_dir, "media")
+        self.model_dir = os.path.join(self.base_dir, "model")
+
         self.interpreter = None
-        self.input_details = None
-        self.output_details = None
-
-        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.media_path = os.path.join(self.base_path, "media")
-        self.model_path = os.path.join(self.base_path, "model")
-        self.labeled_media_path = os.path.join(self.media_path, "labeled")
-
         self.image = None
         self.label = None
         self.model = None
-        self.video = None
 
         self.class_names = None
         self.colors = None
 
-    def image_object_detection(self):
-        if not os.path.exists(self.labeled_media_path):
-            try:
-                Path(self.labeled_media_path).mkdir(parents=True, exist_ok=True)
-            except OSError:
-                sys.exit("Path.mkdir(%s) function has failed"
-                    % self.labeled_media_path)
+    def detect_objects(self, frame):
+        image = preprocess_image_for_tflite(frame)
+        out_scores, out_boxes, out_classes = self.run_detection(image)
 
-        image = opencv.imread(self.image)
-        image_name = os.path.basename(self.image)
-        image_data = preprocess_image_for_tflite(image)
-        out_scores, out_boxes, out_classes = self.run_detection(image_data)
-
-        result = draw_boxes(image, out_scores, out_boxes, out_classes,
-                    self.class_names, self.colors)
-        opencv.imwrite(os.path.join(self.labeled_media_path, image_name),
-            result, [opencv.IMWRITE_JPEG_QUALITY, 90])
-
-    def real_time_object_detection(self):
-        self.video = gstreamer_configurations(self.args)
-        if (not self.video) or (not self.video.isOpened()):
-            sys.exit("Your video device could not be found. Exiting...")
-
-        while self.video.isOpened():
-            start = time.time()
-            ret, frame = self.video.read()
-            if ret:
-                image_data = preprocess_image_for_tflite(frame)
-                out_scores, out_boxes, out_classes = self.run_detection(image_data)
-
-                result = draw_boxes(frame, out_scores, out_boxes, out_classes,
+        result = draw_boxes(frame, out_scores, out_boxes, out_classes,
                             self.class_names, self.colors)
-                end = time.time()
-                t = end - start
-                fps  = "Fps: {:.2f}".format(1 / t)
-                opencv.putText(result, fps, (10, 30),
-		                    opencv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0),
-                            2, opencv.LINE_AA)
-                opencv.imshow(TITLE_OBJECT_DETECTION_SSD, frame)
-                if opencv.waitKey(1) & 0xFF == ord('q'):
-                    break
-        self.video.release()
-        opencv.destroyAllWindows()
+
+        cv2.imshow(TITLE_OBJECT_DETECTION_SSD, result)
+
+    def real_time_detection(self):
+        video = gstreamer_configurations(self.args)
+        if (not video) or (not video.isOpened()):
+            sys.exit("Your video device could not be initialized. Exiting...")
+
+        while video.isOpened():
+            ret, frame = video.read()
+            if ret:
+                self.detect_objects(frame)
+            else:
+                print("Your video device could not capture any image.\n"\
+                      "Please, check your device's configurations.")
+                break
+            if (cv2.waitKey(1) & 0xFF) == ord('q'):
+                break
+        video.release()
 
     def gather_data(self):
         download = Downloader(self.args)
         download.retrieve_data(OBJ_DETECTION_SSD_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_path,
+                               self.__class__.__name__ + ZIP, self.base_dir,
                                OBJ_DETECTION_SSD_MODEL_SHA1, True)
 
         if self.args.image is not None and os.path.exists(self.args.image):
             self.image = self.args.image
         else:
-            self.image = os.path.join(self.media_path,
+            self.image = os.path.join(self.media_dir,
                                       OBJ_DETECTION_SSD_MEDIA_NAME)
 
         if self.args.label is not None and os.path.exists(self.args.label):
             self.label = self.args.label
         else:
-            self.label = os.path.join(self.model_path,
+            self.label = os.path.join(self.model_dir,
                                       OBJ_DETECTION_SSD_LABEL_NAME)
 
         if self.args.model is not None and os.path.exists(self.args.model):
             self.model = self.args.model
         else:
-            self.model = os.path.join(self.model_path,
+            self.model = os.path.join(self.model_dir,
                                       OBJ_DETECTION_SSD_MODEL_NAME)
 
     def run_detection(self, image):
-        self.interpreter.set_tensor(self.input_details[0]['index'], image)
-        inference.inference(self.interpreter)
-        boxes = self.interpreter.get_tensor(self.output_details[0]['index'])
-        classes = self.interpreter.get_tensor(self.output_details[1]['index'])
-        scores = self.interpreter.get_tensor(self.output_details[2]['index'])
-        num = self.interpreter.get_tensor(self.output_details[3]['index'])
+        self.interpreter.set_tensor(image)
+        self.interpreter.run_inference()
 
-        boxes, scores, classes = np.squeeze(boxes), np.squeeze(scores), np.squeeze(classes + 1).astype(np.int32)
-        out_scores, out_boxes, out_classes = non_max_suppression(scores,
-                                                boxes, classes)
-        return out_scores, out_boxes, out_classes
+        boxes = self.interpreter.get_tensor(0, squeeze=True)
+        scores = self.interpreter.get_tensor(2, squeeze=True)
+        classes = self.interpreter.get_tensor(1)
+        classes = np.squeeze(classes + 1).astype(np.int32)
+
+        return non_max_suppression(scores, boxes, classes)
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
-        self.interpreter = inference.load_model(self.model)
-        self.input_details, self.output_details = inference.get_details(self.interpreter)
+        self.interpreter = TFLiteInterpreter(self.model)
         self.class_names = read_classes(self.label)
         self.colors = generate_colors(self.class_names)
 
     def run(self):
         self.start()
 
-        if not self.args.video_src:
-            self.image_object_detection()
+        if self.args.video_src:
+            self.real_time_detection()
         else:
-            self.real_time_object_detection()
+            frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
+            self.detect_objects(frame)
+            cv2.waitKey()
+
+        cv2.destroyAllWindows()
