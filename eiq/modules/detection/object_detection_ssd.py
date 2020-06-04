@@ -615,32 +615,6 @@ class eIQObjectDetectionSSD:
         self.class_names = None
         self.colors = None
 
-    def detect_objects(self, frame):
-        image = preprocess_image_for_tflite(frame)
-        out_scores, out_boxes, out_classes = self.run_detection(image)
-
-        result = draw_boxes(frame, out_scores, out_boxes, out_classes,
-                            self.class_names, self.colors)
-
-        cv2.imshow(TITLE_OBJECT_DETECTION_SSD, result)
-
-    def real_time_detection(self):
-        video = gstreamer_configurations(self.args)
-        if (not video) or (not video.isOpened()):
-            sys.exit("Your video device could not be initialized. Exiting...")
-
-        while video.isOpened():
-            ret, frame = video.read()
-            if ret:
-                self.detect_objects(frame)
-            else:
-                print("Your video device could not capture any image.\n"\
-                      "Please, check your device's configurations.")
-                break
-            if (cv2.waitKey(1) & 0xFF) == ord('q'):
-                break
-        video.release()
-
     def gather_data(self):
         download = Downloader(self.args)
         download.retrieve_data(OBJ_DETECTION_SSD_MODEL_SRC,
@@ -675,6 +649,32 @@ class eIQObjectDetectionSSD:
         classes = np.squeeze(classes + 1).astype(np.int32)
 
         return non_max_suppression(scores, boxes, classes)
+
+    def detect_objects(self, frame):
+        image = preprocess_image_for_tflite(frame)
+        out_scores, out_boxes, out_classes = self.run_detection(image)
+
+        result = draw_boxes(frame, out_scores, out_boxes, out_classes,
+                            self.class_names, self.colors)
+
+        cv2.imshow(TITLE_OBJECT_DETECTION_SSD, result)
+
+    def real_time_detection(self):
+        video = gstreamer_configurations(self.args)
+        if (not video) or (not video.isOpened()):
+            sys.exit("Your video device could not be initialized. Exiting...")
+
+        while video.isOpened():
+            ret, frame = video.read()
+            if ret:
+                self.detect_objects(frame)
+            else:
+                print("Your video device could not capture any image.\n"\
+                      "Please, check your device's configurations.")
+                break
+            if (cv2.waitKey(1) & 0xFF) == ord('q'):
+                break
+        video.release()
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
