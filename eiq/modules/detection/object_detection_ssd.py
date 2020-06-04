@@ -41,9 +41,8 @@ except ImportError:
 
 class eIQObjectsDetection:
     def __init__(self):
-        self.args = args_parser(camera_inference=True, download=True,
-                                image=True,label=True, model=True,
-                                video_src=True)
+        self.args = args_parser(download=True, image=True,label=True,
+                                model=True, video_src=True)
         self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_path = os.path.join(self.base_path, "media")
         self.model_path = os.path.join(self.base_path, "model")
@@ -192,7 +191,7 @@ class eIQObjectsDetection:
     def run(self):
         self.start()
 
-        if self.args.camera_inference:
+        if self.args.video_src:
             self.real_time_detection()
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
@@ -610,9 +609,8 @@ class eIQObjectDetectionOpenCV:
 
 class eIQObjectDetectionSSD:
     def __init__(self):
-        self.args = args_parser(camera_inference=True, download=True,
-                                image=True, label=True, model=True,
-                                video_scr=True)
+        self.args = args_parser(download=True, image=True, label=True,
+                                model=True, video_scr=True)
         self.interpreter = None
         self.input_details = None
         self.output_details = None
@@ -722,7 +720,7 @@ class eIQObjectDetectionSSD:
     def run(self):
         self.start()
 
-        if not self.args.camera_inference:
+        if not self.args.video_src:
             self.image_object_detection()
         else:
             self.real_time_object_detection()
