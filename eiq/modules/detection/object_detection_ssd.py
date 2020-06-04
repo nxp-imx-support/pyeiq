@@ -57,11 +57,6 @@ class eIQObjectsDetection:
         self.class_names_dict = {}
         self.colors = None
 
-        self.font = cv2.FONT_HERSHEY_SIMPLEX
-        self.font_size = 0.8
-        self.font_color = (0, 0, 0)
-        self.font_thickness = 2
-
     def gather_data(self):
         download = Downloader(self.args)
         download.retrieve_data(OBJ_DETECTION_MODEL_SRC,
@@ -137,9 +132,8 @@ class eIQObjectsDetection:
             cv2.rectangle(frame, (left, top), (right, bottom),
                           self.colors[self.class_names_dict[_id]], 6)
 
-            label_size = cv2.getTextSize(labels[_id], self.font,
-                                         self.font_size,
-                                         self.font_thickness)[0]
+            label_size = cv2.getTextSize(labels[_id], FONT, FONT_SIZE,
+                                         FONT_THICKNESS)[0]
             label_rect_left = int(left - 3)
             label_rect_top = int(top - 3)
             label_rect_right = int(left + 3 + label_size[0])
@@ -149,8 +143,7 @@ class eIQObjectsDetection:
                           (label_rect_right, label_rect_bottom),
                           self.colors[self.class_names_dict[_id]], -1)
             cv2.putText(frame, labels[_id], (left, int(top - 4)),
-                        self.font, self.font_size, self.font_color,
-                        self.font_thickness)
+                        FONT, FONT_SIZE, FONT_COLOR, FONT_THICKNESS)
 
         inference_time_overlay = OpenCVOverlay(frame, self.interpreter.inference_time)
         frame = inference_time_overlay.draw_inference_time()
