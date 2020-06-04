@@ -9,7 +9,7 @@ def run():
     os.system(pipeline)
 
 
-def set_pipeline(width=640, height=480, device="/dev/video0",
+def v4l2_set_pipeline(width=640, height=480, device="/dev/video0",
                  frate="30/1", leaky="leaky=downstream max-size-buffers=1",
                  sync="sync=false emit-signals=true drop=true max-buffers=1"):
 

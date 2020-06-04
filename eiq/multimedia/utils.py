@@ -12,7 +12,7 @@ import cv2 as opencv
 import numpy as np
 from PIL import Image
 
-from eiq.multimedia.v4l2 import set_pipeline
+from eiq.multimedia.v4l2 import v4l2_set_pipeline
 
 Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
 
@@ -166,31 +166,41 @@ def gstreamer_configurations(args):
     devices = Devices()
     devices.get_video_devices()
 
-    if args.video_src is not None and os.path.exists(args.video_src):
-        for device in devices.devices:
-            if device.get_name() == args.video_src:
-                dev = device
-                caps = dev.get_default_caps()
-                pipeline = set_pipeline(width=caps.get_width(),
-                                        height=caps.get_height(),
-                                        device=dev.get_name(),
-                                        frate=caps.get_framerate())
-                return opencv.VideoCapture(pipeline)
+    if args.video_fwk is None:
         if not args.video_src.startswith("/dev/video"):
             return opencv.VideoCapture(args.video_src)
         else:
-            print("Invalid video device. Searching for a valid one...")
+            return opencv.VideoCapture(int(args.video_src[10]))
+    elif args.video_fwk == 'gstreamer':
+        if args.video_src is not None and os.path.exists(args.video_src):
+            for device in devices.devices:
+                if device.get_name() == args.video_src:
+                    dev = device
+                    caps = dev.get_default_caps()
+                    pipeline = v4l2_set_pipeline(width=caps.get_width(),
+                                            height=caps.get_height(),
+                                            device=dev.get_name(),
+                                            frate=caps.get_framerate())
+                    return opencv.VideoCapture(pipeline)
+            if not args.video_src.startswith("/dev/video"):
+                return opencv.VideoCapture(args.video_src)
+            else:
+                print("Invalid video device. Searching for a valid one...")
 
-    if devices.devices:
-        dev = devices.devices[0]
-        caps = dev.get_default_caps()
-        pipeline = set_pipeline(width=caps.get_width(),
-                                height=caps.get_height(),
-                                device=dev.get_name(),
-                                frate=caps.get_framerate())
-        return opencv.VideoCapture(pipeline)
+        if devices.devices:
+            dev = devices.devices[0]
+            caps = dev.get_default_caps()
+            pipeline = v4l2_set_pipeline(width=caps.get_width(),
+                                    height=caps.get_height(),
+                                    device=dev.get_name(),
+                                    frate=caps.get_framerate())
+            return opencv.VideoCapture(pipeline)
+        else:
+            return None
     else:
-        return None
+         #set gstreamer appsink/appsrc
+         print("Framework not supported.")
+         return None
 
 
 def resize_image(input_details, image, use_opencv=False):

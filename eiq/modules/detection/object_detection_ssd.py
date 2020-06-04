@@ -42,7 +42,7 @@ except ImportError:
 class eIQObjectsDetection:
     def __init__(self):
         self.args = args_parser(download=True, image=True,label=True,
-                                model=True, video_src=True)
+                                model=True, video_src=True, video_fwk=True)
         self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_dir = os.path.join(self.base_dir, "media")
         self.model_dir = os.path.join(self.base_dir, "model")
@@ -51,6 +51,7 @@ class eIQObjectsDetection:
         self.image = None
         self.label = None
         self.model = None
+        self.framework = None
 
         self.class_names = None
         self.class_names_dict = {}
@@ -79,7 +80,7 @@ class eIQObjectsDetection:
         else:
             self.model = os.path.join(self.model_dir,
                                       OBJ_DETECTION_MODEL_NAME)
-        
+
     def dictionary(self):
         with open(self.label) as f:
             i = 0
@@ -99,7 +100,7 @@ class eIQObjectsDetection:
     def process_image(self, image):
         self.interpreter.set_tensor(np.expand_dims(image, axis=0))
         self.interpreter.run_inference()
-        
+
         positions = self.interpreter.get_tensor(0, squeeze=True)
         classes = self.interpreter.get_tensor(1, squeeze=True)
         scores = self.interpreter.get_tensor(2, squeeze=True)
@@ -195,7 +196,7 @@ class eIQObjectsDetection:
 
 class eIQObjectDetectionGStreamer:
     def __init__(self):
-        self.args = args_parser(download=True, video_src=True)
+        self.args = args_parser(download=True, video_src=True, video_fwk=True)
         self.interpreter = None
         self.input_details = None
         self.output_details = None
@@ -211,6 +212,7 @@ class eIQObjectDetectionGStreamer:
         self.videofmt = "raw"
         self.src_width = 640
         self.src_height = 480
+        self.framework = None
 
     def gather_data(self):
         download = Downloader(self.args)
@@ -359,7 +361,7 @@ class eIQObjectDetectionGStreamer:
 class eIQObjectDetectionDNN:
     def __init__(self):
         self.args = args_parser(download=True, image=True, label=True,
-                                model=True, video_src=True)
+                                model=True, video_src=True, video_fwk=True)
         self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
         self.model_dir = os.path.join(self.base_dir, "model")
         self.media_dir = os.path.join(self.base_dir, "media")
@@ -375,6 +377,7 @@ class eIQObjectDetectionDNN:
         self.threshold = 0.2
         self.width = 300
         self.height = 300
+        self.framework = None
 
     def gather_data(self):
         download = Downloader(self.args)
@@ -486,7 +489,7 @@ class eIQObjectDetectionDNN:
 
 class eIQObjectDetectionOpenCV:
     def __init__(self):
-        self.args = args_parser(download=True, video_src=True)
+        self.args = args_parser(download=True, video_src=True, video_fwk=True)
         self.interpreter = None
         self.input_details = None
         self.output_details = None
@@ -497,6 +500,7 @@ class eIQObjectDetectionOpenCV:
         self.video = None
         self.model = None
         self.label = None
+        self.framework = None
 
     def gather_data(self):
         download = Downloader(self.args)
@@ -602,7 +606,7 @@ class eIQObjectDetectionOpenCV:
 class eIQObjectDetectionSSD:
     def __init__(self):
         self.args = args_parser(download=True, image=True, label=True,
-                                model=True, video_src=True)
+                                model=True, video_src=True, video_fwk=True)
         self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_dir = os.path.join(self.base_dir, "media")
         self.model_dir = os.path.join(self.base_dir, "model")
@@ -611,6 +615,7 @@ class eIQObjectDetectionSSD:
         self.image = None
         self.label = None
         self.model = None
+        self.framework = None
 
         self.class_names = None
         self.colors = None

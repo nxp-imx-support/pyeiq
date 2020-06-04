@@ -247,7 +247,8 @@ def copy(target_dir, src_dir):
 
 
 def args_parser(camera_inference=False, download=False, epochs=False,
-                image=False, label=False, model=False, video_src=False):
+                image=False, label=False, model=False, video_src=False,
+                video_fwk=False):
     parser = ArgumentParser()
     if camera_inference:
         parser.add_argument(
@@ -275,6 +276,10 @@ def args_parser(camera_inference=False, download=False, epochs=False,
         parser.add_argument(
             '-m', '--model', default=None,
             help="path of the .tflite model to be executed")
+    if video_fwk:
+        parser.add_argument(
+            '-f', '--video_fwk', default=None,
+            help="Choose the video framework between v4l2, gstreamer and overlay")
     if video_src:
         parser.add_argument(
             '-v', '--video_src', default=None,
