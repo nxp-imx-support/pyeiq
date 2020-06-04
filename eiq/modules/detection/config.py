@@ -47,12 +47,12 @@ OBJ_DETECTION_CV_GST_MODEL_SRC = {'drive': "https://drive.google.com/file/d/" \
                                         "models/raw/master/models/" \
                                         "mobilenet_ssd_v2_coco_quant.zip"}
 
-OBJ_DETECTION_IMG_CAFFE_NAME = "MobileNetSSD_deploy.caffemodel"
-OBJ_DETECTION_IMG_LABEL_NAME = "labels.txt"
-OBJ_DETECTION_IMG_MEDIA_NAME = "dog.jpg"
-OBJ_DETECTION_IMG_PROTO_NAME = "MobileNetSSD_deploy.prototxt"
-OBJ_DETECTION_IMG_MODEL_SHA1 = "f9894307c83f8ddec91af76b8cd6f3dc07196dc0"
-OBJ_DETECTION_IMG_MODEL_SRC = {'drive': "https://drive.google.com/file/d/" \
+OBJ_DETECTION_DNN_CAFFE_NAME = "MobileNetSSD_deploy.caffemodel"
+OBJ_DETECTION_DNN_LABEL_NAME = "labels.txt"
+OBJ_DETECTION_DNN_MEDIA_NAME = "dog.jpg"
+OBJ_DETECTION_DNN_PROTO_NAME = "MobileNetSSD_deploy.prototxt"
+OBJ_DETECTION_DNN_MODEL_SHA1 = "f9894307c83f8ddec91af76b8cd6f3dc07196dc0"
+OBJ_DETECTION_DNN_MODEL_SRC = {'drive': "https://drive.google.com/file/d/" \
                                        "1_qeq3CxK-xhrVX4qdsmnWQ_dwlMCWF76/" \
                                        "view?usp=sharing",
                                'github': "https://github.com/diegohdorta/" \
@@ -94,5 +94,6 @@ TITLE_EMOTIONS_DETECTION = "PyeIQ - Emotions Detection"
 TITLE_FACE_EYES_DETECTION = "PyeIQ - Face and Eyes Detection"
 TITLE_OBJECT_DETECTION_CAM = "PyeIQ - Object Detection Camera"
 TITLE_OBJECT_DETECTION_CV = "PyeIQ - Object Detection OpenCV"
+TITLE_OBJECT_DETECTION_DNN = "PyeIQ - Object Detection DNN"
 TITLE_OBJECT_DETECTION_SSD = "PyeIQ - Object Detection SSD"
 TITLE_OBJECT_DETECTION_YOLOV3 = "PyeIQ - Object Detection YOLOV3"
