@@ -451,11 +451,11 @@ class eIQObjectDetectionDNN:
 
     def real_time_detection(self):
         video = gstreamer_configurations(self.args)
-        if (not self.video) or (not self.video.isOpened()):
+        if (not video) or (not video.isOpened()):
             sys.exit("Your video device could not be found. Exiting...")
 
         while True:
-            ret, frame = self.video.read()
+            ret, frame = video.read()
             if ret:
                 self.detect_objects(frame)
             else:
