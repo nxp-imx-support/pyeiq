@@ -130,3 +130,6 @@ dmypy.json
 
 # Git patch files
 *.patch
+
+# Docker files
+docker/latest-package/
