@@ -43,9 +43,9 @@ class eIQObjectsDetection:
     def __init__(self):
         self.args = args_parser(download=True, image=True,label=True,
                                 model=True, video_src=True)
-        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.media_path = os.path.join(self.base_path, "media")
-        self.model_path = os.path.join(self.base_path, "model")
+        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.media_dir = os.path.join(self.base_dir, "media")
+        self.model_dir = os.path.join(self.base_dir, "model")
 
         self.interpreter = None
         self.image = None
@@ -65,25 +65,25 @@ class eIQObjectsDetection:
     def gather_data(self):
         download = Downloader(self.args)
         download.retrieve_data(OBJ_DETECTION_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_path,
+                               self.__class__.__name__ + ZIP, self.base_dir,
                                OBJ_DETECTION_MODEL_SHA1, True)
 
         if self.args.image is not None and os.path.exists(self.args.image):
             self.image = self.args.image
         else:
-            self.image = os.path.join(self.media_path,
+            self.image = os.path.join(self.media_dir,
                                       OBJ_DETECTION_MEDIA_NAME)
 
         if self.args.label is not None and os.path.exists(self.args.label):
             self.label = self.args.label
         else:
-            self.label = os.path.join(self.model_path,
+            self.label = os.path.join(self.model_dir,
                                       OBJ_DETECTION_LABEL_NAME)
 
         if self.args.model is not None and os.path.exists(self.args.model):
             self.model = self.args.model
         else:
-            self.model = os.path.join(self.model_path,
+            self.model = os.path.join(self.model_dir,
                                       OBJ_DETECTION_MODEL_NAME)
         
     def dictionary(self):
