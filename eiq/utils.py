@@ -209,26 +209,6 @@ def get_temporary_path(*path):
     return os.path.join(tempfile.gettempdir(), *path)
 
 
-def retrieve_from_id(gd_id_url: str=None, pathname: str = None,
-                     filename: str=None, unzip_flag: bool=False):
-    dirpath = os.path.join(TMP_FILE_PATH, pathname)
-    tmpdir = get_temporary_path(dirpath)
-    if not os.path.exists(dirpath):
-        try:
-            pathlib.Path(tmpdir).mkdir(parents=True, exist_ok=True)
-        except OSError:
-            sys.exit("os.mkdir() function has failed: %s" % tmpdir)
-
-    fp = os.path.join(tmpdir)
-    if (os.path.isfile(fp)):
-        return fp
-    else:
-        dst = os.path.join(tmpdir, filename)
-        gdd.download_file_from_google_drive(
-            file_id=gd_id_url, dest_path=dst, unzip=unzip_flag)
-        return fp
-
-
 def copy(target_dir, src_dir):
     if not os.path.exists(target_dir):
         try:
