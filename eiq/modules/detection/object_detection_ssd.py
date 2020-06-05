@@ -52,6 +52,7 @@ class eIQObjectsDetection:
         self.label = None
         self.model = None
         self.framework = None
+        self.overlay = OpenCVOverlay()
 
         self.class_names = None
         self.class_names_dict = {}
@@ -111,49 +112,12 @@ class eIQObjectsDetection:
                 result.append({'pos': positions[idx], '_id': classes[idx]})
         return result
 
-    def display_result(self, result, frame, labels):
-        width = frame.shape[1]
-        height = frame.shape[0]
-
-        for obj in result:
-            pos = obj['pos']
-            _id = obj['_id']
-
-            x1 = int(pos[1] * width)
-            x2 = int(pos[3] * width)
-            y1 = int(pos[0] * height)
-            y2 = int(pos[2] * height)
-
-            top = max(0, np.floor(y1 + 0.5).astype('int32'))
-            left = max(0, np.floor(x1 + 0.5).astype('int32'))
-            bottom = min(height, np.floor(y2 + 0.5).astype('int32'))
-            right = min(width, np.floor(x2 + 0.5).astype('int32'))
-
-            cv2.rectangle(frame, (left, top), (right, bottom),
-                          self.colors[self.class_names_dict[_id]], 6)
-
-            label_size = cv2.getTextSize(labels[_id], FONT, FONT_SIZE,
-                                         FONT_THICKNESS)[0]
-            label_rect_left = int(left - 3)
-            label_rect_top = int(top - 3)
-            label_rect_right = int(left + 3 + label_size[0])
-            label_rect_bottom = int(top - 5 - label_size[1])
-
-            cv2.rectangle(frame, (label_rect_left, label_rect_top),
-                          (label_rect_right, label_rect_bottom),
-                          self.colors[self.class_names_dict[_id]], -1)
-            cv2.putText(frame, labels[_id], (left, int(top - 4)),
-                        FONT, FONT_SIZE, FONT_COLOR, FONT_THICKNESS)
-
-        inference_time_overlay = OpenCVOverlay(frame, self.interpreter.inference_time)
-        frame = inference_time_overlay.draw_inference_time()
-        cv2.imshow('Object Detection', frame)
-
     def detect_objects(self, frame):
         image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         image = image.resize((self.interpreter.width(), self.interpreter.height()))
         top_result = self.process_image(image)
-        self.display_result(top_result, frame, self.label)
+        frame = self.overlay.display_result(self.interpreter.inference_time, frame, top_result, self.label)
+        cv2.imshow('Object Detection', frame)
 
     def real_time_detection(self):
         video = gstreamer_configurations(self.args)
