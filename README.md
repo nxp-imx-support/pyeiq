@@ -7,19 +7,12 @@
 ![GitHub issues][license]
 [![Gitter][gitter-image]][gitter-url]
 
-<h2 align="center">
-  A Python Framework for eIQ on i.MX Processors
-</h2>
+##  A Python Framework for eIQ on i.MX Processors
 
-<div style = "margin-top: -10px;", align="center">
-  <a href="guides/Getting_Started_with_PyeIQ.md"><b>Getting Started</b></a> •
-  <a href="guides/Docker.md"><b>Docker</b></a> •
-  <a href="guides/Tables.md"><b>Available Demos</b></a> •
-  <a href="guides/Contribute.md"><b>Contribute</b></a>
-</div>
-
-<br>
-<br>
+[Getting Started](guides/Getting_Started_with_PyeIQ.md) •
+[Docker](guides/Docker.md) •
+[Available Demos](guides/Tables.md) •
+[Contribute](guides/Contribute.md)
 
 PyeIQ is written on top of [eIQ™ ML Software Development Environment][eiq]. Provides
 a set of Python classes allowing the user to run Machine Learning applications in
