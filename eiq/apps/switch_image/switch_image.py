@@ -138,9 +138,9 @@ class eIQSwitchLabelImage(Gtk.Window):
         iterr = combo.get_active_iter()
         if iterr is not None:
             model = combo.get_model()
-            imageName = model[iterr][0]
-            print("Selected image: %s" % imageName)
-            self.image = os.path.join(self.media_dir, imageName)
+            image_name = model[iterr][0]
+            print("Selected image: {}".format(image_name))
+            self.image = os.path.join(self.media_dir, image_name)
             self.set_displayed_image(self.image)
 
     def get_bmp_images(self):
