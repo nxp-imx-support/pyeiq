@@ -225,24 +225,14 @@ def copy(target_dir, src_dir):
                     shutil.copy(file_path, target_dir)
 
 
-def args_parser(camera_inference=False, download=False, epochs=False,
-                image=False, label=False, model=False, video_src=False,
-                video_fwk=False):
+def args_parser(download=False, image=False, label=False,
+                model=False, video_src=False, video_fwk=False):
     parser = ArgumentParser()
-    if camera_inference:
-        parser.add_argument(
-            '-ci', '--camera_inference', type=bool, default=False,
-            help="set to True if you want to run inference on your camera, " \
-                 "otherwise it is going to run inference on a single image.")
     if download:
         parser.add_argument(
             '-d', '--download', default=None,
             help="Choose from which server the models are going to be " \
                  "downloaded")
-    if epochs:
-        parser.add_argument(
-            '-e', '--epochs', type=int, default=50,
-            help="number of epochs for the traning")
     if image:
         parser.add_argument(
             '-i', '--image', default=None,
