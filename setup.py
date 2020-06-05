@@ -26,8 +26,9 @@ if os.path.exists(base_dir):
     try:
         print("Removing {0}...".format(base_dir))
         shutil.rmtree(base_dir)
-    except OSError as e:
-        print("Error: %s : %s" % (base_dir, e.strerror))
+    except:
+        print("shutil.rmtree() has failed" \
+              "trying to remove: {}".format(base_dir))
 
 copy(install_dir_demos, demos_dir)
 

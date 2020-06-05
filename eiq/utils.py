@@ -77,9 +77,9 @@ class Downloader():
                 else:
                     urllib.request.urlretrieve(url, download_path)
         except URLError as e:
-            sys.exit("Something went wrong with URLError: " % e)
+            sys.exit("Something went wrong with URLError: {}".format(e))
         except HTTPError as e:
-            sys.exit("Something went wrong with HTTPError: " % e)
+            sys.exit("Something went wrong with HTTPError: {}".format(e))
 
     def download_from_web(self, url, filename=None,
                           download_path=None, drive=False):
@@ -183,7 +183,7 @@ class ProgressBar:
 
 
 def log(*args):
-    logging.info(" ".join("%s" % a for a in args))
+    logging.info(" ".join("{}".format(a) for a in args))
 
 
 class InferenceTimer:

@@ -167,7 +167,7 @@ class eIQSwitchLabelImage(Gtk.Window):
         for i in value[2:]:
             self.label_returned[x].set_text(str(i[2]))
             self.value_returned[x].set_progress_fraction(float(i[0]))
-            self.value_returned[x].set_text(str("%.2f" % (float(i[0])*100))+"%")
+            self.value_returned[x].set_text("{0:.2f}%".format(float(i[0])*100))
             x = x + 1
 
     def set_pre_inference(self):
@@ -180,7 +180,7 @@ class eIQSwitchLabelImage(Gtk.Window):
 
     def set_post_inference(self, x):
         self.model_name_label.set_text(x[0])
-        self.inference_value_label.set_text(str("%.2f" % (float(x[1])) + " ms"))
+        self.inference_value_label.set_text("{0:.2f} ms".format(float(x[1])))
         self.set_returned_entrys(x)
         self.image_combo_box.set_sensitive(True)
         self.cpu_button.set_sensitive(True)
