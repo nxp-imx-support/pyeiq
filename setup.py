@@ -7,7 +7,7 @@ import shutil
 import sys
 from setuptools import setup, find_packages
 
-from eiq.utils import copy
+from eiq.utils import copy_dir
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
@@ -30,7 +30,7 @@ if os.path.exists(base_dir):
         print("shutil.rmtree() has failed" \
               "trying to remove: {}".format(base_dir))
 
-copy(install_dir_demos, demos_dir)
+copy_dir(demos_dir, install_dir_demos)
 
 try:
     pathlib.Path(install_dir_apps).mkdir(parents=True, exist_ok=True)
