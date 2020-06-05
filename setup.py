@@ -31,15 +31,14 @@ if os.path.exists(base_dir):
 
 copy(install_dir_demos, demos_dir)
 
-if not os.path.exists(install_dir_apps):
-    try:
-        pathlib.Path(install_dir_apps).mkdir(parents=True, exist_ok=True)
-    except OSError as e:
-        sys.exit("pathlib.Path.mkdir() function has failed: %s : %s" %
-                 (install_dir_apps, e.strerror))
+try:
+    pathlib.Path(install_dir_apps).mkdir(parents=True, exist_ok=True)
+except:
+    sys.exit("Path().mkdir() has failed" \
+             "trying to create: {}".format(install_dir_apps))
 
-    shutil.copy(switch_label, install_dir_apps)
-    shutil.copy(images_player, install_dir_apps)
+shutil.copy(switch_label, install_dir_apps)
+shutil.copy(images_player, install_dir_apps)
 
 setup(name="eiq",
       version="1.0.0",

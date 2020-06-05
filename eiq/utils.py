@@ -90,12 +90,11 @@ class Downloader():
         if download_path is None:
             download_path = get_temporary_path(TMP_FILE_PATH)
 
-        if not os.path.exists(download_path):
-            try:
-                pathlib.Path(download_path).mkdir(parents=True, exist_ok=True)
-            except OSError:
-                sys.exit("pathlin.Path().mkdir() has failed" \
-                         "trying to create: %s" % download_path)
+        try:
+            pathlib.Path(download_path).mkdir(parents=True, exist_ok=True)
+        except:
+            sys.exit("Path().mkdir() has failed" \
+                     "trying to create: {}".format(download_path))
 
         download_path = os.path.join(download_path, filename)
 
@@ -210,11 +209,11 @@ def get_temporary_path(*path):
 
 
 def copy(target_dir, src_dir):
-    if not os.path.exists(target_dir):
-        try:
-            pathlib.Path(target_dir).mkdir(parents=True, exist_ok=True)
-        except OSError:
-            sys.exit("os.mkdir() function has failed: %s" % target_dir)
+    try:
+        pathlib.Path(target_dir).mkdir(parents=True, exist_ok=True)
+    except:
+        sys.exit("Path().mkdir() has failed" \
+                 "trying to create: {}".format(target_dir))
 
     for file in os.listdir(src_dir):
             file_path = os.path.join(src_dir, file)
