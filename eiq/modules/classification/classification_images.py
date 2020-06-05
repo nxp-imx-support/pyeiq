@@ -25,8 +25,8 @@ from eiq.utils import args_parser, Downloader
 
 class eIQFireClassification:
     def __init__(self):
-        self.args = args_parser(camera_inference=True, download=True,
-                                image=True, model=True, video_src=True)
+        self.args = args_parser(download=True,image=True,
+                                model=True, video_src=True)
         self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_path = os.path.join(self.base_path, "media")
         self.model_path = os.path.join(self.base_path, "model")
@@ -103,7 +103,7 @@ class eIQFireClassification:
     def run(self):
         self.start()
 
-        if self.args.camera_inference:
+        if self.args.video_src:
             self.real_time_classification()
         else:
             frame = opencv.imread(self.image)
