@@ -25,7 +25,7 @@ from PIL import Image
 from eiq.config import BASE_DIR
 import eiq.engines.tflite.inference as inference
 from eiq.engines.tflite.inference import TFLiteInterpreter
-from eiq.helper.overlay import OpenCVOverlay
+from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.modules.detection.config import *
 from eiq.modules.detection.utils import *
 from eiq.multimedia import gstreamer

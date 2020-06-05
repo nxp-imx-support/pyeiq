@@ -16,7 +16,7 @@ from PIL import Image
 
 from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
-from eiq.helper.overlay import OpenCVOverlay
+from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.modules.classification.config import *
 from eiq.modules.classification.utils import load_labels
 from eiq.multimedia.utils import gstreamer_configurations, resize_image
