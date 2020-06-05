@@ -27,9 +27,9 @@ class eIQFireClassification:
     def __init__(self):
         self.args = args_parser(download=True,image=True,
                                 model=True, video_src=True)
-        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.media_path = os.path.join(self.base_path, "media")
-        self.model_path = os.path.join(self.base_path, "model")
+        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.media_dir = os.path.join(self.base_dir, "media")
+        self.model_dir = os.path.join(self.base_dir, "model")
 
         self.interpreter = None
         self.image = None
@@ -39,19 +39,19 @@ class eIQFireClassification:
     def gather_data(self):
         download = Downloader(self.args)
         download.retrieve_data(FIRE_DETECTION_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_path,
+                               self.__class__.__name__ + ZIP, self.base_dir,
                                FIRE_DETECTION_MODEL_SHA1, True)
 
         if self.args.image is not None and os.path.isfile(self.args.image):
             self.image = self.args.image
         else:
-            self.image = os.path.join(self.media_path,
+            self.image = os.path.join(self.media_dir,
                                       FIRE_DETECTION_MEDIA_NAME)
 
         if self.args.model is not None and os.path.isfile(self.args.model):
             self.model = self.args.model
         else:
-            self.model = os.path.join(self.model_path,
+            self.model = os.path.join(self.model_dir,
                                       FIRE_DETECTION_MODEL_NAME)
 
     def fire_classification(self, frame):
@@ -117,9 +117,9 @@ class eIQObjectsClassification:
     def __init__(self):
         self.args = args_parser(download=True, image=True, label=True,
                                 model=True, video_src=True)
-        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.media_path = os.path.join(self.base_path, "media")
-        self.model_path = os.path.join(self.base_path, "model")
+        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.media_dir = os.path.join(self.base_dir, "media")
+        self.model_dir = os.path.join(self.base_dir, "model")
 
         self.interpreter = None
         self.image = None
@@ -135,23 +135,23 @@ class eIQObjectsClassification:
     def gather_data(self):
         download = Downloader(self.args)
         download.retrieve_data(IMAGE_CLASSIFICATION_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_path,
+                               self.__class__.__name__ + ZIP, self.base_dir,
                                IMAGE_CLASSIFICATION_MODEL_SHA1, True)
 
         if self.args.image is not None and os.path.isfile(self.args.image):
             self.image = self.args.image
         else:
-            self.image = os.path.join(self.media_path, IMAGE_CLASSIFICATION_MEDIA_NAME)
+            self.image = os.path.join(self.media_dir, IMAGE_CLASSIFICATION_MEDIA_NAME)
 
         if self.args.label is not None and os.path.isfile(self.args.label):
             self.label = self.args.label
         else:
-            self.label = os.path.join(self.model_path, IMAGE_CLASSIFICATION_LABEL_NAME)
+            self.label = os.path.join(self.model_dir, IMAGE_CLASSIFICATION_LABEL_NAME)
 
         if self.args.model is not None and os.path.isfile(self.args.model):
             self.model = self.args.model
         else:
-            self.model = os.path.join(self.model_path, IMAGE_CLASSIFICATION_MODEL_NAME)
+            self.model = os.path.join(self.model_dir, IMAGE_CLASSIFICATION_MODEL_NAME)
 
     def process_image(self, image, k=3):
         input_data = np.expand_dims(image, axis=0)
@@ -219,9 +219,9 @@ class eIQLabelImage:
     def __init__(self):
         self.args = args_parser(download=True, image=True,
                                 label=True, model=True)
-        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.media_path = os.path.join(self.base_path, "media")
-        self.model_path = os.path.join(self.base_path, "model")
+        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.media_dir = os.path.join(self.base_dir, "media")
+        self.model_dir = os.path.join(self.base_dir, "model")
 
         self.interpreter = None
         self.image = None
@@ -234,23 +234,23 @@ class eIQLabelImage:
     def gather_data(self):
         download = Downloader(self.args)
         download.retrieve_data(LABEL_IMAGE_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_path,
+                               self.__class__.__name__ + ZIP, self.base_dir,
                                LABEL_IMAGE_MODEL_SHA1, True)
 
         if self.args.image is not None and os.path.isfile(self.args.image):
             self.image = self.args.image
         else:
-            self.image = os.path.join(self.media_path, LABEL_IMAGE_MEDIA_NAME)
+            self.image = os.path.join(self.media_dir, LABEL_IMAGE_MEDIA_NAME)
 
         if self.args.label is not None and os.path.isfile(self.args.label):
             self.label = self.args.label
         else:
-            self.label = os.path.join(self.model_path, LABEL_IMAGE_LABEL_NAME)
+            self.label = os.path.join(self.model_dir, LABEL_IMAGE_LABEL_NAME)
 
         if self.args.model is not None and os.path.isfile(self.args.model):
             self.model = self.args.model
         else:
-            self.model = os.path.join(self.model_path, LABEL_IMAGE_MODEL_NAME)
+            self.model = os.path.join(self.model_dir, LABEL_IMAGE_MODEL_NAME)
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
