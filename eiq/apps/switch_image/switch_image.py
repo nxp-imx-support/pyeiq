@@ -13,17 +13,19 @@ from gi.repository import Gtk, GdkPixbuf, GLib
 from eiq.apps import config
 from eiq.apps.utils import convert_image_to_png
 from eiq.apps.utils import run_label_image_no_accel, run_label_image_accel
-from eiq.utils import args_parser, retrieve_from_id
+from eiq.config import BASE_DIR
+from eiq.utils import args_parser, Downloader
 
 
 class eIQSwitchLabelImage(Gtk.Window):
 
     def __init__(self):
         Gtk.Window.__init__(self, title=config.TITLE_LABEL_IMAGE_SWITCH)
-        self.args = args_parser(image=True)
-        self.name = self.__class__.__name__
+        self.args = args_parser(download=True, image=True)
         self.set_default_size(1280, 720)
         self.set_position(Gtk.WindowPosition.CENTER)
+        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.media_dir = os.path.join(self.base_dir, "media")
 
         grid = Gtk.Grid(row_spacing = 10, column_spacing = 10, border_width = 18,)
         self.add(grid)
@@ -36,9 +38,11 @@ class eIQSwitchLabelImage(Gtk.Window):
         self.image = config.DEFAULT_TFLITE_IMAGE
         self.image_map = Gtk.ListStore(str)
 
-        self.images_path = retrieve_from_id(config.IMAGES_DRIVE_ID, self.name,
-            config.IMAGES_DRIVE_NAME + ".zip",unzip_flag=True)
-        self.images_path = os.path.join(self.images_path, config.IMAGES_DRIVE_NAME)
+        download = Downloader(self.args)
+        download.retrieve_data(config.SWITCH_IMAGES_MEDIA_SRC,
+                               self.__class__.__name__ + config.ZIP,
+                               self.base_dir, config.SWITCH_IMAGES_MEDIA_SHA1,
+                               True)
 
         self.get_bmp_images()
 
@@ -136,11 +140,11 @@ class eIQSwitchLabelImage(Gtk.Window):
             model = combo.get_model()
             imageName = model[iterr][0]
             print("Selected image: %s" % imageName)
-            self.image = os.path.join(self.images_path, imageName)
-            self.set_displayed_image(os.path.join(self.images_path, imageName))
+            self.image = os.path.join(self.media_dir, imageName)
+            self.set_displayed_image(self.image)
 
     def get_bmp_images(self):
-        for file in os.listdir(self.images_path):
+        for file in os.listdir(self.media_dir):
             self.image_map.append([file])
 
     def get_hw_accel(self):

@@ -3,8 +3,13 @@
 
 # Switch Label Image
 
-IMAGES_DRIVE_ID = "12wRWlzYQp1ABp2hVuZcPiO5FipEy6HIJ"
-IMAGES_DRIVE_NAME = "bmp_examples"
+SWITCH_IMAGES_MEDIA_SHA1 = "9e468ed566c3402daf24e93f5a503d663e03f448"
+SWITCH_IMAGES_MEDIA_SRC = {'drive': "https://drive.google.com/file/d/" \
+                                    "1C8GIVJUh7SqNf3f35Xd3j3Xt3oaje-O1/" \
+                                    "view?usp=sharing",
+                            'github': "https://github.com/diegohdorta/" \
+                                      "models/raw/master/media/" \
+                                      "eIQSwitchLabelImage.zip"}
 
 DEFAULT_TFLITE_IMAGE = "/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp"
 
@@ -33,6 +38,8 @@ SWITCH_RESULTS = "<b>RESULTS (%)</b>"
 SWITCH_INFERENCE_TIME = "<b>INFERENCE TIME</b>"
 
 SWITCH_SELECT_IMAGE = "<b>SELECT AN IMAGE</b>"
+
+ZIP = ".zip"
 
 # Apps Titles
 
