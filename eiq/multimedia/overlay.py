@@ -6,7 +6,7 @@ import cv2
 from eiq.helper.config import *
 
 class OpenCVOverlay:
-    def __init__(self):
+    def __init__(self, overlay_frame, time):
         self.frame = None
         self.time = None
 

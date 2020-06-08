@@ -71,7 +71,7 @@ class eIQFireClassification:
                         cv2.FONT_HERSHEY_SIMPLEX, 1, CV_RED, 2)
 
         inference_time_overlay = OpenCVOverlay(frame, self.interpreter.inference_time)
-        frame = inference_time_overlay.draw_inference_time()
+        inference_time_overlay.draw_inference_time()
         cv2.imshow(TITLE_FIRE_CLASSIFICATION, frame)
 
     def real_time_classification(self):
@@ -172,7 +172,7 @@ class eIQObjectsClassification:
                            (x, y), self.font, self.font_size,
                            self.font_color, self.font_thickness)
         inference_time_overlay = OpenCVOverlay(frame, self.interpreter.inference_time)
-        frame = inference_time_overlay.draw_inference_time()
+        inference_time_overlay.draw_inference_time()
         cv2.imshow(TITLE_OBJ_CLASSIFICATION, frame)
 
     def classificate_image(self, frame):
