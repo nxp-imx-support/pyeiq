@@ -22,9 +22,6 @@ FIRE_DETECTION_MODEL_SRC = {'drive': "https://drive.google.com/file/d/" \
                                       "models/raw/master/models/" \
                                       "eIQFireClassification.zip"}
 
-CAMERA_WIDTH = 640
-CAMERA_HEIGHT = 480
-
 CV_GREEN = (0, 255, 0)
 CV_RED = (0, 0, 255)
 
