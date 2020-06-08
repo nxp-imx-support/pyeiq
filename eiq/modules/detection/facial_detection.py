@@ -27,7 +27,6 @@ class eIQEmotionsDetection:
         self.interpreter = None
 
         self.image = None
-        self.video = None
 
     def gater_data(self):
         download = Downloader(self.args)
@@ -96,12 +95,12 @@ class eIQEmotionsDetection:
             cv2.imshow(TITLE_EMOTIONS_DETECTION, frame)
 
     def real_time_detection(self):
-        self.video = gstreamer_configurations(self.args)
-        if (not self.video) or (not self.video.isOpened()):
+        video = gstreamer_configurations(self.args)
+        if (not video) or (not video.isOpened()):
             sys.exit("Your video device could not be found. Exiting...")
 
         while(True):
-            ret, frame = self.video.read()
+            ret, frame = video.read()
             if ret:
                 self.detect_face(frame)
             else:
@@ -110,7 +109,7 @@ class eIQEmotionsDetection:
                 break
             if (cv2.waitKey(1) & 0xFF) == ord('q'):
                 break
-        self.video.release()
+        video.release()
 
     def start(self):
         self.gater_data()
@@ -141,7 +140,6 @@ class eIQFaceAndEyesDetection:
         self.face_cascade = None
 
         self.image = None
-        self.video = None
 
     def gather_data(self):
         download = Downloader(self.args)
@@ -176,12 +174,12 @@ class eIQFaceAndEyesDetection:
         cv2.imshow(TITLE_FACE_EYES_DETECTION, frame)
 
     def real_time_detection(self):
-        self.video = gstreamer_configurations(self.args)
-        if (not self.video) or (not self.video.isOpened()):
+        video = gstreamer_configurations(self.args)
+        if (not video) or (not video.isOpened()):
             sys.exit("Your video device could not be found. Exiting...")
 
         while True:
-            ret, frame = self.video.read()
+            ret, frame = video.read()
             if ret:
                 self.detect_face(frame)
             else:
@@ -190,7 +188,7 @@ class eIQFaceAndEyesDetection:
                 break
             if (cv2.waitKey(1) & 0xFF) == ord('q'):
                 break
-        self.video.release()
+        video.release()
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"

@@ -33,7 +33,6 @@ class eIQObjectsDetectionYOLOV3:
         self.image = None
         self.label = None
         self.model = None
-        self.video = None
         
         self.anchors = [[0.57273, 0.677385], [1.87446, 2.06253],
                         [3.33843, 5.47434], [7.88282, 3.52778],
@@ -231,12 +230,12 @@ class eIQObjectsDetectionYOLOV3:
             cv2.imshow(TITLE_OBJECT_DETECTION_YOLOV3, frame)
 
     def real_time_detection(self):
-        self.video = gstreamer_configurations(self.args)
-        if (not self.video) or (not self.video.isOpened()):
+        video = gstreamer_configurations(self.args)
+        if (not video) or (not video.isOpened()):
             sys.exit("Your video device could not be found. Exiting...")
 
         while True:
-            ret, frame = self.video.read()
+            ret, frame = video.read()
             if ret:
                 self.detect_objects(frame)
             else:
@@ -246,7 +245,7 @@ class eIQObjectsDetectionYOLOV3:
             if (cv2.waitKey(1) & 0xFF) == ord('q'):
                 break
 
-        self.video.release()
+        video.release()
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"

@@ -34,7 +34,6 @@ class eIQFireClassification:
         self.interpreter = None
         self.image = None
         self.model = None
-        self.video = None
 
     def gather_data(self):
         download = Downloader(self.args)
@@ -76,15 +75,15 @@ class eIQFireClassification:
         cv2.imshow(TITLE_FIRE_CLASSIFICATION, frame)
 
     def real_time_classification(self):
-        self.video = gstreamer_configurations(self.args)
-        if (not self.video) or (not self.video.isOpened()):
+        video = gstreamer_configurations(self.args)
+        if (not video) or (not video.isOpened()):
             sys.exit("Your video device could not be found. Exiting...")
 
         while True:
-            ret, frame = self.video.read()
+            ret, frame = video.read()
 
             if ret:
-                self.fire_classification(frame)
+                fire_classification(frame)
             else:
                 print("Your video device could not capture any image.\n"\
                       "Please, check your device configurations." )
@@ -93,7 +92,7 @@ class eIQFireClassification:
             if (cv2.waitKey(1) & 0xFF == ord('q')):
                 break
 
-        self.video.release()
+        video.release()
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -125,7 +124,6 @@ class eIQObjectsClassification:
         self.image = None
         self.label = None
         self.model = None
-        self.video = None
 
         self.font = cv2.FONT_HERSHEY_SIMPLEX
         self.font_size = 0.8
@@ -186,17 +184,17 @@ class eIQObjectsClassification:
         self.display_result(top_result, frame, self.label)
 
     def real_time_classification(self):
-        self.video = gstreamer_configurations(self.args)
-        if (not self.video) or (not self.video.isOpened()):
+        video = gstreamer_configurations(self.args)
+        if (not video) or (not video.isOpened()):
             sys.exit("Your video device could not be found. Exiting...")
 
         while True:
-            ret, frame = self.video.read()
+            ret, frame = video.read()
             if ret:
                 self.classificate_image(frame)
             if (cv2.waitKey(1) & 0xFF) == ord('q'):
                 break
-        self.video.release()
+        video.release()
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
