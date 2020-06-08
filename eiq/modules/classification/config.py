@@ -12,17 +12,6 @@ IMAGE_CLASSIFICATION_MODEL_SRC = {'drive': "https://drive.google.com/file/d/" \
                                             "models/raw/master/models/" \
                                             "eIQImageClassification.zip"}
 
-LABEL_IMAGE_LABEL_NAME = "imagenet_labels.txt"
-LABEL_IMAGE_MEDIA_NAME = "grace_hopper.bmp"
-LABEL_IMAGE_MODEL_NAME = "mobilenet_v2_1.0_224_quant.tflite"
-LABEL_IMAGE_MODEL_SHA1 = "e1fc0d8e52e646b0038aadee4248c55311f80a2b"
-LABEL_IMAGE_MODEL_SRC = {'drive':  "https://drive.google.com/file/d/" \
-                                   "1mKCQ6ji5ZQ1IMkZ8HHV3q5CGl1OiNgz-/" \
-                                   "view?usp=sharing",
-                         'github': "https://github.com/diegohdorta/" \
-                                   "models/raw/master/models/" \
-                                   "label_image.zip"}
-
 FIRE_DETECTION_MEDIA_NAME = "fire.jpg"
 FIRE_DETECTION_MODEL_NAME = "fire_detection.tflite"
 FIRE_DETECTION_MODEL_SHA1 = "2df946680459a3b20bd668f423dcdaa6b76a98b3"
