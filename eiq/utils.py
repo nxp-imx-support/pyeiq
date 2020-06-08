@@ -247,7 +247,7 @@ def args_parser(download=False, image=False, label=False,
             help="path of the .tflite model to be executed")
     if video_fwk:
         parser.add_argument(
-            '-f', '--video_fwk', default=None,
+            '-f', '--video_fwk', default='v4l2',
             help="Choose the video framework between v4l2, gstreamer and overlay")
     if video_src:
         parser.add_argument(

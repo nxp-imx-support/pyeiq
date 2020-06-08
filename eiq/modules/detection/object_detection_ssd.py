@@ -51,7 +51,6 @@ class eIQObjectsDetection:
         self.image = None
         self.label = None
         self.model = None
-        self.framework = None
         self.overlay = OpenCVOverlay()
 
         self.class_names = None
@@ -120,7 +119,10 @@ class eIQObjectsDetection:
         cv2.imshow('Object Detection', frame)
 
     def real_time_detection(self):
-        video = gstreamer_configurations(self.args)
+        if not self.args.video_src.startswith("/dev/video"):
+            video = opencv.VideoCapture(self.args.video_src)
+        else:
+            video = opencv.VideoCapture(int(self.args.video_src[10]))
         if (not video) or (not video.isOpened()):
             sys.exit("Your video device could not be found. Exiting...")
 
@@ -148,8 +150,11 @@ class eIQObjectsDetection:
     def run(self):
         self.start()
 
-        if self.args.video_src:
+        if self.args.video_src is not None and self.args.video_fwk == 'v4l2':
             self.real_time_detection()
+        elif self.args.video_src is not None and self.args.video_fwk == 'gstreamer':
+            print("GStreamer framework not supported yet.")
+            #self.real_time_detection_gstreamer()
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_objects(frame)
