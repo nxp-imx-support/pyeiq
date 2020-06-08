@@ -663,8 +663,11 @@ class eIQObjectDetectionSSD:
     def run(self):
         self.start()
 
-        if self.args.video_src:
+        if self.args.video_src is not None and self.args.video_fwk == 'v4l2':
             self.real_time_detection()
+        elif self.args.video_src is not None and self.args.video_fwk == 'gstreamer':
+            print("GStreamer framework not supported yet.")
+            #self.real_time_detection_gstreamer()
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_objects(frame)
