@@ -1,7 +1,7 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
-from eiq.posenet import PoseNet
+from eiq.posenet.posenet import PoseNet
 
 def main():
     app = PoseNet()
