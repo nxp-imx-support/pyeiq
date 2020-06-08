@@ -9,7 +9,6 @@
 
 import collections
 import os
-from pathlib import Path
 import re
 import sys
 import time
@@ -27,6 +26,7 @@ import eiq.engines.tflite.inference as inference
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.detection.config import *
 from eiq.modules.detection.utils import *
+from eiq.modules.utils import real_time_inference
 from eiq.multimedia import gstreamer
 from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.multimedia.utils import gstreamer_configurations, make_boxes
@@ -115,28 +115,10 @@ class eIQObjectsDetection:
         image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         image = image.resize((self.interpreter.width(), self.interpreter.height()))
         top_result = self.process_image(image)
-        frame = self.overlay.display_result(self.interpreter.inference_time, frame, top_result, self.label)
+        frame = self.overlay.display_result(frame, self.interpreter.inference_time,
+                                            top_result, self.label, self.colors,
+                                            self.class_names_dict)
         cv2.imshow('Object Detection', frame)
-
-    def real_time_detection(self):
-        if not self.args.video_src.startswith("/dev/video"):
-            video = opencv.VideoCapture(self.args.video_src)
-        else:
-            video = opencv.VideoCapture(int(self.args.video_src[10]))
-        if (not video) or (not video.isOpened()):
-            sys.exit("Your video device could not be found. Exiting...")
-
-        while True:
-            ret, frame = video.read()
-            if ret:
-                self.detect_objects(frame)
-            else:
-                print("Your video device could not capture any image.\n"\
-                      "Please, check your device's configurations." )
-                break
-            if (cv2.waitKey(1) & 0xFF) == ord('q'):
-                break
-        video.release()
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -150,11 +132,8 @@ class eIQObjectsDetection:
     def run(self):
         self.start()
 
-        if self.args.video_src is not None and self.args.video_fwk == 'v4l2':
-            self.real_time_detection()
-        elif self.args.video_src is not None and self.args.video_fwk == 'gstreamer':
-            print("GStreamer framework not supported yet.")
-            #self.real_time_detection_gstreamer()
+        if self.args.video_src:
+            real_time_inference(self.detect_objects, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_objects(frame)
@@ -420,23 +399,6 @@ class eIQObjectDetectionDNN:
 
         cv2.imshow(TITLE_OBJECT_DETECTION_DNN, frame)
 
-    def real_time_detection(self):
-        video = gstreamer_configurations(self.args)
-        if (not video) or (not video.isOpened()):
-            sys.exit("Your video device could not be found. Exiting...")
-
-        while True:
-            ret, frame = video.read()
-            if ret:
-                self.detect_objects(frame)
-            else:
-                print("Your video device could not capture any image.\n"\
-                      "Please, check your device's configurations.")
-                break
-            if (cv2.waitKey(1) & 0xFF) == ord('q'):
-                break
-        video.release()
-
     def start(self):
         self.gather_data()
         self.labels = self.load_labels(self.labels)
@@ -446,11 +408,8 @@ class eIQObjectDetectionDNN:
     def run(self):
         self.start()
 
-        if self.args.video_src is not None and self.args.video_fwk == 'v4l2':
-            self.real_time_detection()
-        elif self.args.video_src is not None and self.args.video_fwk == 'gstreamer':
-            print("GStreamer framework not supported yet.")
-            #self.real_time_detection_gstreamer()
+        if self.args.video_src:
+            real_time_inference(self.detect_objects, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_objects(frame)
@@ -636,23 +595,6 @@ class eIQObjectDetectionSSD:
 
         cv2.imshow(TITLE_OBJECT_DETECTION_SSD, result)
 
-    def real_time_detection(self):
-        video = gstreamer_configurations(self.args)
-        if (not video) or (not video.isOpened()):
-            sys.exit("Your video device could not be initialized. Exiting...")
-
-        while video.isOpened():
-            ret, frame = video.read()
-            if ret:
-                self.detect_objects(frame)
-            else:
-                print("Your video device could not capture any image.\n"\
-                      "Please, check your device's configurations.")
-                break
-            if (cv2.waitKey(1) & 0xFF) == ord('q'):
-                break
-        video.release()
-
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
@@ -663,11 +605,8 @@ class eIQObjectDetectionSSD:
     def run(self):
         self.start()
 
-        if self.args.video_src is not None and self.args.video_fwk == 'v4l2':
-            self.real_time_detection()
-        elif self.args.video_src is not None and self.args.video_fwk == 'gstreamer':
-            print("GStreamer framework not supported yet.")
-            #self.real_time_detection_gstreamer()
+        if self.args.video_src:
+            real_time_inference(self.detect_objects, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_objects(frame)
