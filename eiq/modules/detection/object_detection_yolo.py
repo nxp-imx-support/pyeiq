@@ -25,7 +25,7 @@ from eiq.utils import args_parser, Downloader
 class eIQObjectsDetectionYOLOV3:
     def __init__(self):
         self.args = args_parser(download=True, image=True, label=True,
-                                model=True, video_src=True)
+                                model=True, video_fwk=True, video_src=True)
         self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_path = os.path.join(self.base_path, "media")
         self.model_path = os.path.join(self.base_path, "model")
