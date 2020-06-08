@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import os
-import sys
 
 import cv2
 import numpy as np
