@@ -144,9 +144,8 @@ class eIQObjectsDetection:
 class eIQObjectDetectionGStreamer:
     def __init__(self):
         self.args = args_parser(download=True, video_src=True, video_fwk=True)
-        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.model_path = os.path.join(self.base_path, "model")
-
+        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.model_dir = os.path.join(self.base_dir, "model")
 
         self.interpreter = None
         self.tensor = None
@@ -163,12 +162,12 @@ class eIQObjectDetectionGStreamer:
     def gather_data(self):
         download = Downloader(self.args)
         download.retrieve_data(OBJ_DETECTION_CV_GST_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_path,
+                               self.__class__.__name__ + ZIP, self.base_dir,
                                OBJ_DETECTION_CV_GST_MODEL_SHA1, True)
 
-        self.model = os.path.join(self.base_path,
+        self.model = os.path.join(self.base_dir,
                                   OBJ_DETECTION_CV_GST_MODEL_NAME)
-        self.label = os.path.join(self.base_path,
+        self.label = os.path.join(self.base_dir,
                                   OBJ_DETECTION_CV_GST_LABEL_NAME)
 
     def video_config(self):
@@ -419,8 +418,8 @@ class eIQObjectDetectionDNN:
 class eIQObjectDetectionOpenCV:
     def __init__(self):
         self.args = args_parser(download=True, video_src=True, video_fwk=True)
-        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.model_path = os.path.join(self.base_path, "model")
+        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.model_dir = os.path.join(self.base_dir, "model")
 
         self.interpreter = None
         self.tensor = None
@@ -432,12 +431,12 @@ class eIQObjectDetectionOpenCV:
     def gather_data(self):
         download = Downloader(self.args)
         download.retrieve_data(OBJ_DETECTION_CV_GST_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_path,
+                               self.__class__.__name__ + ZIP, self.base_dir,
                                OBJ_DETECTION_CV_GST_MODEL_SHA1, True)
 
-        self.model = os.path.join(self.base_path,
+        self.model = os.path.join(self.base_dir,
                                   OBJ_DETECTION_CV_GST_MODEL_NAME)
-        self.label = os.path.join(self.base_path,
+        self.label = os.path.join(self.base_dir,
                                   OBJ_DETECTION_CV_GST_LABEL_NAME)
 
     def set_input(self, image, resample=Image.NEAREST):
