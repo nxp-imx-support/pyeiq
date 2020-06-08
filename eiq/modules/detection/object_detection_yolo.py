@@ -14,7 +14,6 @@ import sys
 import cv2
 import numpy as np
 from PIL import Image
-from tflite_runtime.interpreter import Interpreter
 
 from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
