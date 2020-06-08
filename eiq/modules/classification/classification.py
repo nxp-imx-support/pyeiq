@@ -19,6 +19,7 @@ from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.modules.classification.config import *
 from eiq.modules.classification.utils import load_labels
+from eiq.modules.utils import real_time_inference
 from eiq.multimedia.utils import gstreamer_configurations, resize_image
 from eiq.utils import args_parser, Downloader
 
@@ -74,26 +75,6 @@ class eIQFireClassification:
         self.overlay.draw_inference_time(frame, self.interpreter.inference_time)
         cv2.imshow(TITLE_FIRE_CLASSIFICATION, frame)
 
-    def real_time_classification(self):
-        video = gstreamer_configurations(self.args)
-        if (not video) or (not video.isOpened()):
-            sys.exit("Your video device could not be found. Exiting...")
-
-        while True:
-            ret, frame = video.read()
-
-            if ret:
-                fire_classification(frame)
-            else:
-                print("Your video device could not capture any image.\n"\
-                      "Please, check your device configurations." )
-                break
-
-            if (cv2.waitKey(1) & 0xFF == ord('q')):
-                break
-
-        video.release()
-
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
@@ -103,7 +84,7 @@ class eIQFireClassification:
         self.start()
 
         if self.args.video_src:
-            self.real_time_classification()
+            real_time_inference(self.fire_classification, self.args)
         else:
             frame = cv2.imread(self.image)
             self.fire_classification(frame)
@@ -184,19 +165,6 @@ class eIQObjectsClassification:
         top_result = self.process_image(image)
         self.display_result(top_result, frame, self.label)
 
-    def real_time_classification(self):
-        video = gstreamer_configurations(self.args)
-        if (not video) or (not video.isOpened()):
-            sys.exit("Your video device could not be found. Exiting...")
-
-        while True:
-            ret, frame = video.read()
-            if ret:
-                self.classificate_image(frame)
-            if (cv2.waitKey(1) & 0xFF) == ord('q'):
-                break
-        video.release()
-
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
@@ -206,7 +174,7 @@ class eIQObjectsClassification:
     def run(self):
         self.start()
         if self.args.video_src:
-            self.real_time_classification()
+            real_time_inference(self.classificate_image, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.classificate_image(frame)
