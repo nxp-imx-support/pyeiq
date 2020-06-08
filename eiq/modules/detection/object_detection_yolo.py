@@ -18,6 +18,7 @@ from PIL import Image
 from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.detection.config import *
+from eiq.modules.utils import real_time_inference
 from eiq.multimedia.utils import gstreamer_configurations
 from eiq.utils import args_parser, Downloader
 
@@ -229,24 +230,6 @@ class eIQObjectsDetectionYOLOV3:
                         FONT, FONT_SIZE, FONT_COLOR, FONT_THICKNESS)
             cv2.imshow(TITLE_OBJECT_DETECTION_YOLOV3, frame)
 
-    def real_time_detection(self):
-        video = gstreamer_configurations(self.args)
-        if (not video) or (not video.isOpened()):
-            sys.exit("Your video device could not be found. Exiting...")
-
-        while True:
-            ret, frame = video.read()
-            if ret:
-                self.detect_objects(frame)
-            else:
-                print("Your video device could not capture any image.\n"\
-                      "Please, check your device's configurations." )
-                break
-            if (cv2.waitKey(1) & 0xFF) == ord('q'):
-                break
-
-        video.release()
-
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
@@ -257,7 +240,7 @@ class eIQObjectsDetectionYOLOV3:
         self.start()
 
         if self.args.video_src:
-            self.real_time_detection()
+            real_time_inference(self.detect_objects, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_objects(frame)
