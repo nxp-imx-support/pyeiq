@@ -134,24 +134,24 @@ class eIQObjectsClassification:
 
     def gather_data(self):
         download = Downloader(self.args)
-        download.retrieve_data(IMAGE_CLASSIFICATION_MODEL_SRC,
+        download.retrieve_data(OBJ_CLASSIFICATION_MODEL_SRC,
                                self.__class__.__name__ + ZIP, self.base_dir,
-                               IMAGE_CLASSIFICATION_MODEL_SHA1, True)
+                               OBJ_CLASSIFICATION_MODEL_SHA1, True)
 
         if self.args.image is not None and os.path.isfile(self.args.image):
             self.image = self.args.image
         else:
-            self.image = os.path.join(self.media_dir, IMAGE_CLASSIFICATION_MEDIA_NAME)
+            self.image = os.path.join(self.media_dir, OBJ_CLASSIFICATION_MEDIA_NAME)
 
         if self.args.label is not None and os.path.isfile(self.args.label):
             self.label = self.args.label
         else:
-            self.label = os.path.join(self.model_dir, IMAGE_CLASSIFICATION_LABEL_NAME)
+            self.label = os.path.join(self.model_dir, OBJ_CLASSIFICATION_LABEL_NAME)
 
         if self.args.model is not None and os.path.isfile(self.args.model):
             self.model = self.args.model
         else:
-            self.model = os.path.join(self.model_dir, IMAGE_CLASSIFICATION_MODEL_NAME)
+            self.model = os.path.join(self.model_dir, OBJ_CLASSIFICATION_MODEL_NAME)
 
     def process_image(self, image, k=3):
         input_data = np.expand_dims(image, axis=0)
@@ -175,7 +175,7 @@ class eIQObjectsClassification:
                            self.font_color, self.font_thickness)
         inference_time_overlay = OpenCVOverlay(frame, self.interpreter.inference_time)
         frame = inference_time_overlay.draw_inference_time()
-        opencv.imshow(TITLE_IMAGE_CLASSIFICATION, frame)
+        opencv.imshow(TITLE_OBJ_CLASSIFICATION, frame)
 
     def classificate_image(self, frame):
         image = Image.fromarray(opencv.cvtColor(frame, opencv.COLOR_BGR2RGB))
