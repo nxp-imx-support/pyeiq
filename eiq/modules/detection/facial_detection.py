@@ -29,7 +29,7 @@ class eIQEmotionsDetection:
 
         self.image = None
 
-    def gater_data(self):
+    def gather_data(self):
         download = Downloader(self.args)
         download.retrieve_data(EMOTIONS_DETECTION_SRC,
                                self.__class__.__name__ + ZIP, self.base_dir,
@@ -97,7 +97,7 @@ class eIQEmotionsDetection:
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
-        self.gater_data()
+        self.gather_data()
         self.face_cascade = cv2.CascadeClassifier(self.face_cascade)
         self.interpreter = TFLiteInterpreter(self.model)
 
