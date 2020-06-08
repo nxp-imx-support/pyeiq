@@ -34,6 +34,7 @@ class eIQFireClassification:
         self.interpreter = None
         self.image = None
         self.model = None
+        self.overlay = OpenCVOverlay()
 
     def gather_data(self):
         download = Downloader(self.args)
@@ -70,8 +71,7 @@ class eIQFireClassification:
             cv2.putText(frame, FIRE, (50, 50),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, CV_RED, 2)
 
-        inference_time_overlay = OpenCVOverlay(frame, self.interpreter.inference_time)
-        inference_time_overlay.draw_inference_time()
+        self.overlay.draw_inference_time(frame, self.interpreter.inference_time)
         cv2.imshow(TITLE_FIRE_CLASSIFICATION, frame)
 
     def real_time_classification(self):
@@ -124,6 +124,7 @@ class eIQObjectsClassification:
         self.image = None
         self.label = None
         self.model = None
+        self.overlay = OpenCVOverlay()
 
         self.font = cv2.FONT_HERSHEY_SIMPLEX
         self.font_size = 0.8
@@ -171,8 +172,8 @@ class eIQObjectsClassification:
             cv2.putText(frame, '{} - {:0.4f}'.format(labels[i], score),
                            (x, y), self.font, self.font_size,
                            self.font_color, self.font_thickness)
-        inference_time_overlay = OpenCVOverlay(frame, self.interpreter.inference_time)
-        inference_time_overlay.draw_inference_time()
+
+        self.overlay.draw_inference_time(frame, self.interpreter.inference_time)
         cv2.imshow(TITLE_OBJ_CLASSIFICATION, frame)
 
     def classificate_image(self, frame):

@@ -10,13 +10,10 @@ class OpenCVOverlay:
         self.frame = None
         self.time = None
 
-    def draw_inference_time(self):
-        cv2.putText(self.frame,
-                    INFERENCE_TIME_MESSAGE + str(self.time),
-                    (3, 12),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.4,
-                    (255, 255, 255), 1, cv2.LINE_AA)
+    def draw_inference_time(self, frame, time):
+        cv2.putText(frame, "{}: {}".format(INFERENCE_TIME_MESSAGE, time),
+                    (3, 12), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.4, (255, 255, 255), 1, cv2.LINE_AA)
 
     def display_result(self, frame, time, result, labels):
         self.frame = frame
