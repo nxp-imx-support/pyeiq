@@ -8,8 +8,8 @@
 ## SPDX-License-Identifier:    Apache-2.0
 
 import collections
-from pathlib import Path
 import os
+from pathlib import Path
 import re
 import sys
 import time
@@ -25,10 +25,10 @@ from PIL import Image
 from eiq.config import BASE_DIR
 import eiq.engines.tflite.inference as inference
 from eiq.engines.tflite.inference import TFLiteInterpreter
-from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.modules.detection.config import *
 from eiq.modules.detection.utils import *
 from eiq.multimedia import gstreamer
+from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.multimedia.utils import gstreamer_configurations, make_boxes
 from eiq.utils import args_parser, Downloader
 
