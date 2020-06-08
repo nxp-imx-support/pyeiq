@@ -26,7 +26,7 @@ from eiq.utils import args_parser, Downloader
 class eIQFireClassification:
     def __init__(self):
         self.args = args_parser(download=True,image=True,
-                                model=True, video_src=True)
+                                model=True, video_fwk=True, video_src=True)
         self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_dir = os.path.join(self.base_dir, "media")
         self.model_dir = os.path.join(self.base_dir, "model")
@@ -115,7 +115,7 @@ class eIQFireClassification:
 class eIQObjectsClassification:
     def __init__(self):
         self.args = args_parser(download=True, image=True, label=True,
-                                model=True, video_src=True)
+                                model=True, video_fwk=True, video_src=True)
         self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_dir = os.path.join(self.base_dir, "media")
         self.model_dir = os.path.join(self.base_dir, "model")
