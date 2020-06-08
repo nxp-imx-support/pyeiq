@@ -42,20 +42,3 @@ class TFLiteInterpreter:
         with timer.timeit("Inference time"):
             self.interpreter.invoke()
         self.inference_time = timer.time
-
-
-def get_details(interpreter):
-    return interpreter.get_input_details(), interpreter.get_output_details()
-
-
-def inference(interpreter):
-    timer = InferenceTimer()
-    with timer.timeit("Inference time"):
-        interpreter.invoke()
-
-
-def load_model(model):
-    interpreter = Interpreter(model)
-    interpreter.allocate_tensors()
-
-    return interpreter
