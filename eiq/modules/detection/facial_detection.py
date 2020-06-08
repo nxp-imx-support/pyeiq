@@ -11,13 +11,15 @@ from PIL import Image
 from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.detection.config import *
+from eiq.modules.utils import real_time_inference
 from eiq.multimedia.utils import gstreamer_configurations
 from eiq.utils import args_parser, Downloader
 
 
 class eIQEmotionsDetection:
     def __init__(self):
-        self.args = args_parser(download=True, image=True, video_src=True)
+        self.args = args_parser(download=True, image=True,
+                                video_fwk=True, video_src=True)
         self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_dir = os.path.join(self.base_dir, "media")
         self.model_dir = os.path.join(self.base_dir, "model")
@@ -94,24 +96,8 @@ class eIQEmotionsDetection:
 
             cv2.imshow(TITLE_EMOTIONS_DETECTION, frame)
 
-    def real_time_detection(self):
-        video = gstreamer_configurations(self.args)
-        if (not video) or (not video.isOpened()):
-            sys.exit("Your video device could not be found. Exiting...")
-
-        while(True):
-            ret, frame = video.read()
-            if ret:
-                self.detect_face(frame)
-            else:
-                print("Your video device could not capture any image.\n"\
-                      "Please, check your device's configurations." )
-                break
-            if (cv2.waitKey(1) & 0xFF) == ord('q'):
-                break
-        video.release()
-
     def start(self):
+        os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gater_data()
         self.face_cascade = cv2.CascadeClassifier(self.face_cascade)
         self.interpreter = TFLiteInterpreter(self.model)
@@ -120,7 +106,7 @@ class eIQEmotionsDetection:
         self.start()
 
         if self.args.video_src:
-            self.real_time_detection()
+            real_time_inference(self.detect_face, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_face(frame)
@@ -131,7 +117,8 @@ class eIQEmotionsDetection:
 
 class eIQFaceAndEyesDetection:
     def __init__(self):
-        self.args = args_parser(download=True, image=True, video_src=True)
+        self.args = args_parser(download=True, image=True,
+                                video_fwk=True, video_src=True)
         self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_dir = os.path.join(self.base_dir, "media")
         self.model_dir = os.path.join(self.base_dir, "model")
@@ -173,23 +160,6 @@ class eIQFaceAndEyesDetection:
 
         cv2.imshow(TITLE_FACE_EYES_DETECTION, frame)
 
-    def real_time_detection(self):
-        video = gstreamer_configurations(self.args)
-        if (not video) or (not video.isOpened()):
-            sys.exit("Your video device could not be found. Exiting...")
-
-        while True:
-            ret, frame = video.read()
-            if ret:
-                self.detect_face(frame)
-            else:
-                print("Your video device could not capture any image.\n"\
-                      "Please, check your device's configurations." )
-                break
-            if (cv2.waitKey(1) & 0xFF) == ord('q'):
-                break
-        video.release()
-
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
@@ -200,7 +170,7 @@ class eIQFaceAndEyesDetection:
         self.start()
 
         if self.args.video_src:
-            self.real_time_detection()
+            real_time_inference(self.detect_face, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_face(frame)
