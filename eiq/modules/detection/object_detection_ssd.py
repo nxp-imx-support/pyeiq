@@ -117,7 +117,7 @@ class eIQObjectsDetection:
         frame = self.overlay.display_result(frame, self.interpreter.inference_time,
                                             top_result, self.label, self.colors,
                                             self.class_names_dict)
-        cv2.imshow('Object Detection', frame)
+        cv2.imshow(TITLE_OBJECT_DETECTION, frame)
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -425,7 +425,6 @@ class eIQObjectDetectionOpenCV:
         self.interpreter = None
         self.tensor = None
 
-        self.video = None
         self.model = None
         self.label = None
         self.framework = None

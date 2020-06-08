@@ -92,7 +92,7 @@ ZIP = ".zip"
 
 TITLE_EMOTIONS_DETECTION = "PyeIQ - Emotions Detection"
 TITLE_FACE_EYES_DETECTION = "PyeIQ - Face and Eyes Detection"
-TITLE_OBJECT_DETECTION_CAM = "PyeIQ - Object Detection Camera"
+TITLE_OBJECT_DETECTION = "PyeIQ - Object Detection"
 TITLE_OBJECT_DETECTION_CV = "PyeIQ - Object Detection OpenCV"
 TITLE_OBJECT_DETECTION_DNN = "PyeIQ - Object Detection DNN"
 TITLE_OBJECT_DETECTION_SSD = "PyeIQ - Object Detection SSD"
