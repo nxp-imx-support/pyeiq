@@ -8,7 +8,7 @@ import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst
 
-import cv2 as opencv
+import cv2
 import numpy as np
 from PIL import Image
 
@@ -168,9 +168,9 @@ def gstreamer_configurations(args):
 
     if args.video_fwk is None:
         if not args.video_src.startswith("/dev/video"):
-            return opencv.VideoCapture(args.video_src)
+            return cv2.VideoCapture(args.video_src)
         else:
-            return opencv.VideoCapture(int(args.video_src[10]))
+            return cv2.VideoCapture(int(args.video_src[10]))
     elif args.video_fwk == 'gstreamer':
         if args.video_src is not None and os.path.exists(args.video_src):
             for device in devices.devices:
@@ -181,9 +181,9 @@ def gstreamer_configurations(args):
                                             height=caps.get_height(),
                                             device=dev.get_name(),
                                             frate=caps.get_framerate())
-                    return opencv.VideoCapture(pipeline)
+                    return cv2.VideoCapture(pipeline)
             if not args.video_src.startswith("/dev/video"):
-                return opencv.VideoCapture(args.video_src)
+                return cv2.VideoCapture(args.video_src)
             else:
                 print("Invalid video device. Searching for a valid one...")
 
@@ -194,7 +194,7 @@ def gstreamer_configurations(args):
                                     height=caps.get_height(),
                                     device=dev.get_name(),
                                     frate=caps.get_framerate())
-            return opencv.VideoCapture(pipeline)
+            return cv2.VideoCapture(pipeline)
         else:
             return None
     else:
@@ -207,7 +207,7 @@ def resize_image(input_details, image, use_opencv=False):
     _, height, width, _ = input_details[0]['shape']
 
     if use_opencv:
-        image = opencv.resize(image, (width, height))
+        image = cv2.resize(image, (width, height))
     else:
         image = Image.open(image).resize((width, height))
 

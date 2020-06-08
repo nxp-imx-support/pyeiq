@@ -1,7 +1,7 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
-import cv2 as opencv
+import cv2
 
 from eiq.helper.config import *
 
@@ -11,12 +11,12 @@ class OpenCVOverlay:
         self.time = None
 
     def draw_inference_time(self):
-        opencv.putText(self.frame,
+        cv2.putText(self.frame,
                        INFERENCE_TIME_MESSAGE + str(self.time),
                        (3, 12),
-                       opencv.FONT_HERSHEY_SIMPLEX,
+                       cv2.FONT_HERSHEY_SIMPLEX,
                        0.4,
-                       (255, 255, 255), 1, opencv.LINE_AA)
+                       (255, 255, 255), 1, cv2.LINE_AA)
 
     def display_result(self, frame, time, result, labels):
         self.frame = frame

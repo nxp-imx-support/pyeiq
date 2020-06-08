@@ -18,7 +18,7 @@ import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst
 
-import cv2 as opencv
+import cv2
 import numpy as np
 from PIL import Image
 
@@ -435,7 +435,7 @@ class eIQObjectDetectionDNN:
     def start(self):
         self.gather_data()
         self.labels = self.load_labels(self.labels)
-        self.nn = opencv.dnn.readNetFromCaffe(self.model_proto,
+        self.nn = cv2.dnn.readNetFromCaffe(self.model_proto,
                                               self.model_caffe)
 
     def run(self):
@@ -526,10 +526,10 @@ class eIQObjectDetectionOpenCV:
             percent = int(100 * obj.score)
             label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))
 
-            opencv_im = opencv.rectangle(
+            opencv_im = cv2.rectangle(
                 opencv_im, (x0, y0), (x1, y1), (0, 255, 0), 2)
-            opencv_im = opencv.putText(opencv_im, label, (x0, y0 + 30),
-                                       opencv.FONT_HERSHEY_SIMPLEX, 1.0,
+            opencv_im = cv2.putText(opencv_im, label, (x0, y0 + 30),
+                                       cv2.FONT_HERSHEY_SIMPLEX, 1.0,
                                        (255, 0, 0), 2)
         return opencv_im
 
@@ -552,7 +552,7 @@ class eIQObjectDetectionOpenCV:
             if not ret:
                 break
             opencv_im = frame
-            opencv_im_rgb = opencv.cvtColor(opencv_im, opencv.COLOR_BGR2RGB)
+            opencv_im_rgb = cv2.cvtColor(opencv_im, cv2.COLOR_BGR2RGB)
             pil_im = Image.fromarray(opencv_im_rgb)
 
             self.set_input(pil_im)
@@ -560,11 +560,11 @@ class eIQObjectDetectionOpenCV:
             objs = self.get_output()
             opencv_im = self.append_objs_to_img(opencv_im, objs, labels)
 
-            opencv.imshow(TITLE_OBJECT_DETECTION_CV, opencv_im)
-            if opencv.waitKey(1) & 0xFF == ord('q'):
+            cv2.imshow(TITLE_OBJECT_DETECTION_CV, opencv_im)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         self.video.release()
-        opencv.destroyAllWindows()
+        cv2.destroyAllWindows()
 
 
 class eIQObjectDetectionSSD:

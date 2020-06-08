@@ -10,7 +10,7 @@
 import os
 import sys
 
-import cv2 as opencv
+import cv2
 import numpy as np
 from PIL import Image
 
@@ -65,15 +65,15 @@ class eIQFireClassification:
         self.interpreter.run_inference()
 
         if np.argmax(self.interpreter.get_tensor(0)) == 0:
-            opencv.putText(frame, NO_FIRE, (50, 50),
-                           opencv.FONT_HERSHEY_SIMPLEX, 1, CV_GREEN, 2)
+            cv2.putText(frame, NO_FIRE, (50, 50),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, CV_GREEN, 2)
         else:
-            opencv.putText(frame, FIRE, (50, 50),
-                           opencv.FONT_HERSHEY_SIMPLEX, 1, CV_RED, 2)
+            cv2.putText(frame, FIRE, (50, 50),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, CV_RED, 2)
 
         inference_time_overlay = OpenCVOverlay(frame, self.interpreter.inference_time)
         frame = inference_time_overlay.draw_inference_time()
-        opencv.imshow(TITLE_FIRE_CLASSIFICATION, frame)
+        cv2.imshow(TITLE_FIRE_CLASSIFICATION, frame)
 
     def real_time_classification(self):
         self.video = gstreamer_configurations(self.args)
@@ -90,7 +90,7 @@ class eIQFireClassification:
                       "Please, check your device configurations." )
                 break
 
-            if (opencv.waitKey(1) & 0xFF == ord('q')):
+            if (cv2.waitKey(1) & 0xFF == ord('q')):
                 break
 
         self.video.release()
@@ -106,11 +106,11 @@ class eIQFireClassification:
         if self.args.video_src:
             self.real_time_classification()
         else:
-            frame = opencv.imread(self.image)
+            frame = cv2.imread(self.image)
             self.fire_classification(frame)
-            opencv.waitKey()
+            cv2.waitKey()
 
-        opencv.destroyAllWindows()
+        cv2.destroyAllWindows()
 
 
 class eIQObjectsClassification:
@@ -127,7 +127,7 @@ class eIQObjectsClassification:
         self.model = None
         self.video = None
 
-        self.font = opencv.FONT_HERSHEY_SIMPLEX
+        self.font = cv2.FONT_HERSHEY_SIMPLEX
         self.font_size = 0.8
         self.font_color = (0, 127, 255)
         self.font_thickness = 2
@@ -170,15 +170,15 @@ class eIQObjectsClassification:
         for idx, (i, score) in enumerate(top_result):
             x = 20
             y = 35 * idx + 35
-            opencv.putText(frame, '{} - {:0.4f}'.format(labels[i], score),
+            cv2.putText(frame, '{} - {:0.4f}'.format(labels[i], score),
                            (x, y), self.font, self.font_size,
                            self.font_color, self.font_thickness)
         inference_time_overlay = OpenCVOverlay(frame, self.interpreter.inference_time)
         frame = inference_time_overlay.draw_inference_time()
-        opencv.imshow(TITLE_OBJ_CLASSIFICATION, frame)
+        cv2.imshow(TITLE_OBJ_CLASSIFICATION, frame)
 
     def classificate_image(self, frame):
-        image = Image.fromarray(opencv.cvtColor(frame, opencv.COLOR_BGR2RGB))
+        image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         image = image.resize((self.interpreter.width(),
                               self.interpreter.height()))
 
@@ -194,7 +194,7 @@ class eIQObjectsClassification:
             ret, frame = self.video.read()
             if ret:
                 self.classificate_image(frame)
-            if (opencv.waitKey(1) & 0xFF) == ord('q'):
+            if (cv2.waitKey(1) & 0xFF) == ord('q'):
                 break
         self.video.release()
 
@@ -209,7 +209,7 @@ class eIQObjectsClassification:
         if self.args.video_src:
             self.real_time_classification()
         else:
-            frame = opencv.imread(self.image, opencv.IMREAD_COLOR)
+            frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.classificate_image(frame)
-            opencv.waitKey()
-        opencv.destroyAllWindows()
+            cv2.waitKey()
+        cv2.destroyAllWindows()
