@@ -1,173 +1,33 @@
-import math
-import time
-import os
 from enum import Enum
+import math
+import os
+import time
+
+import cv2
+import numpy as np
+from PIL import Image, ImageDraw
 
 from eiq.config import BASE_DIR
-import numpy as np
-from tflite_runtime.interpreter import Interpreter
+from eiq.engines.tflite.inference import TFLiteInterpreter
+from eiq.modules.utils import real_time_inference
 from eiq.posenet.config import *
-from PIL import Image, ImageDraw
 from eiq.utils import args_parser, Downloader
 
-MIN_CONFIDENCE = 0.40
-
-class PoseNet:
+class eIQCoralPoseNet:
 	def __init__(self):
-		self.args = args_parser(download=True, image=True, label=True,model=True, video_src=True)
-		self.input_mean = 127.5
-		self.input_std = 127.5
+		self.args = args_parser(download=True, image=True, model=True,
+								video_fwk=True, video_src=True)
 		self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
 		self.media_dir = os.path.join(self.base_dir, "media")
 		self.model_dir = os.path.join(self.base_dir, "model")
-		#self.image_path = None
-		#self.image_path = "./sample.jpg"
-		self.image_width = 0
-		self.image_height = 0
+
+		self.image = None
 		self.model = None
-		#self.interpreter = Interpreter(self.model)
-		#self.interpreter = Interpreter("./posenet_mobilenet_v1_100_257x257_multi_kpt_stripped.tflite")
-		# self.interpreter.allocate_tensors()
-		# self.input_details = self.interpreter.get_input_details()
-		# self.output_details = self.interpreter.get_output_details()
-		# print('input_details : ', self.input_details)
-		# print('output_details : ', self.output_details)
-	def run(self):
-		body_joints = [[self.BodyPart.LEFT_WRIST, self.BodyPart.LEFT_ELBOW],
-				[self.BodyPart.LEFT_ELBOW, self.BodyPart.LEFT_SHOULDER],
-				[self.BodyPart.LEFT_SHOULDER, self.BodyPart.RIGHT_SHOULDER],
-				[self.BodyPart.RIGHT_SHOULDER, self.BodyPart.RIGHT_ELBOW],
-				[self.BodyPart.RIGHT_ELBOW, self.BodyPart.RIGHT_WRIST],
-				[self.BodyPart.LEFT_SHOULDER, self.BodyPart.LEFT_HIP],
-				[self.BodyPart.LEFT_HIP, self.BodyPart.RIGHT_HIP],
-				[self.BodyPart.RIGHT_HIP, self.BodyPart.RIGHT_SHOULDER],
-				[self.BodyPart.LEFT_HIP, self.BodyPart.LEFT_KNEE],
-				[self.BodyPart.LEFT_KNEE, self.BodyPart.LEFT_ANKLE],
-				[self.BodyPart.RIGHT_HIP, self.BodyPart.RIGHT_KNEE],
-				[self.BodyPart.RIGHT_KNEE, self.BodyPart.RIGHT_ANKLE]]
-		
-		self.gather_data()
-		self.interpreter = Interpreter(self.model)
-		self.interpreter.allocate_tensors()
-		self.input_details = self.interpreter.get_input_details()
-		self.output_details = self.interpreter.get_output_details()
-		print('input_details : ', self.input_details)
-		print('output_details : ', self.output_details)
 
-		#image = Image.open("./sample.jpg")
-		image = Image.open(self.image_path)
-		draw = ImageDraw.Draw(image)
+		self.input_mean = 127.5
+		self.input_std = 127.5
+		self.min_confidence = 0.4
 
-		person = self.estimate_pose()
-
-		for line in body_joints:
-			if person.keyPoints[line[0].value[0]].score > MIN_CONFIDENCE and person.keyPoints[line[1].value[0]].score > MIN_CONFIDENCE:
-				start_point_x, start_point_y = int(person.keyPoints[line[0].value[0]].position.x), int(person.keyPoints[line[0].value[0]].position.y)
-				end_point_x, end_point_y = int(person.keyPoints[line[1].value[0]].position.x), int(person.keyPoints[line[1].value[0]].position.y)
-				draw.line((start_point_x, start_point_y, end_point_x, end_point_y),
-						fill=(255, 255, 0), width=3)
-
-		for key_point in person.keyPoints:
-			if key_point.score > MIN_CONFIDENCE:
-				left_top_x, left_top_y = int(key_point.position.x) - 5, int(key_point.position.y) - 5
-				right_bottom_x, right_bottom_y = int(key_point.position.x) + 5, int(key_point.position.y) + 5
-				draw.ellipse((left_top_x, left_top_y, right_bottom_x, right_bottom_y),
-							fill=(0, 128, 0), outline=(255, 255, 0))
-
-		print('total score : ', person.score)
-		image.save("./result.png")
-
-	def sigmoid(self, x):
-		return 1. / (1. + math.exp(-x))
-
-	def load_input_image(self):
-		height, width = self.input_details[0]['shape'][1], self.input_details[0]['shape'][2]
-		input_image = Image.open(self.image_path)
-		self.image_width, self.image_height = input_image.size
-		print('width, height = (', self.image_width, ',', self.image_height, ')')
-		resize_image = input_image.resize((width, height))
-		return np.expand_dims(resize_image, axis=0)
-
-	def estimate_pose(self):
-		input_data = self.load_input_image()
-
-		if self.input_details[0]['dtype'] == type(np.float32(1.0)):
-			input_data = (np.float32(input_data) - self.input_mean) / self.input_std
-
-		self.interpreter.set_tensor(self.input_details[0]['index'], input_data)
-
-		start_time = time.time()
-		self.interpreter.invoke()
-		end_time = time.time()
-		print("time spent:", ((end_time - start_time) * 1000))
-
-		heat_maps = self.interpreter.get_tensor(self.output_details[0]['index'])
-		offset_maps = self.interpreter.get_tensor(self.output_details[1]['index'])
-		print('heat_maps shape=', heat_maps.shape)
-		print('offset_maps shape=', offset_maps.shape)
-
-		height = len(heat_maps[0])
-		width = len(heat_maps[0][0])
-		num_key_points = len(heat_maps[0][0][0])
-
-		key_point_positions = [[0] * 2 for i in range(num_key_points)]
-		for key_point in range(num_key_points):
-			max_val = heat_maps[0][0][0][key_point]
-			max_row = 0
-			max_col = 0
-			for row in range(height):
-				for col in range(width):
-					heat_maps[0][row][col][key_point] = self.sigmoid(heat_maps[0][row][col][key_point])
-					if heat_maps[0][row][col][key_point] > max_val:
-						max_val = heat_maps[0][row][col][key_point]
-						max_row = row
-						max_col = col
-			key_point_positions[key_point] = [max_row, max_col]
-
-		x_coords = [0] * num_key_points
-		y_coords = [0] * num_key_points
-		confidenceScores = [0] * num_key_points
-		for i, position in enumerate(key_point_positions):
-			position_y = int(key_point_positions[i][0])
-			position_x = int(key_point_positions[i][1])
-			y_coords[i] = (position[0] / float(height - 1) * self.image_height +
-							offset_maps[0][position_y][position_x][i])
-			x_coords[i] = (position[1] / float(width - 1) * self.image_width +
-							offset_maps[0][position_y][position_x][i + num_key_points])
-			confidenceScores[i] = heat_maps[0][position_y][position_x][i]
-			print("confidenceScores[", i, "] = ", confidenceScores[i])
-
-		person = self.Person()
-		key_point_list = []
-		for i in range(num_key_points):
-			key_point = self.KeyPoint()
-			key_point_list.append(key_point)
-		total_score = 0
-		for i, body_part in enumerate(self.BodyPart):
-			key_point_list[i].bodyPart = body_part
-			key_point_list[i].position.x = x_coords[i]
-			key_point_list[i].position.y = y_coords[i]
-			key_point_list[i].score = confidenceScores[i]
-			total_score += confidenceScores[i]
-
-		person.keyPoints = key_point_list
-		person.score = total_score / num_key_points
-
-		return person
-
-	def gather_data(self):
-		download = Downloader(self.args)
-		download.retrieve_data(CORAL_POSENET_MODEL_SRC,
-								self.__class__.__name__ + ZIP,self.base_dir,
-								CORAL_POSENET_SHA1, True)
-		self.model = os.path.join(self.model_dir,
-									CORAL_POSENET_MODEL_NAME)
-
-		if self.args.image is not None and os.path.exists(self.args.image):
-			self.image_path = self.args.image_path
-		else:
-			self.image_path = os.path.join(self.media_dir,
-										CORAL_POSENET_MEDIA_NAME)
 	class BodyPart(Enum):
 		NOSE = 0,
 		LEFT_EYE = 1,
@@ -187,21 +47,157 @@ class PoseNet:
 		LEFT_ANKLE = 15,
 		RIGHT_ANKLE = 16,
 
-
 	class Position:
 		def __init__(self):
 			self.x = 0
 			self.y = 0
 
-
 	class KeyPoint:
 		def __init__(self):
-			self.bodyPart = PoseNet.BodyPart.NOSE
-			self.position = PoseNet.Position()
+			self.bodyPart = self.BodyPart.NOSE
+			self.position = self.Position()
 			self.score = 0.0
-
 
 	class Person:
 		def __init__(self):
 			self.keyPoints = []
 			self.score = 0.0
+
+	def gather_data(self):
+		download = Downloader(self.args)
+		download.retrieve_data(CORAL_POSENET_MODEL_SRC,
+							   self.__class__.__name__ + ZIP,self.base_dir,
+							   CORAL_POSENET_SHA1, True)
+		self.model = os.path.join(self.model_dir,
+								  CORAL_POSENET_MODEL_NAME)
+
+		if self.args.image is not None and os.path.exists(self.args.image):
+			self.image = self.args.image
+		else:
+			self.image = os.path.join(self.media_dir,
+									  CORAL_POSENET_MEDIA_NAME)
+
+	def sigmoid(self, x):
+		return 1. / (1. + math.exp(-x))
+
+	def estimate_pose(self, image):
+		w, h = image.size
+		image = image.resize((self.interpreter.width(),
+		                      self.interpreter.height()))
+		image = np.expand_dims(image, axis=0)
+
+		if self.interpreter.dtype() == np.float32:
+			image = (np.float32(image) - self.input_mean) / self.input_std
+
+		self.interpreter.set_tensor(image)
+		self.interpreter.run_inference()
+
+		heat_maps = self.interpreter.get_tensor(0)
+		offset_maps = self.interpreter.get_tensor(1)
+
+		height = len(heat_maps[0])
+		width = len(heat_maps[0][0])
+		num_key_points = len(heat_maps[0][0][0])
+		key_point_positions = [[0] * 2 for i in range(num_key_points)]
+
+		for key_point in range(num_key_points):
+			max_val = heat_maps[0][0][0][key_point]
+			max_row = 0
+			max_col = 0
+			for row in range(height):
+				for col in range(width):
+					heat_maps[0][row][col][key_point] = self.sigmoid(heat_maps[0][row][col][key_point])
+					if heat_maps[0][row][col][key_point] > max_val:
+						max_val = heat_maps[0][row][col][key_point]
+						max_row = row
+						max_col = col
+			key_point_positions[key_point] = [max_row, max_col]
+
+		x_coords = [0] * num_key_points
+		y_coords = [0] * num_key_points
+		confidenceScores = [0] * num_key_points
+
+		for i, position in enumerate(key_point_positions):
+			position_y = int(key_point_positions[i][0])
+			position_x = int(key_point_positions[i][1])
+			y_coords[i] = (position[0]/float(height-1) * h \
+						  + offset_maps[0][position_y][position_x][i])
+			x_coords[i] = (position[1]/float(width-1) * w \
+						  + offset_maps[0][position_y][position_x][i + num_key_points])
+			confidenceScores[i] = heat_maps[0][position_y][position_x][i]
+
+		person = self.Person()
+		key_point_list = []
+		total_score = 0
+
+		for i in range(num_key_points):
+			key_point = self.KeyPoint()
+			key_point_list.append(key_point)
+
+		for i, body_part in enumerate(self.BodyPart):
+			key_point_list[i].bodyPart = body_part
+			key_point_list[i].position.x = x_coords[i]
+			key_point_list[i].position.y = y_coords[i]
+			key_point_list[i].score = confidenceScores[i]
+			total_score += confidenceScores[i]
+
+		person.keyPoints = key_point_list
+		person.score = total_score / num_key_points
+
+		return person
+
+	def detect_pose(self, frame):
+		frame = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+		draw = ImageDraw.Draw(frame)
+		person = self.estimate_pose(frame)
+
+		body_joints = [[self.BodyPart.LEFT_WRIST, self.BodyPart.LEFT_ELBOW],
+					   [self.BodyPart.LEFT_ELBOW, self.BodyPart.LEFT_SHOULDER],
+					   [self.BodyPart.LEFT_SHOULDER, self.BodyPart.RIGHT_SHOULDER],
+					   [self.BodyPart.RIGHT_SHOULDER, self.BodyPart.RIGHT_ELBOW],
+					   [self.BodyPart.RIGHT_ELBOW, self.BodyPart.RIGHT_WRIST],
+					   [self.BodyPart.LEFT_SHOULDER, self.BodyPart.LEFT_HIP],
+					   [self.BodyPart.LEFT_HIP, self.BodyPart.RIGHT_HIP],
+					   [self.BodyPart.RIGHT_HIP, self.BodyPart.RIGHT_SHOULDER],
+					   [self.BodyPart.LEFT_HIP, self.BodyPart.LEFT_KNEE],
+					   [self.BodyPart.LEFT_KNEE, self.BodyPart.LEFT_ANKLE],
+					   [self.BodyPart.RIGHT_HIP, self.BodyPart.RIGHT_KNEE],
+					   [self.BodyPart.RIGHT_KNEE, self.BodyPart.RIGHT_ANKLE]]
+
+		for line in body_joints:
+			if person.keyPoints[line[0].value[0]].score > self.min_confidence \
+			and person.keyPoints[line[1].value[0]].score > self.min_confidence:
+				start_point_x = int(person.keyPoints[line[0].value[0]].position.x)
+				start_point_y = int(person.keyPoints[line[0].value[0]].position.y)
+				end_point_x = int(person.keyPoints[line[1].value[0]].position.x)
+				end_point_y = int(person.keyPoints[line[1].value[0]].position.y)
+				draw.line((start_point_x, start_point_y, end_point_x, end_point_y),
+						  fill=(255, 255, 0), width=3)
+
+		for key_point in person.keyPoints:
+			if key_point.score > self.min_confidence:
+				left_top_x = int(key_point.position.x) - 5
+				left_top_y = int(key_point.position.y) - 5
+				right_bottom_x = int(key_point.position.x) + 5
+				right_bottom_y = int(key_point.position.y) + 5
+				draw.ellipse((left_top_x, left_top_y, right_bottom_x, right_bottom_y),
+							 fill=(0, 128, 0), outline=(255, 255, 0))
+
+		frame = cv2.cvtColor(np.array(frame), cv2.COLOR_RGB2BGR)
+		cv2.imshow(TITLE_CORAL_POSENET, frame)
+
+	def start(self):
+		os.environ['VSI_NN_LOG_LEVEL'] = "0"
+		self.gather_data()
+		self.interpreter = TFLiteInterpreter(self.model)
+
+	def run(self):
+		self.start()
+
+		if self.args.video_src:
+			real_time_inference(self.detect_pose, self.args)
+		else:
+			frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
+			self.detect_pose(frame)
+			cv2.waitKey()
+		cv2.destroyAllWindows()
