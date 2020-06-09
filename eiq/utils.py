@@ -25,12 +25,6 @@ import urllib.request
 from eiq.config import *
 from eiq.helper.google_drive_downloader import GoogleDriveDownloader as gdd
 
-try:
-    import progressbar
-    found = True
-except ImportError:
-    found = False
-
 
 class Downloader():
     def __init__(self, args):
@@ -68,11 +62,7 @@ class Downloader():
         try:
             log("Downloading '{0}'".format(filename))
             with timer.timeit("Download time"):
-                if found is True:
-                    urllib.request.urlretrieve(url, download_path,
-                                               ProgressBar())
-                else:
-                    urllib.request.urlretrieve(url, download_path)
+                urllib.request.urlretrieve(url, download_path)
         except URLError as e:
             sys.exit("Something went wrong with URLError: {}".format(e))
         except HTTPError as e:
@@ -161,22 +151,6 @@ class Downloader():
         proc.wait()
 
         shutil.unpack_archive(newfile, download_path)
-
-
-class ProgressBar:
-    def __init__(self):
-        self.pbar = None
-
-    def __call__(self, block_num, block_size, total_size):
-        if not self.pbar:
-            self.pbar = progressbar.ProgressBar(maxval=total_size)
-            self.pbar.start()
-
-        downloaded = block_num * block_size
-        if downloaded < total_size:
-            self.pbar.update(downloaded)
-        else:
-            self.pbar.finish()
 
 
 def log(*args):
