@@ -11,14 +11,11 @@ logging.basicConfig(level=logging.INFO)
 
 from hashlib import sha1
 import os
-from os import makedirs
-from os.path import exists
 import pathlib
 import requests
 import shutil
 import subprocess
 import sys
-from sys import stdout
 import tempfile
 from time import monotonic
 from urllib.error import URLError, HTTPError
