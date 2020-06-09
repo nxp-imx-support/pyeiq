@@ -30,6 +30,23 @@ from gi.repository import GLib, GObject, Gst, GstBase, Gtk
 GObject.threads_init()
 Gst.init(None)
 
+def set_appsink_pipeline(device,
+                        leaky="leaky=downstream max-size-buffers=1",
+                        sync="drop=True max-buffers=1 emit-signals=True max-lateness=8000000000"):
+
+    return (("v4l2src device={} do-timestamp=True ! videoconvert ! \
+                videoscale n-threads=4 method=nearest-neighbour ! \
+                video/x-raw,format=RGB,width=1920,height=1080 ! \
+                queue {} ! appsink name=sink {}"
+            ).format(device,
+                    leaky, sync))
+
+def set_appsrc_pipeline(width=1920, height=1080):
+    return (("appsrc name=src is-live=True block=True ! \
+                video/x-raw,format=RGB,width=1920,height=1080, \
+                framerate=20/1,interlace-mode=(string)progressive ! \
+                videoconvert ! waylandsink"
+            ).format(width, height))
 
 class GstPipeline:
     def __init__(self, pipeline, user_function, src_size):
