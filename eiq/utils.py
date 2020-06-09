@@ -248,7 +248,10 @@ def args_parser(download=False, image=False, label=False,
     if video_fwk:
         parser.add_argument(
             '-f', '--video_fwk', default='v4l2',
-            help="Choose the video framework between v4l2, gstreamer and overlay")
+            help="Choose the video framework according to the options below:"
+                 "v4l2: GStreamer appsink + OpenCV.imshow(). Default."
+                 "opencv: OpenCV.VideoCapture() + OpenCV.imxshow()."
+                 "gstreamer: GStreamer appsink + GStreamer appsrc.")
     if video_src:
         parser.add_argument(
             '-v', '--video_src', default=None,

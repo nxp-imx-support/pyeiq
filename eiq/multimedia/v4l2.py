@@ -9,11 +9,19 @@ def run():
     os.system(pipeline)
 
 
-def v4l2_set_pipeline(width=640, height=480, device="/dev/video0",
-                 frate="30/1", leaky="leaky=downstream max-size-buffers=1",
+def v4l2_camera_set_pipeline(width, height, device,
+                 frate, leaky="leaky=downstream max-size-buffers=1",
                  sync="sync=false emit-signals=true drop=true max-buffers=1"):
 
     return (("v4l2src device={} ! video/x-raw,width={},height={},framerate={} " \
              "! queue {} ! videoconvert ! appsink {}").format(device, width,
                                                               height, frate,
+                                                              leaky, sync))
+
+def v4l2_video_set_pipeline(device,
+                 leaky="leaky=downstream max-size-buffers=1",
+                 sync="sync=false drop=True max-buffers=1 emit-signals=True max-lateness=8000000000"):
+
+    return (("filesrc location={} ! decodebin " \
+             "! queue {} ! videoconvert ! appsink {}").format(device,
                                                               leaky, sync))

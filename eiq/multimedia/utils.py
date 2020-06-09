@@ -12,7 +12,7 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from eiq.multimedia.v4l2 import v4l2_set_pipeline
+from eiq.multimedia.v4l2 import v4l2_camera_set_pipeline, v4l2_video_set_pipeline
 
 Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
 
@@ -166,42 +166,39 @@ def gstreamer_configurations(args):
     devices = Devices()
     devices.get_video_devices()
 
-    if args.video_fwk is None:
-        if not args.video_src.startswith("/dev/video"):
-            return cv2.VideoCapture(args.video_src)
-        else:
-            return cv2.VideoCapture(int(args.video_src[10]))
-    elif args.video_fwk == 'gstreamer':
-        if args.video_src is not None and os.path.exists(args.video_src):
-            for device in devices.devices:
-                if device.get_name() == args.video_src:
-                    dev = device
-                    caps = dev.get_default_caps()
-                    pipeline = v4l2_set_pipeline(width=caps.get_width(),
-                                            height=caps.get_height(),
-                                            device=dev.get_name(),
-                                            frate=caps.get_framerate())
-                    return cv2.VideoCapture(pipeline)
+    if args.video_src is not None and os.path.exists(args.video_src):
+        if args.video_fwk == 'opencv':
             if not args.video_src.startswith("/dev/video"):
                 return cv2.VideoCapture(args.video_src)
             else:
-                print("Invalid video device. Searching for a valid one...")
+                return cv2.VideoCapture(int(args.video_src[10]))
+        elif args.video_fwk == 'v4l2':
+            if not args.video_src.startswith("/dev/video"):
+                pipeline = v4l2_video_set_pipeline(args.video_src)
+                return cv2.VideoCapture(pipeline)
 
-        if devices.devices:
-            dev = devices.devices[0]
-            caps = dev.get_default_caps()
-            pipeline = v4l2_set_pipeline(width=caps.get_width(),
-                                    height=caps.get_height(),
-                                    device=dev.get_name(),
-                                    frate=caps.get_framerate())
-            return cv2.VideoCapture(pipeline)
+            else:
+                for device in devices.devices:
+                    if device.get_name() == args.video_src:
+                        dev = device
+                        caps = dev.get_default_caps()
+                        pipeline = v4l2_camera_set_pipeline(width=caps.get_width(),
+                                                height=caps.get_height(),
+                                                device=dev.get_name(),
+                                                frate=caps.get_framerate())
+                        return cv2.VideoCapture(pipeline)
+                    else:
+                        print("Invalid video device. Searching for a valid one...")
+        elif args.video_src == 'gstreamer':
+            #set gstreamer appsink/appsrc
+            print("Framework not supported.")
+            return None
         else:
+            print("Framework not supported.")
             return None
     else:
-         #set gstreamer appsink/appsrc
-         print("Framework not supported.")
-         return None
-
+        print("Invalid video device. Searching for a valid one...")
+        return None
 
 def resize_image(input_details, image, use_opencv=False):
     _, height, width, _ = input_details[0]['shape']
