@@ -1,10 +1,12 @@
+#!/usr/bin/env python3
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
-from eiq.posenet.posenet import PoseNet
+from eiq.modules.detection.pose_detection import eIQCoralPoseNet
+
 
 def main():
-    app = PoseNet()
+    app = eIQCoralPoseNet()
     app.run()
 
 

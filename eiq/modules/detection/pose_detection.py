@@ -9,8 +9,8 @@ from PIL import Image, ImageDraw
 
 from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
+from eiq.modules.detection.config import *
 from eiq.modules.utils import real_time_inference
-from eiq.posenet.config import *
 from eiq.utils import args_parser, Downloader
 
 class eIQCoralPoseNet:
@@ -54,8 +54,8 @@ class eIQCoralPoseNet:
 
 	class KeyPoint:
 		def __init__(self):
-			self.bodyPart = self.BodyPart.NOSE
-			self.position = self.Position()
+			self.bodyPart = eIQCoralPoseNet.BodyPart.NOSE
+			self.position = eIQCoralPoseNet.Position()
 			self.score = 0.0
 
 	class Person:
