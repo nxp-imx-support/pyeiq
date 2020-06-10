@@ -28,7 +28,7 @@ from eiq.modules.detection.utils import *
 from eiq.modules.utils import real_time_inference
 from eiq.multimedia import gstreamer
 from eiq.multimedia.overlay import OpenCVOverlay
-from eiq.multimedia.utils import gstreamer_configurations, make_boxes
+from eiq.multimedia.utils import make_boxes, VideoConfig
 from eiq.utils import args_parser, Downloader
 
 try:
@@ -530,8 +530,9 @@ class eIQObjectDetectionOpenCV:
 
     def run(self):
         self.start()
+        video_config = VideoConfig(self.args)
 
-        video = gstreamer_configurations(self.args)
+        video = video_config.get_config()[0]
         if (not video) or (not video.isOpened()):
             sys.exit("Your video device could not be found. Exiting...")
 

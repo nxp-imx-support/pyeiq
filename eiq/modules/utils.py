@@ -9,10 +9,11 @@ import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst
 
-from eiq.multimedia.utils import gstreamer_configurations
+from eiq.multimedia.utils import VideoConfig
 
 def real_time_inference(set_src_func=None, on_new_frame_func=None, inference_func=None, args=None):
-    sink, src = gstreamer_configurations(args)
+    video_config = VideoConfig(args)
+    sink, src = video_config.get_config()
 
     if src is None:
         if (not sink) or (not sink.isOpened()):
