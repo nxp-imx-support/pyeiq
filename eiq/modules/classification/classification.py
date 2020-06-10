@@ -19,7 +19,6 @@ from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.modules.classification.config import *
 from eiq.modules.classification.utils import load_labels
 from eiq.modules.utils import real_time_inference
-from eiq.multimedia.utils import gstreamer_configurations, resize_image
 from eiq.utils import args_parser, Downloader
 
 
@@ -55,8 +54,9 @@ class eIQFireClassification:
                                       FIRE_DETECTION_MODEL_NAME)
 
     def fire_classification(self, frame):
-        image = resize_image(self.interpreter.input_details,
-                             frame, use_opencv=True)
+        image = cv2.resize(frame, (self.interpreter.width(),
+                                   self.interpreter.height()))
+        image = np.expand_dims(image, axis=0)
 
         if self.interpreter.dtype() == np.float32:
             image = np.array(image, dtype=np.float32) / 255.0

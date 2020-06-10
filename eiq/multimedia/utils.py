@@ -211,13 +211,3 @@ def gstreamer_configurations(args):
     else:
         print("Invalid video device. Searching for a valid one...")
         return None, None
-
-def resize_image(input_details, image, use_opencv=False):
-    _, height, width, _ = input_details[0]['shape']
-
-    if use_opencv:
-        image = cv2.resize(image, (width, height))
-    else:
-        image = Image.open(image).resize((width, height))
-
-    return np.expand_dims(image, axis=0)
