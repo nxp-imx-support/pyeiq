@@ -83,7 +83,8 @@ class eIQFireClassification:
         self.start()
 
         if self.args.video_src:
-            real_time_inference(self.fire_classification, self.args)
+            real_time_inference(inference_func=self.fire_classification,
+                                args=self.args)
         else:
             frame = cv2.imread(self.image)
             self.fire_classification(frame)
@@ -173,7 +174,8 @@ class eIQObjectsClassification:
     def run(self):
         self.start()
         if self.args.video_src:
-            real_time_inference(self.classificate_image, self.args)
+            real_time_inference(inference_func=self.classificate_image,
+                                args=self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.classificate_image(frame)

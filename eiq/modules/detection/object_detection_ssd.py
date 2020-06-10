@@ -156,7 +156,10 @@ class eIQObjectsDetection:
         self.start()
 
         if self.args.video_src:
-            real_time_inference(self.set_src, self.on_new_frame, self.detect_objects, self.args)
+            real_time_inference(set_src_func=self.set_src,
+                                on_new_frame_func=self.on_new_frame,
+                                inference_func=self.detect_objects,
+                                args=self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_objects(frame)
@@ -430,7 +433,8 @@ class eIQObjectDetectionDNN:
         self.start()
 
         if self.args.video_src:
-            real_time_inference(self.detect_objects, self.args)
+            real_time_inference(inference_func=self.detect_objects,
+                                args=self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_objects(frame)
@@ -623,7 +627,8 @@ class eIQObjectDetectionSSD:
         self.start()
 
         if self.args.video_src:
-            real_time_inference(self.detect_objects, self.args)
+            real_time_inference(inference_func=self.detect_objects,
+                                args=self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_objects(frame)

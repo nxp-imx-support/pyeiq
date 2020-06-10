@@ -11,7 +11,7 @@ from gi.repository import Gst
 
 from eiq.multimedia.utils import gstreamer_configurations
 
-def real_time_inference(set_src_func, on_new_frame_func, inference_func, args):
+def real_time_inference(set_src_func=None, on_new_frame_func=None, inference_func=None, args=None):
     sink, src = gstreamer_configurations(args)
 
     if src is None:
