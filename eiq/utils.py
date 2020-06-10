@@ -14,7 +14,7 @@ import os
 import pathlib
 import requests
 import shutil
-import subprocess
+from subprocess import Popen
 import sys
 import tempfile
 from time import monotonic
@@ -80,7 +80,7 @@ class Downloader():
         try:
             pathlib.Path(download_path).mkdir(parents=True, exist_ok=True)
         except:
-            sys.exit("Path().mkdir() has failed" \
+            sys.exit("Path().mkdir() has failed " \
                      "trying to create: {}".format(download_path))
 
         download_path = os.path.join(download_path, filename)
@@ -143,13 +143,14 @@ class Downloader():
     def wget(self, url, filename, download_path):
         file = os.path.basename(url)
         newfile = os.path.join(download_path, filename)
-        proc = subprocess.Popen("mkdir -p {}".format(download_path), shell = True)
-        proc.wait()
-        proc = subprocess.Popen("wget {}".format(url), shell = True)
-        proc.wait()
-        proc =subprocess.Popen("mv {} {}".format(file, newfile), shell = True)
-        proc.wait()
 
+        try:
+            pathlib.Path(download_path).mkdir(parents=True, exist_ok=True)
+        except:
+            sys.exit("Path().mkdir() has failed " \
+                     "trying to create: {}".format(download_path))
+
+        Popen(["wget", "{}".format(url), "-O", "{}".format(newfile)]).wait()
         shutil.unpack_archive(newfile, download_path)
 
 
