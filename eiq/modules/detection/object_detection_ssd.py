@@ -55,7 +55,6 @@ class eIQObjectsDetection:
         self.class_names = None
         self.class_names_dict = {}
         self.colors = None
-        self.appsource = None
 
     def gather_data(self):
         download = Downloader(self.args)
@@ -120,29 +119,6 @@ class eIQObjectsDetection:
                                             self.class_names_dict)
         cv2.imshow(TITLE_OBJECT_DETECTION, frame)
 
-    def on_new_frame(self, sink, data):
-        sample = sink.emit("pull-sample")
-        captured_gst_buf = sample.get_buffer()
-        caps = sample.get_caps()
-        im_height_in = caps.get_structure(0).get_value('height')
-        im_width_in = caps.get_structure(0).get_value('width')
-        mem = captured_gst_buf.get_all_memory()
-        success, arr = mem.map(Gst.MapFlags.READ)
-        img = np.ndarray((im_height_in,im_width_in,3),buffer=arr.data,dtype=np.uint8)
-        opencv_im = img
-        image = Image.fromarray(cv2.cvtColor(opencv_im, cv2.COLOR_BGR2RGB))
-        image = image.resize((self.interpreter.width(), self.interpreter.height()))
-        top_result = self.process_image(image)
-        frame = self.overlay.display_result(opencv_im, self.interpreter.inference_time,
-                                            top_result, self.label, self.colors,
-                                            self.class_names_dict)
-        self.appsource.emit("push-buffer", Gst.Buffer.new_wrapped(img.tobytes()))
-        mem.unmap(arr)
-        return Gst.FlowReturn.OK
-
-    def set_src(self, src):
-        self.appsource = src;
-
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
@@ -156,10 +132,7 @@ class eIQObjectsDetection:
         self.start()
 
         if self.args.video_src:
-            real_time_inference(set_src_func=self.set_src,
-                                on_new_frame_func=self.on_new_frame,
-                                inference_func=self.detect_objects,
-                                args=self.args)
+            real_time_inference(self.detect_objects, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_objects(frame)
@@ -433,8 +406,7 @@ class eIQObjectDetectionDNN:
         self.start()
 
         if self.args.video_src:
-            real_time_inference(inference_func=self.detect_objects,
-                                args=self.args)
+            real_time_inference(self.detect_objects, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_objects(frame)
@@ -628,8 +600,7 @@ class eIQObjectDetectionSSD:
         self.start()
 
         if self.args.video_src:
-            real_time_inference(inference_func=self.detect_objects,
-                                args=self.args)
+            real_time_inference(self.detect_objects, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_objects(frame)

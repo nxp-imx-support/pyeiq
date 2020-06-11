@@ -195,8 +195,7 @@ class eIQCoralPoseNet:
 		self.start()
 
 		if self.args.video_src:
-			real_time_inference(inference_func=self.detect_pose,
-								args=self.args)
+			real_time_inference(self.detect_pose, self.args)
 		else:
 			frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
 			self.detect_pose(frame)

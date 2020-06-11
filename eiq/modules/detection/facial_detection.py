@@ -104,8 +104,7 @@ class eIQEmotionsDetection:
         self.start()
 
         if self.args.video_src:
-            real_time_inference(inference_func=self.detect_face,
-                                args=self.args)
+            real_time_inference(self.detect_face, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_face(frame)
@@ -169,8 +168,7 @@ class eIQFaceAndEyesDetection:
         self.start()
 
         if self.args.video_src:
-            real_time_inference(inference_func=self.detect_face,
-                                args=self.args)
+            real_time_inference(self.detect_face, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
             self.detect_face(frame)
