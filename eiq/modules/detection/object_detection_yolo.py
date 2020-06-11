@@ -226,6 +226,8 @@ class eIQObjectsDetectionYOLOV3:
                           (label_right, label_bottom), (0,255,0), cv2.FILLED)
             cv2.putText(frame, element[self.classes], (left, top-4),
                         FONT, FONT_SIZE, FONT_COLOR, FONT_THICKNESS)
+
+        if self.args.video_fwk != "gstreamer":
             cv2.imshow(TITLE_OBJECT_DETECTION_YOLOV3, frame)
 
     def start(self):

@@ -117,7 +117,9 @@ class eIQObjectsDetection:
         frame = self.overlay.display_result(frame, self.interpreter.inference_time,
                                             top_result, self.label, self.colors,
                                             self.class_names_dict)
-        cv2.imshow(TITLE_OBJECT_DETECTION, frame)
+
+        if self.args.video_fwk != "gstreamer":
+            cv2.imshow(TITLE_OBJECT_DETECTION, frame)
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -394,7 +396,8 @@ class eIQObjectDetectionDNN:
                     cv2.putText(frame, label, (left, top), FONT,
                                 FONT_SIZE, (255, 255, 255), FONT_THICKNESS - 1)
 
-        cv2.imshow(TITLE_OBJECT_DETECTION_DNN, frame)
+        if self.args.video_fwk != "gstreamer":
+            cv2.imshow(TITLE_OBJECT_DETECTION_DNN, frame)
 
     def start(self):
         self.gather_data()

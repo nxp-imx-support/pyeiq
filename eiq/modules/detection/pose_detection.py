@@ -184,7 +184,9 @@ class eIQCoralPoseNet:
 							 fill=(0, 128, 0), outline=(255, 255, 0))
 
 		frame = cv2.cvtColor(np.array(frame), cv2.COLOR_RGB2BGR)
-		cv2.imshow(TITLE_CORAL_POSENET, frame)
+
+		if self.args.video_fwk != "gstreamer":
+			cv2.imshow(TITLE_CORAL_POSENET, frame)
 
 	def start(self):
 		os.environ['VSI_NN_LOG_LEVEL'] = "0"

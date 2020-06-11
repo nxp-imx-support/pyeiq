@@ -72,7 +72,9 @@ class eIQFireClassification:
                         cv2.FONT_HERSHEY_SIMPLEX, 1, CV_RED, 2)
 
         self.overlay.draw_inference_time(frame, self.interpreter.inference_time)
-        cv2.imshow(TITLE_FIRE_CLASSIFICATION, frame)
+
+        if self.args.video_fwk != "gstreamer":
+            cv2.imshow(TITLE_FIRE_CLASSIFICATION, frame)
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -154,7 +156,9 @@ class eIQObjectsClassification:
                            self.font_color, self.font_thickness)
 
         self.overlay.draw_inference_time(frame, self.interpreter.inference_time)
-        cv2.imshow(TITLE_OBJ_CLASSIFICATION, frame)
+
+        if self.args.video_fwk != "gstreamer":
+            cv2.imshow(TITLE_OBJ_CLASSIFICATION, frame)
 
     def classificate_image(self, frame):
         image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))

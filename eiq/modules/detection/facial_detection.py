@@ -92,7 +92,8 @@ class eIQEmotionsDetection:
             cv2.putText(frame, emotion, (x, y-5), cv2.FONT_HERSHEY_SIMPLEX,
                         0.7, (0,0,255), 2, cv2.LINE_AA)
 
-            cv2.imshow(TITLE_EMOTIONS_DETECTION, frame)
+            if self.args.video_fwk != "gstreamer":
+                cv2.imshow(TITLE_EMOTIONS_DETECTION, frame)
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -156,7 +157,8 @@ class eIQFaceAndEyesDetection:
                 cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh),
                               (0, 255, 0), 2)
 
-        cv2.imshow(TITLE_FACE_EYES_DETECTION, frame)
+        if self.args.video_fwk != "gstreamer":
+            cv2.imshow(TITLE_FACE_EYES_DETECTION, frame)
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
