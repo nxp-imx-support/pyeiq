@@ -185,8 +185,7 @@ class eIQCoralPoseNet:
 
 		frame = cv2.cvtColor(np.array(frame), cv2.COLOR_RGB2BGR)
 
-		if self.args.video_fwk != "gstreamer":
-			cv2.imshow(TITLE_CORAL_POSENET, frame)
+		return TITLE_CORAL_POSENET, frame
 
 	def start(self):
 		os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -200,6 +199,7 @@ class eIQCoralPoseNet:
 			real_time_inference(self.detect_pose, self.args)
 		else:
 			frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
-			self.detect_pose(frame)
+			cv2.imshow(*self.detect_pose(frame))
 			cv2.waitKey()
+
 		cv2.destroyAllWindows()

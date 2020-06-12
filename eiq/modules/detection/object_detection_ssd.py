@@ -118,8 +118,7 @@ class eIQObjectsDetection:
                                             top_result, self.label, self.colors,
                                             self.class_names_dict)
 
-        if self.args.video_fwk != "gstreamer":
-            cv2.imshow(TITLE_OBJECT_DETECTION, frame)
+        return TITLE_OBJECT_DETECTION, frame
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -137,7 +136,7 @@ class eIQObjectsDetection:
             real_time_inference(self.detect_objects, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
-            self.detect_objects(frame)
+            cv2.imshow(*self.detect_objects(frame))
             cv2.waitKey()
 
         cv2.destroyAllWindows()
@@ -396,8 +395,7 @@ class eIQObjectDetectionDNN:
                     cv2.putText(frame, label, (left, top), FONT,
                                 FONT_SIZE, (255, 255, 255), FONT_THICKNESS - 1)
 
-        if self.args.video_fwk != "gstreamer":
-            cv2.imshow(TITLE_OBJECT_DETECTION_DNN, frame)
+        return TITLE_OBJECT_DETECTION_DNN, frame
 
     def start(self):
         self.gather_data()
@@ -412,7 +410,7 @@ class eIQObjectDetectionDNN:
             real_time_inference(self.detect_objects, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
-            self.detect_objects(frame)
+            cv2.imshow(*self.detect_objects(frame))
             cv2.waitKey()
 
         cv2.destroyAllWindows()

@@ -73,8 +73,7 @@ class eIQFireClassification:
 
         self.overlay.draw_inference_time(frame, self.interpreter.inference_time)
 
-        if self.args.video_fwk != "gstreamer":
-            cv2.imshow(TITLE_FIRE_CLASSIFICATION, frame)
+        return TITLE_FIRE_CLASSIFICATION, frame
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -88,7 +87,7 @@ class eIQFireClassification:
             real_time_inference(self.fire_classification, self.args)
         else:
             frame = cv2.imread(self.image)
-            self.fire_classification(frame)
+            cv2.imshow(*self.fire_classification(frame))
             cv2.waitKey()
 
         cv2.destroyAllWindows()
@@ -157,9 +156,6 @@ class eIQObjectsClassification:
 
         self.overlay.draw_inference_time(frame, self.interpreter.inference_time)
 
-        if self.args.video_fwk != "gstreamer":
-            cv2.imshow(TITLE_OBJ_CLASSIFICATION, frame)
-
     def classificate_image(self, frame):
         image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         image = image.resize((self.interpreter.width(),
@@ -167,6 +163,8 @@ class eIQObjectsClassification:
 
         top_result = self.process_image(image)
         self.display_result(top_result, frame, self.label)
+
+        return TITLE_OBJ_CLASSIFICATION, frame
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -180,6 +178,7 @@ class eIQObjectsClassification:
             real_time_inference(self.classificate_image, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
-            self.classificate_image(frame)
+            cv2.imshow(*self.classificate_image(frame))
             cv2.waitKey()
+
         cv2.destroyAllWindows()

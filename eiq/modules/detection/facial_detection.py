@@ -92,8 +92,7 @@ class eIQEmotionsDetection:
             cv2.putText(frame, emotion, (x, y-5), cv2.FONT_HERSHEY_SIMPLEX,
                         0.7, (0,0,255), 2, cv2.LINE_AA)
 
-            if self.args.video_fwk != "gstreamer":
-                cv2.imshow(TITLE_EMOTIONS_DETECTION, frame)
+        return TITLE_FACE_EYES_DETECTION, frame
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -108,7 +107,7 @@ class eIQEmotionsDetection:
             real_time_inference(self.detect_face, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
-            self.detect_face(frame)
+            cv2.imshow(*self.detect_face(frame))
             cv2.waitKey()
 
         cv2.destroyAllWindows()
@@ -157,8 +156,7 @@ class eIQFaceAndEyesDetection:
                 cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh),
                               (0, 255, 0), 2)
 
-        if self.args.video_fwk != "gstreamer":
-            cv2.imshow(TITLE_FACE_EYES_DETECTION, frame)
+        return TITLE_FACE_EYES_DETECTION, frame
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -173,7 +171,7 @@ class eIQFaceAndEyesDetection:
             real_time_inference(self.detect_face, self.args)
         else:
             frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
-            self.detect_face(frame)
+            cv2.imshow(*self.detect_face(frame))
             cv2.waitKey()
 
         cv2.destroyAllWindows()

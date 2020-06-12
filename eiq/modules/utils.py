@@ -77,7 +77,7 @@ class GstVideo:
         success, arr = mem.map(Gst.MapFlags.READ)
         img = np.ndarray(resize, buffer=arr.data, dtype=np.uint8)
 
-        self.inference_func(img)
+        img = self.inference_func(img)[1]
         self.appsource.emit("push-buffer", Gst.Buffer.new_wrapped(img.tobytes()))
         mem.unmap(arr)
 
@@ -93,7 +93,7 @@ def real_time_inference(inference_func, args):
         while sink.isOpened():
             ret, frame = sink.read()
             if ret:
-                inference_func(frame)
+                cv2.imshow(*inference_func(frame))
             else:
                 print("Your video device could not capture any image.")
                 break
