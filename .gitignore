@@ -133,3 +133,6 @@ dmypy.json
 
 # Docker files
 docker/latest-package/
+
+# Editors
+.idea/
