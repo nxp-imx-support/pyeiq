@@ -35,7 +35,7 @@ PyeIQ is hosted on [PyPI][pypirepo] repository referring to the latest tag on [C
 
  ![PyPI](guides/media/pypieiq.gif)
 
-2. Find the installation at `/opt/eiq` folder. Use *--help* to learn how to run the sample applications.
+2. Find the installation at **/opt/eiq** folder. Use **--help** to learn how to run the sample applications.
 
 ### Samples
 
