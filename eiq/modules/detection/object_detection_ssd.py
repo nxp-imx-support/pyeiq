@@ -25,7 +25,7 @@ from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.detection.config import *
 from eiq.modules.detection.utils import *
-from eiq.modules.utils import real_time_inference
+from eiq.modules.utils import run_inference
 from eiq.multimedia import gstreamer
 from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.multimedia.utils import make_boxes, VideoConfig
@@ -131,15 +131,7 @@ class eIQObjectsDetection:
 
     def run(self):
         self.start()
-
-        if self.args.video_src:
-            real_time_inference(self.detect_objects, self.args)
-        else:
-            frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
-            cv2.imshow(*self.detect_objects(frame))
-            cv2.waitKey()
-
-        cv2.destroyAllWindows()
+        run_inference(self.detect_objects, self.image, self.args)
 
 
 class eIQObjectDetectionGStreamer:
@@ -405,15 +397,7 @@ class eIQObjectDetectionDNN:
 
     def run(self):
         self.start()
-
-        if self.args.video_src:
-            real_time_inference(self.detect_objects, self.args)
-        else:
-            frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
-            cv2.imshow(*self.detect_objects(frame))
-            cv2.waitKey()
-
-        cv2.destroyAllWindows()
+        run_inference(self.detect_objects, self.image, self.args)
 
 
 class eIQObjectDetectionOpenCV:
@@ -588,7 +572,7 @@ class eIQObjectDetectionSSD:
         result = draw_boxes(frame, out_scores, out_boxes, out_classes,
                             self.class_names, self.colors)
 
-        cv2.imshow(TITLE_OBJECT_DETECTION_SSD, result)
+        return TITLE_OBJECT_DETECTION_SSD, result
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -599,12 +583,4 @@ class eIQObjectDetectionSSD:
 
     def run(self):
         self.start()
-
-        if self.args.video_src:
-            real_time_inference(self.detect_objects, self.args)
-        else:
-            frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
-            self.detect_objects(frame)
-            cv2.waitKey()
-
-        cv2.destroyAllWindows()
+        run_inference(self.detect_objects, self.image, self.args)

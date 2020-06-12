@@ -17,7 +17,7 @@ from PIL import Image
 from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.detection.config import *
-from eiq.modules.utils import real_time_inference
+from eiq.modules.utils import run_inference
 from eiq.utils import args_parser, Downloader
 
 class eIQObjectsDetectionYOLOV3:
@@ -237,12 +237,4 @@ class eIQObjectsDetectionYOLOV3:
 
     def run(self):
         self.start()
-
-        if self.args.video_src:
-            real_time_inference(self.detect_objects, self.args)
-        else:
-            frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
-            cv2.imshow(*self.detect_objects(frame))
-            cv2.waitKey()
-
-        cv2.destroyAllWindows()
+        run_inference(self.detect_objects, self.image, self.args)

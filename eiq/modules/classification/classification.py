@@ -18,7 +18,7 @@ from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.modules.classification.config import *
 from eiq.modules.classification.utils import load_labels
-from eiq.modules.utils import real_time_inference
+from eiq.modules.utils import run_inference
 from eiq.utils import args_parser, Downloader
 
 
@@ -82,15 +82,7 @@ class eIQFireClassification:
 
     def run(self):
         self.start()
-
-        if self.args.video_src:
-            real_time_inference(self.fire_classification, self.args)
-        else:
-            frame = cv2.imread(self.image)
-            cv2.imshow(*self.fire_classification(frame))
-            cv2.waitKey()
-
-        cv2.destroyAllWindows()
+        run_inference(self.fire_classification, self.image, self.args)
 
 
 class eIQObjectsClassification:
@@ -174,11 +166,4 @@ class eIQObjectsClassification:
 
     def run(self):
         self.start()
-        if self.args.video_src:
-            real_time_inference(self.classificate_image, self.args)
-        else:
-            frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
-            cv2.imshow(*self.classificate_image(frame))
-            cv2.waitKey()
-
-        cv2.destroyAllWindows()
+        run_inference(self.classificate_image, self.image, self.args)
