@@ -27,7 +27,7 @@ if os.path.exists(base_dir):
         print("Removing {0}...".format(base_dir))
         shutil.rmtree(base_dir)
     except:
-        print("shutil.rmtree() has failed" \
+        print("shutil.rmtree() has failed"
               "trying to remove: {}".format(base_dir))
 
 copy_dir(demos_dir, install_dir_demos)
@@ -35,7 +35,7 @@ copy_dir(demos_dir, install_dir_demos)
 try:
     pathlib.Path(install_dir_apps).mkdir(parents=True, exist_ok=True)
 except:
-    sys.exit("Path().mkdir() has failed" \
+    sys.exit("Path().mkdir() has failed"
              "trying to create: {}".format(install_dir_apps))
 
 shutil.copy(switch_label, install_dir_apps)

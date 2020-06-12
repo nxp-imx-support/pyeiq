@@ -360,9 +360,9 @@ class eIQObjectDetectionGStreamer:
 
     def run(self):
         if not has_svgwrite:
-            sys.exit("The module svgwrite needed to run this demo was not " \
-                     "found. If you want to install it type 'pip3 install " \
-                     " svgwrite' at your terminal. Exiting...")
+            sys.exit("The module svgwrite needed to run this demo was not "
+                     "found. If you want to install it type 'pip3 install "
+                     "svgwrite' at your terminal. Exiting...")
 
         self.start()
         labels = self.load_labels(self.label)

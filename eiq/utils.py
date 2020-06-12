@@ -7,6 +7,7 @@ from contextlib import contextmanager
 from datetime import timedelta
 
 import logging
+
 logging.basicConfig(level=logging.INFO)
 
 from hashlib import sha1
@@ -80,7 +81,7 @@ class Downloader:
         try:
             pathlib.Path(download_path).mkdir(parents=True, exist_ok=True)
         except:
-            sys.exit("Path().mkdir() has failed " \
+            sys.exit("Path().mkdir() has failed "
                      "trying to create: {}".format(download_path))
 
         download_path = os.path.join(download_path, filename)
@@ -94,8 +95,8 @@ class Downloader:
                                                         dest_path=download_path)
                     self.downloaded_file = download_path
                 except:
-                    sys.exit("Google Drive server could not be reached." \
-                             "Your download has been canceled.\n" \
+                    sys.exit("Google Drive server could not be reached."
+                             "Your download has been canceled.\n"
                              "Exiting...")
 
         self.downloaded_file = download_path
@@ -127,7 +128,7 @@ class Downloader:
                     url = url.split('/')[ID]
                     drive_flag = True
             else:
-                sys.exit("No servers were available to download the data.\n" \
+                sys.exit("No servers were available to download the data.\n"
                          "Exiting...")
 
         self.download_from_web(url, filename, download_path, drive=drive_flag)
@@ -137,7 +138,7 @@ class Downloader:
                 shutil.unpack_archive(self.downloaded_file, download_path)
             else:
                 os.remove(self.downloaded_file)
-                sys.exit("The checksum of your file failed!"\
+                sys.exit("The checksum of your file failed!"
                          "Your file is corrupted.\nRemoving and exiting...")
 
     def wget(self, url, filename, download_path):
@@ -147,7 +148,7 @@ class Downloader:
         try:
             pathlib.Path(download_path).mkdir(parents=True, exist_ok=True)
         except:
-            sys.exit("Path().mkdir() has failed " \
+            sys.exit("Path().mkdir() has failed "
                      "trying to create: {}".format(download_path))
 
         Popen(["wget", "{}".format(url), "-O", "{}".format(newfile)]).wait()
@@ -169,7 +170,7 @@ class InferenceTimer:
             yield
         finally:
             end = monotonic()
-            self.convert(end-begin)
+            self.convert(end - begin)
             print("{0}: {1}".format(message, self.time))
 
     def convert(self, elapsed):
@@ -184,7 +185,7 @@ def copy_dir(src, target):
     try:
         pathlib.Path(target).mkdir(parents=True, exist_ok=True)
     except:
-        sys.exit("Path().mkdir() has failed" \
+        sys.exit("Path().mkdir() has failed"
                  "trying to create: {}".format(target))
 
     for file in os.listdir(src):
@@ -203,7 +204,7 @@ def args_parser(download=False, image=False, label=False,
     if download:
         parser.add_argument(
             '-d', '--download', default=None,
-            help="Choose from which server the models are going to be " \
+            help="Choose from which server the models are going to be "
                  "downloaded")
     if image:
         parser.add_argument(
@@ -227,7 +228,7 @@ def args_parser(download=False, image=False, label=False,
     if video_src:
         parser.add_argument(
             '-v', '--video_src', default=None,
-            help="Choose your video source, it can be the path to a video file" \
+            help="Choose your video source, it can be the path to a video file"
                  " or your video device, e.g, /dev/video<x>")
 
     return parser.parse_args()
