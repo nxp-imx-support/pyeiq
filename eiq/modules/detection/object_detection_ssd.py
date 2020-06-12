@@ -150,7 +150,6 @@ class eIQObjectDetectionGStreamer:
         self.videofmt = "raw"
         self.src_width = 640
         self.src_height = 480
-        self.framework = None
 
     def gather_data(self):
         download = Downloader(self.args)
@@ -315,7 +314,6 @@ class eIQObjectDetectionDNN:
         self.threshold = 0.2
         self.width = 300
         self.height = 300
-        self.framework = None
 
     def gather_data(self):
         download = Downloader(self.args)
@@ -411,7 +409,6 @@ class eIQObjectDetectionOpenCV:
 
         self.model = None
         self.label = None
-        self.framework = None
 
     def gather_data(self):
         download = Downloader(self.args)
@@ -525,7 +522,6 @@ class eIQObjectDetectionSSD:
         self.image = None
         self.label = None
         self.model = None
-        self.framework = None
 
         self.class_names = None
         self.colors = None
