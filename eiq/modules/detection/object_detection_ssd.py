@@ -489,7 +489,7 @@ class eIQObjectDetectionOpenCV:
         self.start()
         video_config = VideoConfig(self.args)
 
-        video = video_config.get_config()[0]
+        video = video_config.opencv_config()[0]
         if (not video) or (not video.isOpened()):
             sys.exit("Your video device could not be found. Exiting...")
 
