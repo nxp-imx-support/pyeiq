@@ -1,3 +1,6 @@
+# Copyright 2020 NXP Semiconductors
+# SPDX-License-Identifier: BSD-3-Clause
+
 import numpy as np
 from tflite_runtime.interpreter import Interpreter
 
