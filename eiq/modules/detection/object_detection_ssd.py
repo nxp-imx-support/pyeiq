@@ -134,6 +134,109 @@ class eIQObjectsDetection:
         run_inference(self.detect_objects, self.image, self.args)
 
 
+class eIQObjectDetectionDNN:
+    def __init__(self):
+        self.args = args_parser(download=True, image=True, label=True,
+                                model=True, video_src=True, video_fwk=True)
+        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.model_dir = os.path.join(self.base_dir, "model")
+        self.media_dir = os.path.join(self.base_dir, "media")
+
+        self.image = None
+        self.labels = None
+        self.model_caffe = None
+        self.model_proto = None
+        self.nn = None
+
+        self.normalize = 127.5
+        self.scale_factor = 0.009718
+        self.threshold = 0.2
+        self.width = 300
+        self.height = 300
+
+    def gather_data(self):
+        download = Downloader(self.args)
+        download.retrieve_data(OBJ_DETECTION_DNN_MODEL_SRC,
+                               self.__class__.__name__ + ZIP, self.base_dir,
+                               OBJ_DETECTION_DNN_MODEL_SHA1, True)
+
+        if self.args.image is not None and os.path.exists(self.args.image):
+            self.image = self.args.image
+        else:
+            self.image = os.path.join(self.media_dir,
+                                      OBJ_DETECTION_DNN_MEDIA_NAME)
+
+        if self.args.label is not None and os.path.isfile(self.args.label):
+            self.labels = self.args.label
+        else:
+            self.labels = os.path.join(self.model_dir,
+                                       OBJ_DETECTION_DNN_LABEL_NAME)
+
+        if self.args.model is not None and os.path.isfile(self.args.model):
+            self.model_caffe = self.args.model
+        else:
+            self.model_caffe =  os.path.join(self.model_dir,
+                                             OBJ_DETECTION_DNN_CAFFE_NAME)
+            self.model_proto =  os.path.join(self.model_dir,
+                                             OBJ_DETECTION_DNN_PROTO_NAME)
+
+    def load_labels(self, labels_path):
+        labels = {}
+
+        with open(labels_path) as f:
+            for line in f:
+                (key, val) = line.split()
+                labels[int(key)] = val
+
+        return labels
+
+    def detect_objects(self, frame):
+        height, width = frame.shape[:2]
+        image = cv2.resize(frame, (self.height, self.width))
+        blob = cv2.dnn.blobFromImage(image, self.scale_factor,
+                                     (self.height, self.width),
+                                     (self.normalize, self.normalize,
+                                      self.normalize), False)
+        self.nn.setInput(blob)
+        det = self.nn.forward()
+
+        for i in range(det.shape[2]):
+            confidence = det[0, 0, i, 2]
+
+            if (confidence > self.threshold):
+                index = int(det[0, 0, i, 1])
+                left = int(width * det[0, 0, i, 3])
+                top = int(height * det[0, 0, i, 4])
+                right = int(width * det[0, 0, i, 5])
+                bottom = int(height * det[0, 0, i, 6])
+                cv2.rectangle(frame, (left, top), (right, bottom),
+                              FONT_COLOR, FONT_THICKNESS)
+
+                if (index in self.labels):
+                    label = ("{0}: {1:.3f}".format(self.labels[index],
+                                                   confidence))
+                    label_size = cv2.getTextSize(label, FONT, FONT_SIZE,
+                                                 FONT_THICKNESS + 1)[0]
+                    top = max(top, label_size[1])
+                    cv2.rectangle(frame, (left, top - label_size[1]),
+                                  (left + label_size[0], top),
+                                  FONT_COLOR, cv2.FILLED)
+                    cv2.putText(frame, label, (left, top), FONT,
+                                FONT_SIZE, (255, 255, 255), FONT_THICKNESS - 1)
+
+        return TITLE_OBJECT_DETECTION_DNN, frame
+
+    def start(self):
+        self.gather_data()
+        self.labels = self.load_labels(self.labels)
+        self.nn = cv2.dnn.readNetFromCaffe(self.model_proto,
+                                              self.model_caffe)
+
+    def run(self):
+        self.start()
+        run_inference(self.detect_objects, self.image, self.args)
+
+
 class eIQObjectDetectionGStreamer:
     def __init__(self):
         self.args = args_parser(download=True, video_src=True, video_fwk=True)
@@ -293,109 +396,6 @@ class eIQObjectDetectionGStreamer:
                                         videosrc=self.videosrc,
                                         videofile=self.videofile,
                                         videofmt=self.videofmt)
-
-
-class eIQObjectDetectionDNN:
-    def __init__(self):
-        self.args = args_parser(download=True, image=True, label=True,
-                                model=True, video_src=True, video_fwk=True)
-        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.model_dir = os.path.join(self.base_dir, "model")
-        self.media_dir = os.path.join(self.base_dir, "media")
-
-        self.image = None
-        self.labels = None
-        self.model_caffe = None
-        self.model_proto = None
-        self.nn = None
-
-        self.normalize = 127.5
-        self.scale_factor = 0.009718
-        self.threshold = 0.2
-        self.width = 300
-        self.height = 300
-
-    def gather_data(self):
-        download = Downloader(self.args)
-        download.retrieve_data(OBJ_DETECTION_DNN_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_dir,
-                               OBJ_DETECTION_DNN_MODEL_SHA1, True)
-
-        if self.args.image is not None and os.path.exists(self.args.image):
-            self.image = self.args.image
-        else:
-            self.image = os.path.join(self.media_dir,
-                                      OBJ_DETECTION_DNN_MEDIA_NAME)
-
-        if self.args.label is not None and os.path.isfile(self.args.label):
-            self.labels = self.args.label
-        else:
-            self.labels = os.path.join(self.model_dir,
-                                       OBJ_DETECTION_DNN_LABEL_NAME)
-
-        if self.args.model is not None and os.path.isfile(self.args.model):
-            self.model_caffe = self.args.model
-        else:
-            self.model_caffe =  os.path.join(self.model_dir,
-                                             OBJ_DETECTION_DNN_CAFFE_NAME)
-            self.model_proto =  os.path.join(self.model_dir,
-                                             OBJ_DETECTION_DNN_PROTO_NAME)
-
-    def load_labels(self, labels_path):
-        labels = {}
-
-        with open(labels_path) as f:
-            for line in f:
-                (key, val) = line.split()
-                labels[int(key)] = val
-
-        return labels
-
-    def detect_objects(self, frame):
-        height, width = frame.shape[:2]
-        image = cv2.resize(frame, (self.height, self.width))
-        blob = cv2.dnn.blobFromImage(image, self.scale_factor,
-                                     (self.height, self.width),
-                                     (self.normalize, self.normalize,
-                                      self.normalize), False)
-        self.nn.setInput(blob)
-        det = self.nn.forward()
-
-        for i in range(det.shape[2]):
-            confidence = det[0, 0, i, 2]
-
-            if (confidence > self.threshold):
-                index = int(det[0, 0, i, 1])
-                left = int(width * det[0, 0, i, 3])
-                top = int(height * det[0, 0, i, 4])
-                right = int(width * det[0, 0, i, 5])
-                bottom = int(height * det[0, 0, i, 6])
-                cv2.rectangle(frame, (left, top), (right, bottom),
-                              FONT_COLOR, FONT_THICKNESS)
-
-                if (index in self.labels):
-                    label = ("{0}: {1:.3f}".format(self.labels[index],
-                                                   confidence))
-                    label_size = cv2.getTextSize(label, FONT, FONT_SIZE,
-                                                 FONT_THICKNESS + 1)[0]
-                    top = max(top, label_size[1])
-                    cv2.rectangle(frame, (left, top - label_size[1]),
-                                  (left + label_size[0], top),
-                                  FONT_COLOR, cv2.FILLED)
-                    cv2.putText(frame, label, (left, top), FONT,
-                                FONT_SIZE, (255, 255, 255), FONT_THICKNESS - 1)
-
-        return TITLE_OBJECT_DETECTION_DNN, frame
-
-    def start(self):
-        self.gather_data()
-        self.labels = self.load_labels(self.labels)
-        self.nn = cv2.dnn.readNetFromCaffe(self.model_proto,
-                                              self.model_caffe)
-
-    def run(self):
-        self.start()
-        run_inference(self.detect_objects, self.image, self.args)
 
 
 class eIQObjectDetectionOpenCV:
