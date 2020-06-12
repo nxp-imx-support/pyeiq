@@ -28,7 +28,7 @@ from eiq.modules.detection.utils import *
 from eiq.modules.utils import run_inference
 from eiq.multimedia import gstreamer
 from eiq.multimedia.overlay import OpenCVOverlay
-from eiq.multimedia.utils import make_boxes, VideoConfig
+from eiq.multimedia.utils import VideoConfig
 from eiq.utils import args_parser, Downloader
 
 try:
@@ -252,8 +252,8 @@ class eIQObjectDetectionGStreamer:
         boxes = self.output_tensor(0)
         category = self.output_tensor(1)
         scores = self.output_tensor(2)
-        return [make_boxes(i, boxes, category, scores) for i in range(top_k) \
-                if scores[i] >= score_threshold]
+        return [gstreamer.make_boxes(i, boxes, category, scores) \
+                for i in range(top_k) if scores[i] >= score_threshold]
 
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
@@ -456,8 +456,8 @@ class eIQObjectDetectionOpenCV:
         scores = self.output_tensor(2)
         count = int(self.output_tensor(3))
 
-        return [make_boxes(i, boxes, class_ids, scores) for i in range(top_k) \
-                if scores[i] >= score_threshold]
+        return [gstreamer.make_boxes(i, boxes, class_ids, scores) \
+                for i in range(top_k) if scores[i] >= score_threshold]
 
     def append_objs_to_img(self, opencv_im, objs):
         height, width, channels = opencv_im.shape

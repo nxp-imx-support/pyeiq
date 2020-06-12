@@ -16,16 +16,6 @@ from PIL import Image
 from eiq.multimedia.gstreamer import set_appsink_pipeline, set_appsrc_pipeline
 from eiq.multimedia.v4l2 import v4l2_camera_pipeline, v4l2_video_pipeline
 
-Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
-
-class BBox(collections.namedtuple(
-        'BBox', ['xmin', 'ymin', 'xmax', 'ymax'])):
-    """Bounding box.
-    Represents a rectangle which sides are either vertical or horizontal,
-    parallel to the x or y axis.
-    """
-    __slots__ = ()
-
 
 class VideoDevice():
     def __int__(self):
@@ -221,14 +211,3 @@ class VideoConfig:
                                             frate=caps.get_framerate())
 
         return cv2.VideoCapture(pipeline), None
-
-
-def make_boxes(i, boxes, class_ids, scores):
-    ymin, xmin, ymax, xmax = boxes[i]
-    return Object(
-        id=int(class_ids[i]),
-        score=scores[i],
-        bbox=BBox(xmin=np.maximum(0.0, xmin),
-                        ymin=np.maximum(0.0, ymin),
-                        xmax=np.minimum(1.0, xmax),
-                        ymax=np.minimum(1.0, ymax)))

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import collections
 import sys
 
 try:
@@ -27,8 +28,31 @@ gi.require_version('GstBase', '1.0')
 gi.require_version('Gtk', '3.0')
 from gi.repository import GLib, GObject, Gst, GstBase, Gtk
 
+import numpy as np
+
+
+Object = collections.namedtuple('Object', ['id', 'score', 'bbox'])
+
 GObject.threads_init()
 Gst.init(None)
+
+
+class BBox(collections.namedtuple('BBox', ['xmin', 'ymin', 'xmax', 'ymax'])):
+    """Bounding box.
+    Represents a rectangle which sides are either vertical or horizontal,
+    parallel to the x or y axis.
+    """
+    __slots__ = ()
+
+
+def make_boxes(i, boxes, class_ids, scores):
+    ymin, xmin, ymax, xmax = boxes[i]
+    return Object(id=int(class_ids[i]), score=scores[i],
+                  bbox=BBox(xmin=np.maximum(0.0, xmin),
+                            ymin=np.maximum(0.0, ymin),
+                            xmax=np.minimum(1.0, xmax),
+                            ymax=np.minimum(1.0, ymax)))
+
 
 def set_appsink_pipeline(device,
                         leaky="leaky=downstream max-size-buffers=1",
