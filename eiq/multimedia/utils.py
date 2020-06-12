@@ -17,7 +17,7 @@ from eiq.multimedia.gstreamer import set_appsink_pipeline, set_appsrc_pipeline
 from eiq.multimedia.v4l2 import v4l2_camera_pipeline, v4l2_video_pipeline
 
 
-class VideoDevice():
+class VideoDevice:
     def __int__(self):
         self.name = None
         self.caps = None
@@ -42,7 +42,7 @@ class VideoDevice():
         self.default_caps = default
 
 
-class Caps():
+class Caps:
     def __init__(self):
         self.name = None
         self.format = None
@@ -88,7 +88,7 @@ class Caps():
         self.framerate = framerate
 
 
-class Devices():
+class Devices:
     def __init__(self):
         self.devices = []
 

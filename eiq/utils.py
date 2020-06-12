@@ -26,7 +26,7 @@ from eiq.config import *
 from eiq.helper.google_drive_downloader import GoogleDriveDownloader as gdd
 
 
-class Downloader():
+class Downloader:
     def __init__(self, args):
         self.args = args
         self.downloaded_file = None
