@@ -76,7 +76,6 @@ class eIQFireClassification:
         return TITLE_FIRE_CLASSIFICATION, frame
 
     def start(self):
-        os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
 
@@ -159,7 +158,6 @@ class eIQObjectsClassification:
         return TITLE_OBJ_CLASSIFICATION, frame
 
     def start(self):
-        os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
         self.label = load_labels(self.label)

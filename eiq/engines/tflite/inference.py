@@ -1,6 +1,8 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
+import os
+
 import numpy as np
 from tflite_runtime.interpreter import Interpreter
 
@@ -8,6 +10,7 @@ from eiq.utils import InferenceTimer
 
 class TFLiteInterpreter:
     def __init__(self, model=None):
+        os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.interpreter = None
         self.input_details = None
         self.output_details = None

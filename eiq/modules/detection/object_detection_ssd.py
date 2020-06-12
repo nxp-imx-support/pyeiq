@@ -121,7 +121,6 @@ class eIQObjectsDetection:
         return TITLE_OBJECT_DETECTION, frame
 
     def start(self):
-        os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
         self.class_names = read_classes(self.label)
@@ -352,7 +351,6 @@ class eIQObjectDetectionGStreamer:
                 for i in range(top_k) if scores[i] >= score_threshold]
 
     def start(self):
-        os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.video_config()
         self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
@@ -470,7 +468,6 @@ class eIQObjectDetectionOpenCV:
         return opencv_im
 
     def start(self):
-        os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
         self.tensor = self.interpreter.interpreter.tensor
@@ -565,7 +562,6 @@ class eIQObjectDetectionSSD:
         return TITLE_OBJECT_DETECTION_SSD, result
 
     def start(self):
-        os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
         self.class_names = read_classes(self.label)

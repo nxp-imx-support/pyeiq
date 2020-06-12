@@ -230,7 +230,6 @@ class eIQObjectsDetectionYOLOV3:
                         FONT, FONT_SIZE, FONT_COLOR, FONT_THICKNESS)
 
     def start(self):
-        os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
         self.label = self.load_labels(self.label)
         self.interpreter = TFLiteInterpreter(self.model)

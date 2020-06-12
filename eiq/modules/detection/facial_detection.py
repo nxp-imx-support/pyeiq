@@ -95,7 +95,6 @@ class eIQEmotionsDetection:
         return TITLE_FACE_EYES_DETECTION, frame
 
     def start(self):
-        os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
         self.face_cascade = cv2.CascadeClassifier(self.face_cascade)
         self.interpreter = TFLiteInterpreter(self.model)
@@ -151,7 +150,6 @@ class eIQFaceAndEyesDetection:
         return TITLE_FACE_EYES_DETECTION, frame
 
     def start(self):
-        os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.gather_data()
         self.eye_cascade = cv2.CascadeClassifier(self.eye_cascade)
         self.face_cascade = cv2.CascadeClassifier(self.face_cascade)

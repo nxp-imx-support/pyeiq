@@ -188,7 +188,6 @@ class eIQCoralPoseNet:
 		return TITLE_CORAL_POSENET, frame
 
 	def start(self):
-		os.environ['VSI_NN_LOG_LEVEL'] = "0"
 		self.gather_data()
 		self.interpreter = TFLiteInterpreter(self.model)
 
