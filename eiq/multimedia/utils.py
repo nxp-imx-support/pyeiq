@@ -105,10 +105,7 @@ class Devices():
 
             name = dev_props.get_string("device.path")
             caps = self.get_device_caps(dev_caps.normalize())
-            if caps:
-                default_caps = caps[0]
-            else:
-                default_caps = None
+            default_caps = None if not caps else caps[0]
 
             video_dev.set_name(name)
             video_dev.set_caps(caps)
