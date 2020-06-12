@@ -3,6 +3,7 @@
 
 import atexit
 import sys
+import threading
 
 import cv2
 import numpy as np
@@ -105,8 +106,18 @@ def run_inference(inference_func, image, args):
             gst_video = GstVideo(sink, src, inference_func)
             gst_video.run()
     else:
-        frame = cv2.imread(image, cv2.IMREAD_COLOR)
-        cv2.imshow(*inference_func(frame))
-        cv2.waitKey()
+        try:
+            frame = cv2.imread(image, cv2.IMREAD_COLOR)
+            thread = threading.Thread(target=display_image,
+                                      args=inference_func(frame))
+            thread.daemon = True
+            thread.start()
+            thread.join()
+        except KeyboardInterrupt:
+            sys.exit("")
 
     cv2.destroyAllWindows()
+
+def display_image(window_title, image):
+    cv2.imshow(window_title, image)
+    cv2.waitKey()
