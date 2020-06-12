@@ -130,13 +130,11 @@ class Devices():
             caps.set_format(caps_struct.get_string("format"))
             caps.set_width(caps_struct.get_int("width")[1])
             caps.set_height(caps_struct.get_int("height")[1])
-            pixel_ar = ("{}/{}".format(
-                        *caps_struct.get_fraction(
-                        "pixel-aspect-ratio")[1:]))
+            pixel_ar = ("{}/{}".format(*caps_struct.get_fraction(
+                                       "pixel-aspect-ratio")[1:]))
             caps.set_pixel_aspect_ration(pixel_ar)
-            framerate = ("{}/{}".format(
-                        *caps_struct.get_fraction(
-                        "framerate")[1:]))
+            framerate = ("{}/{}".format(*caps_struct.get_fraction(
+                                        "framerate")[1:]))
             caps.set_framerate(framerate)
             caps_list.append(caps)
 
