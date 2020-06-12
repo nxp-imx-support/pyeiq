@@ -1,6 +1,7 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
+import atexit
 import sys
 
 import cv2
@@ -20,19 +21,27 @@ class GstVideo:
         self.inference_func = inference_func
 
         self.appsource = None
+        self.sink_pipeline = None
+        self.src_pipeline = None
+
+        atexit.register(self.exit_handler)
+
+    def exit_handler(self):
+        self.sink_pipeline.set_state(Gst.State.NULL)
+        self.src_pipeline.set_state(Gst.State.NULL)
 
     def run(self):
-        sink_pipeline = Gst.parse_launch(self.sink)
-        appsink = sink_pipeline.get_by_name('sink')
+        self.sink_pipeline = Gst.parse_launch(self.sink)
+        appsink = self.sink_pipeline.get_by_name('sink')
         appsink.connect("new-sample", self.on_new_frame)
 
-        src_pipeline = Gst.parse_launch(self.src)
-        self.appsource = src_pipeline.get_by_name('src')
+        self.src_pipeline = Gst.parse_launch(self.src)
+        self.appsource = self.src_pipeline.get_by_name('src')
 
-        sink_pipeline.set_state(Gst.State.PLAYING)
-        bus1 = sink_pipeline.get_bus()
-        src_pipeline.set_state(Gst.State.PLAYING)
-        bus2 = src_pipeline.get_bus()
+        self.sink_pipeline.set_state(Gst.State.PLAYING)
+        bus1 = self.sink_pipeline.get_bus()
+        self.src_pipeline.set_state(Gst.State.PLAYING)
+        bus2 = self.src_pipeline.get_bus()
 
         while True:
             message = bus1.timed_pop_filtered(10000, Gst.MessageType.ANY)
