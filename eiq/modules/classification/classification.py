@@ -24,7 +24,7 @@ from eiq.utils import args_parser, Downloader
 
 class eIQFireClassification:
     def __init__(self):
-        self.args = args_parser(download=True,image=True,
+        self.args = args_parser(download=True, image=True,
                                 model=True, video_fwk=True, video_src=True)
         self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
         self.media_dir = os.path.join(self.base_dir, "media")
@@ -142,8 +142,8 @@ class eIQObjectsClassification:
             x = 20
             y = 35 * idx + 35
             cv2.putText(frame, '{} - {:0.4f}'.format(labels[i], score),
-                           (x, y), self.font, self.font_size,
-                           self.font_color, self.font_thickness)
+                        (x, y), self.font, self.font_size,
+                        self.font_color, self.font_thickness)
 
         self.overlay.draw_inference_time(frame, self.interpreter.inference_time)
 
