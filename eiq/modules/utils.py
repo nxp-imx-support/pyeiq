@@ -10,10 +10,12 @@ import numpy as np
 from PIL import Image
 
 import gi
+
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst
 
 from eiq.multimedia.utils import VideoConfig
+
 
 class GstVideo:
     def __init__(self, sink, src, inference_func):
@@ -48,25 +50,25 @@ class GstVideo:
             message = bus1.timed_pop_filtered(10000, Gst.MessageType.ANY)
             if message:
                 if message.type == Gst.MessageType.ERROR:
-                    err,debug = message.parse_error()
+                    err, debug = message.parse_error()
                     self.sink_pipeline.set_state(Gst.State.NULL)
                     self.src_pipeline.set_state(Gst.State.NULL)
                     sys.exit("ERROR bus 1: {}: {}".format(err, debug))
 
                 if message.type == Gst.MessageType.WARNING:
-                    err,debug = message.parse_warning()
+                    err, debug = message.parse_warning()
                     print("WARNING bus 1: {}: {}".format(err, debug))
 
             message = bus2.timed_pop_filtered(10000, Gst.MessageType.ANY)
             if message:
                 if message.type == Gst.MessageType.ERROR:
-                    err,debug = message.parse_error()
+                    err, debug = message.parse_error()
                     self.sink_pipeline.set_state(Gst.State.NULL)
                     self.src_pipeline.set_state(Gst.State.NULL)
                     sys.exit("ERROR bus 2: {}: {}".format(err, debug))
 
                 if message.type == Gst.MessageType.WARNING:
-                    err,debug = message.parse_warning()
+                    err, debug = message.parse_warning()
                     print("WARNING bus 2: {}: {}".format(err, debug))
 
     def on_new_frame(self, sink):
@@ -83,6 +85,7 @@ class GstVideo:
         mem.unmap(arr)
 
         return Gst.FlowReturn.OK
+
 
 def run_inference(inference_func, image, args):
     if args.video_src:
@@ -117,6 +120,7 @@ def run_inference(inference_func, image, args):
             sys.exit("")
 
     cv2.destroyAllWindows()
+
 
 def display_image(window_title, image):
     cv2.imshow(window_title, image)
