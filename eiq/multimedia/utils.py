@@ -113,7 +113,8 @@ class Devices:
 
         dev_monitor.stop()
 
-    def get_device_caps(self, dev_caps):
+    @staticmethod
+    def get_device_caps(dev_caps):
         caps_list = []
 
         for i in range(dev_caps.get_size()):
@@ -141,7 +142,7 @@ class Devices:
 
         for device in self.devices:
             if device.get_name() == dev_name:
-                    dev = device
+                dev = device
 
             if not dev:
                 print("The specified video_src does not exists.\n"
