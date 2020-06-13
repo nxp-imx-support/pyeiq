@@ -49,8 +49,8 @@ class GstVideo:
             if message:
                 if message.type == Gst.MessageType.ERROR:
                     err,debug = message.parse_error()
-                    sink_pipeline.set_state(Gst.State.NULL)
-                    src_pipeline.set_state(Gst.State.NULL)
+                    self.sink_pipeline.set_state(Gst.State.NULL)
+                    self.src_pipeline.set_state(Gst.State.NULL)
                     sys.exit("ERROR bus 1: {}: {}".format(err, debug))
 
                 if message.type == Gst.MessageType.WARNING:
@@ -61,8 +61,8 @@ class GstVideo:
             if message:
                 if message.type == Gst.MessageType.ERROR:
                     err,debug = message.parse_error()
-                    sink_pipeline.set_state(Gst.State.NULL)
-                    src_pipeline.set_state(Gst.State.NULL)
+                    self.sink_pipeline.set_state(Gst.State.NULL)
+                    self.src_pipeline.set_state(Gst.State.NULL)
                     sys.exit("ERROR bus 2: {}: {}".format(err, debug))
 
                 if message.type == Gst.MessageType.WARNING:
