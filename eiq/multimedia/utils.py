@@ -17,7 +17,7 @@ from eiq.multimedia.v4l2 import v4l2_camera_pipeline, v4l2_video_pipeline
 
 
 class VideoDevice:
-    def __int__(self):
+    def __init__(self):
         self.name = None
         self.caps = None
         self.default_caps = None
