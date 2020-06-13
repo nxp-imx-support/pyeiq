@@ -147,7 +147,7 @@ class eIQObjectsClassification:
 
         self.overlay.draw_inference_time(frame, self.interpreter.inference_time)
 
-    def classificate_image(self, frame):
+    def classify_image(self, frame):
         image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         image = image.resize((self.interpreter.width(),
                               self.interpreter.height()))
@@ -164,4 +164,4 @@ class eIQObjectsClassification:
 
     def run(self):
         self.start()
-        run_inference(self.classificate_image, self.image, self.args)
+        run_inference(self.classify_image, self.image, self.args)
