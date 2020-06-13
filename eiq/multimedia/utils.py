@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import atexit
-import collections
 import os
 import sys
 
@@ -12,7 +11,6 @@ from gi.repository import Gst
 
 import cv2
 import numpy as np
-from PIL import Image
 
 from eiq.multimedia.gstreamer import set_appsink_pipeline, set_appsrc_pipeline
 from eiq.multimedia.v4l2 import v4l2_camera_pipeline, v4l2_video_pipeline
