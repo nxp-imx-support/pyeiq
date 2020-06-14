@@ -13,45 +13,18 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
-from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.modules.classification.config import *
 from eiq.modules.classification.utils import load_labels
-from eiq.modules.utils import run_inference
-from eiq.utils import args_parser, Downloader
+from eiq.modules.utils import DemoBase
 
 
-class eIQFireClassification:
+class eIQFireClassification(DemoBase):
     def __init__(self):
-        self.args = args_parser(download=True, image=True,
-                                model=True, video_fwk=True, video_src=True)
-        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.media_dir = os.path.join(self.base_dir, "media")
-        self.model_dir = os.path.join(self.base_dir, "model")
-
-        self.interpreter = None
-        self.image = None
-        self.model = None
-        self.overlay = OpenCVOverlay()
-
-    def gather_data(self):
-        download = Downloader(self.args)
-        download.retrieve_data(FIRE_DETECTION_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_dir,
-                               FIRE_DETECTION_MODEL_SHA1, True)
-
-        if self.args.image is not None and os.path.isfile(self.args.image):
-            self.image = self.args.image
-        else:
-            self.image = os.path.join(self.media_dir,
-                                      FIRE_DETECTION_MEDIA_NAME)
-
-        if self.args.model is not None and os.path.isfile(self.args.model):
-            self.model = self.args.model
-        else:
-            self.model = os.path.join(self.model_dir,
-                                      FIRE_DETECTION_MODEL_NAME)
+        super().__init__(download=True, image=True, model=True,
+                         video_fwk=True, video_src=True,
+                         class_name=self.__class__.__name__,
+                         data=FIRE_CLASSIFICATION)
 
     def fire_classification(self, frame):
         image = cv2.resize(frame, (self.interpreter.width(),
@@ -73,7 +46,7 @@ class eIQFireClassification:
 
         self.overlay.draw_inference_time(frame, self.interpreter.inference_time)
 
-        return TITLE_FIRE_CLASSIFICATION, frame
+        return frame
 
     def start(self):
         self.gather_data()
@@ -81,48 +54,20 @@ class eIQFireClassification:
 
     def run(self):
         self.start()
-        run_inference(self.fire_classification, self.image, self.args)
+        self.run_inference(self.fire_classification)
 
 
-class eIQObjectsClassification:
+class eIQObjectsClassification(DemoBase):
     def __init__(self):
-        self.args = args_parser(download=True, image=True, label=True,
-                                model=True, video_fwk=True, video_src=True)
-        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.media_dir = os.path.join(self.base_dir, "media")
-        self.model_dir = os.path.join(self.base_dir, "model")
-
-        self.interpreter = None
-        self.image = None
-        self.label = None
-        self.model = None
-        self.overlay = OpenCVOverlay()
+        super().__init__(download=True, image=True, labels=True,
+                         model=True, video_fwk=True, video_src=True,
+                         class_name=self.__class__.__name__,
+                         data=OBJ_CLASSIFICATION)
 
         self.font = cv2.FONT_HERSHEY_SIMPLEX
         self.font_size = 0.8
         self.font_color = (0, 127, 255)
         self.font_thickness = 2
-
-    def gather_data(self):
-        download = Downloader(self.args)
-        download.retrieve_data(OBJ_CLASSIFICATION_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_dir,
-                               OBJ_CLASSIFICATION_MODEL_SHA1, True)
-
-        if self.args.image is not None and os.path.isfile(self.args.image):
-            self.image = self.args.image
-        else:
-            self.image = os.path.join(self.media_dir, OBJ_CLASSIFICATION_MEDIA_NAME)
-
-        if self.args.label is not None and os.path.isfile(self.args.label):
-            self.label = self.args.label
-        else:
-            self.label = os.path.join(self.model_dir, OBJ_CLASSIFICATION_LABEL_NAME)
-
-        if self.args.model is not None and os.path.isfile(self.args.model):
-            self.model = self.args.model
-        else:
-            self.model = os.path.join(self.model_dir, OBJ_CLASSIFICATION_MODEL_NAME)
 
     def process_image(self, image, k=3):
         input_data = np.expand_dims(image, axis=0)
@@ -153,15 +98,15 @@ class eIQObjectsClassification:
                               self.interpreter.height()))
 
         top_result = self.process_image(image)
-        self.display_result(top_result, frame, self.label)
+        self.display_result(top_result, frame, self.labels)
 
-        return TITLE_OBJ_CLASSIFICATION, frame
+        return frame
 
     def start(self):
         self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
-        self.label = load_labels(self.label)
+        self.labels = load_labels(self.labels)
 
     def run(self):
         self.start()
-        run_inference(self.classify_image, self.image, self.args)
+        self.run_inference(self.classify_image)
