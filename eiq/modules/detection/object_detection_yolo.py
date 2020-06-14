@@ -14,25 +14,18 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.detection.config import *
-from eiq.modules.utils import run_inference
-from eiq.utils import args_parser, Downloader
+from eiq.modules.utils import DemoBase
 
-class eIQObjectsDetectionYOLOV3:
+
+class eIQObjectsDetectionYOLOV3(DemoBase):
     def __init__(self):
-        self.args = args_parser(download=True, image=True, label=True,
-                                model=True, video_fwk=True, video_src=True)
-        self.base_path = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.media_path = os.path.join(self.base_path, "media")
-        self.model_path = os.path.join(self.base_path, "model")
+        super().__init__(download=True, image=True, labels=True,
+                         model=True, video_fwk=True, video_src=True,
+                         class_name=self.__class__.__name__,
+                         data=OBJ_DETECTION_YOLOV3)
 
-        self.interpreter = None
-        self.image = None
-        self.label = None
-        self.model = None
-        
         self.anchors = [[0.57273, 0.677385], [1.87446, 2.06253],
                         [3.33843, 5.47434], [7.88282, 3.52778],
                         [9.77052, 9.16828]]
@@ -51,34 +44,12 @@ class eIQObjectsDetectionYOLOV3:
         self.confidence = 4
         self.classes = 5
 
-    def gather_data(self):
-        download = Downloader(self.args)
-        download.retrieve_data(YOLOV3_OBJ_DETECTION_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_path,
-                               YOLOV3_OBJ_DETECTION_MODEL_SHA1, True)
-
-        if self.args.image is not None and os.path.exists(self.args.image):
-            self.image = self.args.image
-        else:
-            self.image = os.path.join(self.media_path,
-                                      YOLOV3_OBJ_DETECTION_MEDIA_NAME)
-
-        if self.args.label is not None and os.path.exists(self.args.label):
-            self.label = self.args.label
-        else:
-            self.label = os.path.join(self.model_path,
-                                      YOLOV3_OBJ_DETECTION_LABEL_NAME)
-
-        if self.args.model is not None and os.path.exists(self.args.model):
-            self.model = self.args.model
-        else:
-            self.model = os.path.join(self.model_path,
-                                      YOLOV3_OBJ_DETECTION_MODEL_NAME)
-
-    def expit(self, x):
+    @staticmethod
+    def expit(x):
         return 1 / (1 + np.exp(-x))
 
-    def softmax(self, x):
+    @staticmethod
+    def softmax(x):
         x = x - np.max(x)
         exp_x = np.exp(x)
         softmax_x = exp_x / np.sum(exp_x)
@@ -96,18 +67,19 @@ class eIQObjectsDetectionYOLOV3:
 
         return np.array([n], dtype='float32')
 
-    def load_labels(self, labels_path):
+    @staticmethod
+    def load_labels(labels_path):
         labels = []
 
-        with open(labels_path, 'r') as l:
-            for line in l.readlines():
+        with open(labels_path, 'r') as lines:
+            for line in lines.readlines():
                 labels.append(line.rstrip())
 
         return labels
 
     def non_maximal_suppression(self, results):
         predictions = []
-        
+
         if len(results):
             results.sort(reverse=True, key=self.sort_results)
             best_prediction = results.pop(0)
@@ -125,19 +97,18 @@ class eIQObjectsDetectionYOLOV3:
                     secondary = prediction
 
                     if (primary[self.left] < secondary[self.right]) \
-                       and (primary[self.right] > secondary[self.left]) \
-                       and (primary[self.top] < secondary[self.bottom]) \
-                       and (primary[self.bottom] > secondary[self.top]):
-
+                            and (primary[self.right] > secondary[self.left]) \
+                            and (primary[self.top] < secondary[self.bottom]) \
+                            and (primary[self.bottom] > secondary[self.top]):
                         intersection = max(0, min(primary[self.right],
-                                           secondary[self.right])-max(primary[self.left],
-                                           secondary[self.left])) \
-                                      * max(0, min(primary[self.bottom],
-                                           secondary[self.bottom])-max(primary[self.top],
-                                           secondary[self.top]))
+                                                  secondary[self.right]) - max(primary[self.left],
+                                                                               secondary[self.left])) \
+                                       * max(0, min(primary[self.bottom],
+                                                    secondary[self.bottom]) - max(primary[self.top],
+                                                                                  secondary[self.top]))
 
-                        main = np.abs(primary[self.right]-primary[self.left]) \
-                               * np.abs(primary[self.bottom]-primary[self.top])
+                        main = np.abs(primary[self.right] - primary[self.left]) \
+                               * np.abs(primary[self.bottom] - primary[self.top])
                         intersect_proportion = intersection / main
 
                     overlaps = overlaps or (intersect_proportion > self.overlap_threshold)
@@ -154,11 +125,11 @@ class eIQObjectsDetectionYOLOV3:
             for column in range(self.grid_width):
                 for box in range(self.boxes_per_block):
                     item = data[row][column]
-                    offset = (len(self.label) + 5) * box
+                    offset = (len(self.labels) + 5) * box
 
-                    confidence = self.expit(item[offset+4])
+                    confidence = self.expit(item[offset + 4])
 
-                    classes = item[offset+5 : offset+5+len(self.label)]
+                    classes = item[offset + 5: offset + 5 + len(self.labels)]
                     classes = self.softmax(classes)
 
                     detected_class = np.argmax(classes)
@@ -167,25 +138,25 @@ class eIQObjectsDetectionYOLOV3:
                     confidence_in_class = max_class * confidence
 
                     if confidence_in_class >= self.threshold:
-                        x_pos = (column+self.expit(item[offset])) \
+                        x_pos = (column + self.expit(item[offset])) \
                                 * self.block_size
-                        y_pos = (row+self.expit(item[offset+1])) \
+                        y_pos = (row + self.expit(item[offset + 1])) \
                                 * self.block_size
-                        w = (np.exp(item[offset+2])*self.anchors[box][0]) \
+                        w = (np.exp(item[offset + 2]) * self.anchors[box][0]) \
                             * self.block_size
-                        h = (np.exp(item[offset+3])*self.anchors[box][1]) \
+                        h = (np.exp(item[offset + 3]) * self.anchors[box][1]) \
                             * self.block_size
 
-                        left = max(0, x_pos - w/2)
-                        top = max(0, y_pos - h/2)
+                        left = max(0, x_pos - w / 2)
+                        top = max(0, y_pos - h / 2)
                         right = min(self.interpreter.width() - 1,
-                                    x_pos + w/2)
+                                    x_pos + w / 2)
                         bottom = min(self.interpreter.height() - 1,
-                                     y_pos + h/2)
+                                     y_pos + h / 2)
 
                         results.append([left, top, right, bottom,
                                         confidence_in_class,
-                                        self.label[detected_class]])
+                                        self.labels[detected_class]])
 
         return self.non_maximal_suppression(results)
 
@@ -197,7 +168,7 @@ class eIQObjectsDetectionYOLOV3:
         data = self.interpreter.get_tensor(0)[0]
         self.draw_rectangles(frame, self.check_result(data))
 
-        return TITLE_OBJECT_DETECTION_YOLOV3, frame
+        return frame
 
     def draw_rectangles(self, frame, predictions):
         width = frame.shape[1]
@@ -223,17 +194,18 @@ class eIQObjectsDetectionYOLOV3:
             label_right = int(left + 3 + label_size[0])
             label_bottom = int(top - 5 - label_size[1])
 
-            cv2.rectangle(frame, (left, top), (right, bottom), (0,255,0), 3)
+            cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 3)
             cv2.rectangle(frame, (label_left, label_top),
-                          (label_right, label_bottom), (0,255,0), cv2.FILLED)
-            cv2.putText(frame, element[self.classes], (left, top-4),
+                          (label_right, label_bottom),
+                          (0, 255, 0), cv2.FILLED)
+            cv2.putText(frame, element[self.classes], (left, top - 4),
                         FONT, FONT_SIZE, FONT_COLOR, FONT_THICKNESS)
 
     def start(self):
         self.gather_data()
-        self.label = self.load_labels(self.label)
+        self.labels = self.load_labels(self.labels)
         self.interpreter = TFLiteInterpreter(self.model)
 
     def run(self):
         self.start()
-        run_inference(self.detect_objects, self.image, self.args)
+        self.run_inference(self.detect_objects)
