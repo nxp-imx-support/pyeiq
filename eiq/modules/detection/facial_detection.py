@@ -26,13 +26,14 @@ class eIQEmotionsDetection(DemoBase):
         self.face_cascade = os.path.join(self.model_dir,
                                          self.data['face_cascade'])
 
-    def preprocess_image(self, image, x, y, w, h):
+    @staticmethod
+    def preprocess_image(image, x, y, w, h):
         image = image[y:y+h, x:x+w]
         image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        image = image.resize((200,200))
+        image = image.resize((200, 200))
         image = np.expand_dims(image, axis=0)
 
-        if(np.max(image) > 1):
+        if np.max(image) > 1:
             image = image / 255.0
 
         return image.astype(np.float32)
@@ -72,7 +73,7 @@ class eIQEmotionsDetection(DemoBase):
             emotion = self.detect_emotion(gray, x, y, w, h)
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
             cv2.putText(frame, emotion, (x, y-5), cv2.FONT_HERSHEY_SIMPLEX,
-                        0.7, (0,0,255), 2, cv2.LINE_AA)
+                        0.7, (0, 0, 255), 2, cv2.LINE_AA)
 
         return frame
 
@@ -90,7 +91,7 @@ class eIQFaceAndEyesDetection(DemoBase):
     def __init__(self):
         super().__init__(download=True, image=True, video_fwk=True,
                          video_src=True, class_name=self.__class__.__name__,
-                         data = FACE_EYES_DETECTION)
+                         data=FACE_EYES_DETECTION)
 
         self.eye_cascade = None
         self.face_cascade = None
@@ -107,13 +108,13 @@ class eIQFaceAndEyesDetection(DemoBase):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = self.face_cascade.detectMultiScale(gray, 1.3, 5)
 
-        for (x,y,w,h) in faces:
+        for (x, y, w, h) in faces:
             cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
             roi_gray = gray[y:y+h, x:x+w]
             roi_color = frame[y:y+h, x:x+w]
 
             eyes = self.eye_cascade.detectMultiScale(roi_gray)
-            for (ex,ey,ew,eh) in eyes:
+            for (ex, ey, ew, eh) in eyes:
                 cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh),
                               (0, 255, 0), 2)
 
