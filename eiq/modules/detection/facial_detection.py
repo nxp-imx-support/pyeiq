@@ -7,42 +7,24 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
-from eiq.modules.detection.config import *
-from eiq.modules.utils import run_inference
-from eiq.utils import args_parser, Downloader
+from eiq.modules.detection.config import EMOTIONS_DETECTION, FACE_EYES_DETECTION
+from eiq.modules.utils import DemoBase
 
 
-class eIQEmotionsDetection:
+class eIQEmotionsDetection(DemoBase):
     def __init__(self):
-        self.args = args_parser(download=True, image=True,
-                                video_fwk=True, video_src=True)
-        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.media_dir = os.path.join(self.base_dir, "media")
-        self.model_dir = os.path.join(self.base_dir, "model")
+        super().__init__(download=True, image=True, video_fwk=True,
+                         video_src=True, class_name=self.__class__.__name__,
+                         data=EMOTIONS_DETECTION)
 
         self.face_cascade = None
-        self.model = None
-        self.interpreter = None
-
-        self.image = None
 
     def gather_data(self):
-        download = Downloader(self.args)
-        download.retrieve_data(EMOTIONS_DETECTION_SRC,
-                               self.__class__.__name__ + ZIP, self.base_dir,
-                               EMOTIONS_DETECTION_SHA1, True)
-        self.face_cascade = os.path.join(self.model_dir,
-                                        EMOTIONS_DETECTION_CASCADE_FACE_NAME)
-        self.model = os.path.join(self.model_dir,
-                                  EMOTIONS_DETECTION_MODEL_NAME)
+        super().gather_data()
 
-        if self.args.image is not None and os.path.exists(self.args.image):
-            self.image = self.args.image
-        else:
-            self.image = os.path.join(self.media_dir,
-                                      FACE_EYES_DETECTION_MEDIA_NAME)
+        self.face_cascade = os.path.join(self.model_dir,
+                                         self.data['face_cascade'])
 
     def preprocess_image(self, image, x, y, w, h):
         image = image[y:y+h, x:x+w]
@@ -92,7 +74,7 @@ class eIQEmotionsDetection:
             cv2.putText(frame, emotion, (x, y-5), cv2.FONT_HERSHEY_SIMPLEX,
                         0.7, (0,0,255), 2, cv2.LINE_AA)
 
-        return TITLE_FACE_EYES_DETECTION, frame
+        return frame
 
     def start(self):
         self.gather_data()
@@ -101,37 +83,25 @@ class eIQEmotionsDetection:
 
     def run(self):
         self.start()
-        run_inference(self.detect_face, self.image, self.args)
+        self.run_inference(self.detect_face)
 
 
-class eIQFaceAndEyesDetection:
+class eIQFaceAndEyesDetection(DemoBase):
     def __init__(self):
-        self.args = args_parser(download=True, image=True,
-                                video_fwk=True, video_src=True)
-        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.media_dir = os.path.join(self.base_dir, "media")
-        self.model_dir = os.path.join(self.base_dir, "model")
+        super().__init__(download=True, image=True, video_fwk=True,
+                         video_src=True, class_name=self.__class__.__name__,
+                         data = FACE_EYES_DETECTION)
 
         self.eye_cascade = None
         self.face_cascade = None
 
-        self.image = None
-
     def gather_data(self):
-        download = Downloader(self.args)
-        download.retrieve_data(FACE_EYES_DETECTION_SRC,
-                               self.__class__.__name__ + ZIP, self.base_dir,
-                               FACE_EYES_DETECTION_SHA1, True)
-        self.eye_cascade = os.path.join(self.model_dir,
-                                        FACE_EYES_DETECTION_CASCADE_EYES_NAME)
-        self.face_cascade = os.path.join(self.model_dir,
-                                         FACE_EYES_DETECTION_CASCADE_FACE_NAME)
+        super().gather_data()
 
-        if self.args.image is not None and os.path.exists(self.args.image):
-            self.image = self.args.image
-        else:
-            self.image = os.path.join(self.media_dir,
-                                      FACE_EYES_DETECTION_MEDIA_NAME)
+        self.eye_cascade = os.path.join(self.model_dir,
+                                        self.data['eye_cascade'])
+        self.face_cascade = os.path.join(self.model_dir,
+                                         self.data['face_cascade'])
 
     def detect_face(self, frame):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -147,7 +117,7 @@ class eIQFaceAndEyesDetection:
                 cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh),
                               (0, 255, 0), 2)
 
-        return TITLE_FACE_EYES_DETECTION, frame
+        return frame
 
     def start(self):
         self.gather_data()
@@ -156,4 +126,4 @@ class eIQFaceAndEyesDetection:
 
     def run(self):
         self.start()
-        run_inference(self.detect_face, self.image, self.args)
+        self.run_inference(self.detect_face)
