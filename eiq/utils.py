@@ -198,8 +198,8 @@ def copy_dir(src, target):
                 shutil.copy(file_path, target)
 
 
-def args_parser(download=False, image=False, label=False,
-                model=False, video_src=False, video_fwk=False):
+def args_parser(download=False, image=False, labels=False,
+                model=False, video_fwk=False, video_src=False):
     parser = ArgumentParser()
     if download:
         parser.add_argument(
@@ -210,9 +210,9 @@ def args_parser(download=False, image=False, label=False,
         parser.add_argument(
             '-i', '--image', default=None,
             help="path of the image to be classified")
-    if label:
+    if labels:
         parser.add_argument(
-            '-l', '--label', default=None,
+            '-l', '--labels', default=None,
             help="path of the file containing labels")
     if model:
         parser.add_argument(
