@@ -18,3 +18,5 @@ INIT_MODULE_FILE = "__init__.py"
 MAX_TIME = datetime.timedelta(9, 9, 9)
 
 ID = 5
+
+ZIP = ".zip"
