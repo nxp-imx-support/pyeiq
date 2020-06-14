@@ -39,16 +39,17 @@ FACE_EYES_DETECTION = {'eye_cascade': "haarcascade_eye.xml",
                                      "eIQFaceAndEyesDetection.zip"},
                        'window_title': "PyeIQ - Face and Eyes Detection"}
 
-OBJ_DETECTION_LABEL_NAME = "coco_labels.txt"
-OBJ_DETECTION_MEDIA_NAME = "bus.jpg"
-OBJ_DETECTION_MODEL_NAME = "detect.tflite"
-OBJ_DETECTION_MODEL_SHA1 = "73b8bb0749f275c10366553bab6f5f313230c527"
-OBJ_DETECTION_MODEL_SRC = {'drive': "https://drive.google.com/file/d/"
-                                    "1xdjdKPOH2PFPStbU2K2TEuFJN8Las3ag/"
-                                    "view?usp=sharing",
-                           'github': "https://github.com/diegohdorta/"
-                                     "models/raw/master/models/"
-                                     "eIQObjectDetection.zip"}
+OBJ_DETECTION = {'image': "bus.jpg",
+                 'labels': "coco_labels.txt",
+                 'model': "detect.tflite",
+                 'sha1': "73b8bb0749f275c10366553bab6f5f313230c527",
+                 'src': {'drive': "https://drive.google.com/file/d/"
+                                  "1xdjdKPOH2PFPStbU2K2TEuFJN8Las3ag/"
+                                  "view?usp=sharing",
+                         'github': "https://github.com/diegohdorta/"
+                                   "models/raw/master/models/"
+                                   "eIQObjectDetection.zip"},
+                 'window_title': "PyeIQ - Object Detection"}
 
 OBJ_DETECTION_CV_GST_LABEL_NAME = "coco_labels.txt"
 OBJ_DETECTION_CV_GST_MODEL_NAME = "mobilenet_ssd_v2_coco_quant_postprocess.tflite"
@@ -104,7 +105,6 @@ ZIP = ".zip"
 
 # Demos Titles
 
-TITLE_OBJECT_DETECTION = "PyeIQ - Object Detection"
 TITLE_OBJECT_DETECTION_CV = "PyeIQ - Object Detection OpenCV"
 TITLE_OBJECT_DETECTION_DNN = "PyeIQ - Object Detection DNN"
 TITLE_OBJECT_DETECTION_SSD = "PyeIQ - Object Detection SSD"
