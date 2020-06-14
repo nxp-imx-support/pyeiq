@@ -25,9 +25,8 @@ from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.detection.config import *
 from eiq.modules.detection.utils import *
-from eiq.modules.utils import run_inference
+from eiq.modules.utils import DemoBase
 from eiq.multimedia import gstreamer
-from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.multimedia.utils import VideoConfig
 from eiq.utils import args_parser, Downloader
 
@@ -38,57 +37,27 @@ except ImportError:
     has_svgwrite = False
 
 
-class eIQObjectsDetection:
+class eIQObjectsDetection(DemoBase):
     def __init__(self):
-        self.args = args_parser(download=True, image=True,label=True,
-                                model=True, video_src=True, video_fwk=True)
-        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.media_dir = os.path.join(self.base_dir, "media")
-        self.model_dir = os.path.join(self.base_dir, "model")
-
-        self.interpreter = None
-        self.image = None
-        self.label = None
-        self.model = None
-        self.overlay = OpenCVOverlay()
+        super().__init__(download=True, image=True, labels=True,
+                         model=True, video_fwk=True, video_src=True,
+                         class_name=self.__class__.__name__,
+                         data=OBJ_DETECTION)
 
         self.class_names = None
         self.class_names_dict = {}
         self.colors = None
 
-    def gather_data(self):
-        download = Downloader(self.args)
-        download.retrieve_data(OBJ_DETECTION_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_dir,
-                               OBJ_DETECTION_MODEL_SHA1, True)
-
-        if self.args.image is not None and os.path.exists(self.args.image):
-            self.image = self.args.image
-        else:
-            self.image = os.path.join(self.media_dir,
-                                      OBJ_DETECTION_MEDIA_NAME)
-
-        if self.args.label is not None and os.path.exists(self.args.label):
-            self.label = self.args.label
-        else:
-            self.label = os.path.join(self.model_dir,
-                                      OBJ_DETECTION_LABEL_NAME)
-
-        if self.args.model is not None and os.path.exists(self.args.model):
-            self.model = self.args.model
-        else:
-            self.model = os.path.join(self.model_dir,
-                                      OBJ_DETECTION_MODEL_NAME)
-
     def dictionary(self):
-        with open(self.label) as f:
+        with open(self.labels) as file:
             i = 0
-            for line in f:
+            for line in file:
                 _id = line.split()
                 self.class_names_dict[np.float32(_id[0])] = i
                 i = i + 1
 
-    def load_labels(self, label_path):
+    @staticmethod
+    def load_labels(label_path):
         with open(label_path) as f:
             labels = {}
             for line in f.readlines():
@@ -115,22 +84,22 @@ class eIQObjectsDetection:
         image = image.resize((self.interpreter.width(), self.interpreter.height()))
         top_result = self.process_image(image)
         frame = self.overlay.display_result(frame, self.interpreter.inference_time,
-                                            top_result, self.label, self.colors,
+                                            top_result, self.labels, self.colors,
                                             self.class_names_dict)
 
-        return TITLE_OBJECT_DETECTION, frame
+        return frame
 
     def start(self):
         self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
-        self.class_names = read_classes(self.label)
+        self.class_names = read_classes(self.labels)
         self.colors = generate_colors(self.class_names)
         self.dictionary()
-        self.label = self.load_labels(self.label)
+        self.labels = self.load_labels(self.labels)
 
     def run(self):
         self.start()
-        run_inference(self.detect_objects, self.image, self.args)
+        self.run_inference(self.detect_objects)
 
 
 class eIQObjectDetectionDNN:
