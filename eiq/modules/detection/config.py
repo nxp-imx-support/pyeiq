@@ -83,16 +83,17 @@ OBJ_DETECTION_SSD_MODEL_SRC = {'drive': "https://drive.google.com/file/d/"
                                          "models/raw/master/models/"
                                          "object_detection_ssd.zip"}
                                         
-YOLOV3_OBJ_DETECTION_LABEL_NAME = "labels.txt"
-YOLOV3_OBJ_DETECTION_MEDIA_NAME = "example.jpg"
-YOLOV3_OBJ_DETECTION_MODEL_NAME = "tiny_yolov3.tflite"
-YOLOV3_OBJ_DETECTION_MODEL_SHA1 = "406438b9a5a530f6f6874341219a749e4f209b6e"
-YOLOV3_OBJ_DETECTION_MODEL_SRC = {'drive': "https://drive.google.com/file/d/"
-                                           "1gzUVbyDZrgAFDyZG3aRpnsClufL9Q7Hx/"
-                                           "view?usp=sharing",
-                                  'github': "https://github.com/diegohdorta/"
-                                            "models/raw/master/models/"
-                                            "eIQObjectDetectionYOLOV3.zip"}
+OBJ_DETECTION_YOLOV3 = {'image': "example.jpg",
+                        'labels': "labels.txt",
+                        'model': "tiny_yolov3.tflite",
+                        'sha1': "406438b9a5a530f6f6874341219a749e4f209b6e",
+                        'src': {'drive': "https://drive.google.com/file/d/"
+                                         "1gzUVbyDZrgAFDyZG3aRpnsClufL9Q7Hx/"
+                                         "view?usp=sharing",
+                                'github': "https://github.com/diegohdorta/"
+                                          "models/raw/master/models/"
+                                          "eIQObjectDetectionYOLOV3.zip"},
+                        'window_title': "PyeIQ - Object Detection YOLOV3"}
 
 FONT = cv2.FONT_HERSHEY_SIMPLEX
 FONT_SIZE = 0.8
@@ -107,4 +108,3 @@ TITLE_OBJECT_DETECTION = "PyeIQ - Object Detection"
 TITLE_OBJECT_DETECTION_CV = "PyeIQ - Object Detection OpenCV"
 TITLE_OBJECT_DETECTION_DNN = "PyeIQ - Object Detection DNN"
 TITLE_OBJECT_DETECTION_SSD = "PyeIQ - Object Detection SSD"
-TITLE_OBJECT_DETECTION_YOLOV3 = "PyeIQ - Object Detection YOLOV3"
