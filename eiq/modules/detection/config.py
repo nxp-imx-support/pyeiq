@@ -14,27 +14,29 @@ CORAL_POSENET_MODEL_SRC = {'drive': "https://drive.google.com/file/d/"
                            'github': "https://github.com/diegohdorta/models/"
                                      "raw/master/models/posenet_model.zip"}
 
-EMOTIONS_DETECTION_CASCADE_FACE_NAME = "haarcascade_frontalface_default.xml"
-EMOTIONS_DETECTION_MEDIA_NAME = "grace_hopper.jpg"
-EMOTIONS_DETECTION_MODEL_NAME = "model.tflite"
-EMOTIONS_DETECTION_SHA1 = "d112d8e378f8457a48b66aea80bc4e714e8e2e41"
-EMOTIONS_DETECTION_SRC = {'drive': "https://drive.google.com/file/d/"
-                                    "15VTXVJ7GwS_Rr2vvl9xve9UAcFO3LFzG/"
-                                    "view?usp=sharing",
-                          'github': "https://github.com/diegohdorta/"
-                                    "models/raw/master/models/"
-                                    "eIQEmotionsDetection.zip"}
+EMOTIONS_DETECTION = {'face_cascade': "haarcascade_frontalface_default.xml",
+                      'image': "grace_hopper.jpg",
+                      'model': "model.tflite",
+                      'sha1': "d112d8e378f8457a48b66aea80bc4e714e8e2e41",
+                      'src': {'drive': "https://drive.google.com/file/d/"
+                                       "15VTXVJ7GwS_Rr2vvl9xve9UAcFO3LFzG/"
+                                       "view?usp=sharing",
+                              'github': "https://github.com/diegohdorta/"
+                                        "models/raw/master/models/"
+                                        "eIQEmotionsDetection.zip"},
+                      'window_title': "PyeIQ - Emotions Detection"}
 
-FACE_EYES_DETECTION_CASCADE_EYES_NAME = "haarcascade_eye.xml"
-FACE_EYES_DETECTION_CASCADE_FACE_NAME = "haarcascade_frontalface_default.xml"
-FACE_EYES_DETECTION_MEDIA_NAME = "grace_hopper.jpg"
-FACE_EYES_DETECTION_SHA1 = "79ac7f90076ed5e2724e791bc27b3840ef63eb11"
-FACE_EYES_DETECTION_SRC = {'drive': "https://drive.google.com/file/d/"
+FACE_EYES_DETECTION = {'eye_cascade': "haarcascade_eye.xml",
+                       'face_cascade': "haarcascade_frontalface_default.xml",
+                       'image': "grace_hopper.jpg",
+                       'sha1': "79ac7f90076ed5e2724e791bc27b3840ef63eb11",
+                       'src': {'drive': "https://drive.google.com/file/d/"
                                     "1HPWV4W4FnrfG14tnZF7bugkgoCmMpM-p/"
                                     "view?usp=sharing",
                            'github': "https://github.com/diegohdorta/"
                                      "models/raw/master/models/"
-                                     "eIQFaceAndEyesDetection.zip"}
+                                     "eIQFaceAndEyesDetection.zip"},
+                       'window_title': "PyeIQ - Face and Eyes Detection"}
 
 OBJ_DETECTION_LABEL_NAME = "coco_labels.txt"
 OBJ_DETECTION_MEDIA_NAME = "bus.jpg"
@@ -101,8 +103,6 @@ ZIP = ".zip"
 # Demos Titles
 
 TITLE_CORAL_POSENET = "PyeIQ - Coral Posenet"
-TITLE_EMOTIONS_DETECTION = "PyeIQ - Emotions Detection"
-TITLE_FACE_EYES_DETECTION = "PyeIQ - Face and Eyes Detection"
 TITLE_OBJECT_DETECTION = "PyeIQ - Object Detection"
 TITLE_OBJECT_DETECTION_CV = "PyeIQ - Object Detection OpenCV"
 TITLE_OBJECT_DETECTION_DNN = "PyeIQ - Object Detection DNN"
