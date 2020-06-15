@@ -59,9 +59,6 @@ class Caps:
     def get_height(self):
         return self.height
 
-    def get_pixel_aspect_ratio(self):
-        return self.pixel_aspect_ratio
-
     def get_framerate(self):
         return self.framerate
 
