@@ -1,6 +1,6 @@
 # Copyright 2020 NXP Semiconductors
 #
-# This file was partial copied from the link below and modified acoording to
+# This file was partial copied from the link below and modified according to
 # its license terms.
 #
 # Reference:
