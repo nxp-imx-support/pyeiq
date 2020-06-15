@@ -9,7 +9,6 @@
 
 import collections
 import os
-import re
 import sys
 import time
 
@@ -46,23 +45,6 @@ class eIQObjectsDetection(DemoBase):
         self.class_names_dict = {}
         self.colors = None
 
-    def dictionary(self):
-        with open(self.labels) as file:
-            i = 0
-            for line in file:
-                _id = line.split()
-                self.class_names_dict[np.float32(_id[0])] = i
-                i = i + 1
-
-    @staticmethod
-    def load_labels(label_path):
-        with open(label_path) as f:
-            labels = {}
-            for line in f.readlines():
-                m = re.match(r"(\d+)\s+(\w+)", line.strip())
-                labels[int(m.group(1))] = m.group(2)
-            return labels
-
     def process_image(self, image):
         self.interpreter.set_tensor(np.expand_dims(image, axis=0))
         self.interpreter.run_inference()
@@ -82,8 +64,7 @@ class eIQObjectsDetection(DemoBase):
         image = image.resize((self.interpreter.width(), self.interpreter.height()))
         top_result = self.process_image(image)
         frame = self.overlay.display_result(frame, self.interpreter.inference_time,
-                                            top_result, self.labels, self.colors,
-                                            self.class_names_dict)
+                                            top_result, self.labels, self.colors)
 
         return frame
 
@@ -92,7 +73,6 @@ class eIQObjectsDetection(DemoBase):
         self.interpreter = TFLiteInterpreter(self.model)
         self.class_names = read_classes(self.labels)
         self.colors = generate_colors(self.class_names)
-        self.dictionary()
         self.labels = self.load_labels(self.labels)
 
     def run(self):
@@ -122,17 +102,6 @@ class eIQObjectDetectionDNN(DemoBase):
 
         self.caffe = os.path.join(self.model_dir, self.data['caffe'])
         self.proto = os.path.join(self.model_dir, self.data['proto'])
-
-    @staticmethod
-    def load_labels(labels_path):
-        labels = {}
-
-        with open(labels_path) as file:
-            for line in file:
-                (key, val) = line.split()
-                labels[int(key)] = val
-
-        return labels
 
     def detect_objects(self, frame):
         height, width = frame.shape[:2]
@@ -237,13 +206,6 @@ class eIQObjectDetectionGStreamer(DemoBase):
             window.append(curr - prev)
             prev = curr
             yield len(window) / sum(window)
-
-    @staticmethod
-    def load_labels(path):
-        p = re.compile(r'\s*(\d+)(.+)')
-        with open(path, 'r', encoding='utf-8') as f:
-            lines = (p.match(line).groups() for line in f.readlines())
-            return {int(num): text.strip() for num, text in lines}
 
     @staticmethod
     def shadow_text(dwg, x, y, text, font_size=20):
@@ -351,13 +313,6 @@ class eIQObjectDetectionOpenCV(DemoBase):
         if scale == 0:
             return output_data - zero_point
         return scale * (output_data - zero_point)
-
-    @staticmethod
-    def load_labels(path):
-        p = re.compile(r'\s*(\d+)(.+)')
-        with open(path, 'r', encoding='utf-8') as f:
-            lines = (p.match(line).groups() for line in f.readlines())
-            return {int(num): text.strip() for num, text in lines}
 
     def get_output(self, score_threshold=0.1, top_k=3):
         boxes = self.output_tensor(0)
