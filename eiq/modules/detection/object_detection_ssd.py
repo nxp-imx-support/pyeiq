@@ -21,7 +21,6 @@ from PIL import Image
 
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.detection.config import *
-from eiq.modules.detection.utils import *
 from eiq.modules.utils import DemoBase
 from eiq.multimedia import gstreamer
 from eiq.multimedia.utils import VideoConfig
@@ -371,44 +370,3 @@ class eIQObjectDetectionOpenCV(DemoBase):
                 break
         video.release()
         cv2.destroyAllWindows()
-
-
-class eIQObjectDetectionSSD(DemoBase):
-    def __init__(self):
-        super().__init__(download=True, image=True, labels=True,
-                         model=True,  video_fwk=True, video_src=True,
-                         class_name=self.__class__.__name__,
-                         data=OBJ_DETECTION_SSD)
-
-        self.class_names = None
-        self.colors = None
-
-    def run_detection(self, image):
-        self.interpreter.set_tensor(image)
-        self.interpreter.run_inference()
-
-        boxes = self.interpreter.get_tensor(0, squeeze=True)
-        scores = self.interpreter.get_tensor(2, squeeze=True)
-        classes = self.interpreter.get_tensor(1)
-        classes = np.squeeze(classes + 1).astype(np.int32)
-
-        return non_max_suppression(scores, boxes, classes)
-
-    def detect_objects(self, frame):
-        image = preprocess_image_for_tflite(frame)
-        out_scores, out_boxes, out_classes = self.run_detection(image)
-
-        result = draw_boxes(frame, out_scores, out_boxes, out_classes,
-                            self.class_names, self.colors)
-
-        return result
-
-    def start(self):
-        self.gather_data()
-        self.interpreter = TFLiteInterpreter(self.model)
-        self.class_names = read_classes(self.labels)
-        self.colors = generate_colors(self.class_names)
-
-    def run(self):
-        self.start()
-        self.run_inference(self.detect_objects)
