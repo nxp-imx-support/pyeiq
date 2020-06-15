@@ -8,6 +8,7 @@ from tflite_runtime.interpreter import Interpreter
 
 from eiq.utils import InferenceTimer
 
+
 class TFLiteInterpreter:
     def __init__(self, model=None):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
