@@ -34,9 +34,9 @@ FACE_EYES_DETECTION = {'eye_cascade': "haarcascade_eye.xml",
                        'src': {'drive': "https://drive.google.com/file/d/"
                                         "1HPWV4W4FnrfG14tnZF7bugkgoCmMpM-p/"
                                         "view?usp=sharing",
-                           'github': "https://github.com/diegohdorta/"
-                                     "models/raw/master/models/"
-                                     "eIQFaceAndEyesDetection.zip"},
+                               'github': "https://github.com/diegohdorta/"
+                                         "models/raw/master/models/"
+                                         "eIQFaceAndEyesDetection.zip"},
                        'window_title': "PyeIQ - Face and Eyes Detection"}
 
 OBJ_DETECTION = {'image': "bus.jpg",
@@ -51,15 +51,16 @@ OBJ_DETECTION = {'image': "bus.jpg",
                                    "eIQObjectDetection.zip"},
                  'window_title': "PyeIQ - Object Detection"}
 
-OBJ_DETECTION_CV_GST_LABEL_NAME = "coco_labels.txt"
-OBJ_DETECTION_CV_GST_MODEL_NAME = "mobilenet_ssd_v2_coco_quant_postprocess.tflite"
-OBJ_DETECTION_CV_GST_MODEL_SHA1 = "ba623e959b743db24276fc91f5d9d081121f762f"
-OBJ_DETECTION_CV_GST_MODEL_SRC = {'drive': "https://drive.google.com/file/d/"
-                                           "1KF1hDfLvwJZ1S6102i8FvMwYoZmtEqLN/"
-                                           "view?usp=sharing",
-                                  'github': "https://github.com/diegohdorta/"
-                                            "models/raw/master/models/"
-                                            "mobilenet_ssd_v2_coco_quant.zip"}
+OBJ_DETECTION_CV_GST = {'labels': "coco_labels.txt",
+                        'model': "mobilenet_ssd_v2_coco_quant_postprocess.tflite",
+                        'sha1': "4736e758d8d626047df7cd1b3c38c72e77fd32ee",
+                        'src': {'drive': "https://drive.google.com/file/d/"
+                                         "1l2gKkPIPPPI0Q4QrVBXgSOkQUDVHogOi/"
+                                         "view?usp=sharing",
+                                'github': "https://github.com/diegohdorta/"
+                                          "models/raw/master/models/"
+                                          "eIQObjectDetectionCVGST.zip"},
+                        'window_title': "PyeIQ - Object Detection OpenCV"}
 
 OBJ_DETECTION_DNN = {'caffe': "MobileNetSSD_deploy.caffemodel",
                      'image': "dog.jpg",
@@ -102,9 +103,3 @@ FONT = cv2.FONT_HERSHEY_SIMPLEX
 FONT_SIZE = 0.8
 FONT_COLOR = (0, 0, 0)
 FONT_THICKNESS = 2
-
-ZIP = ".zip"
-
-# Demos Titles
-
-TITLE_OBJECT_DETECTION_CV = "PyeIQ - Object Detection OpenCV"
