@@ -200,7 +200,7 @@ class VideoConfig:
             sys.exit("Video file not supported by GStreamer framework.")
         else:
             dev = self.devices.search_device(self.video_src)
-            caps = dev.get_default_caps()
+            caps = dev.default_caps
             sink_pipeline = set_appsink_pipeline(device=dev.name)
             src_pipeline = set_appsrc_pipeline(width=caps.width,
                                                height=caps.height)
@@ -219,7 +219,7 @@ class VideoConfig:
             pipeline = v4l2_video_pipeline(self.video_src)
         else:
             dev = self.devices.search_device(self.video_src)
-            caps = dev.get_default_caps()
+            caps = dev.default_caps
             pipeline = v4l2_camera_pipeline(width=caps.width,
                                             height=caps.height,
                                             device=dev.name,
