@@ -32,7 +32,8 @@ class Downloader:
         self.args = args
         self.downloaded_file = None
 
-    def check_servers(self, url_dict):
+    @staticmethod
+    def check_servers(url_dict):
         elapsed = {}
         min_time = MAX_TIME
 
@@ -51,13 +52,15 @@ class Downloader:
 
         return elapsed[min_time]
 
-    def check_sha1(self, file_path, sha1_hash):
+    @staticmethod
+    def check_sha1(file_path, sha1_hash):
         with open(file_path, 'rb') as f:
             file = f.read()
 
         return sha1(file).hexdigest() == sha1_hash
 
-    def download_from_url(self, url, filename=None, download_path=None):
+    @staticmethod
+    def download_from_url(url, filename=None, download_path=None):
         timer = InferenceTimer()
 
         try:
@@ -65,9 +68,7 @@ class Downloader:
             with timer.timeit("Download time"):
                 urllib.request.urlretrieve(url, download_path)
         except URLError as e:
-            sys.exit("Something went wrong with URLError: {}".format(e))
-        except HTTPError as e:
-            sys.exit("Something went wrong with HTTPError: {}".format(e))
+            sys.exit("Something went wrong: {}".format(e))
 
     def download_from_web(self, url, filename=None,
                           download_path=None, drive=False):
@@ -102,7 +103,7 @@ class Downloader:
         self.downloaded_file = download_path
 
     def retrieve_data(self, url_dict, filename=None, download_path=None,
-                      sha1=None, unzip=False):
+                      sha1_hash=None, unzip=False):
         if os.path.exists(os.path.join(download_path, filename)):
             return
 
@@ -133,16 +134,15 @@ class Downloader:
 
         self.download_from_web(url, filename, download_path, drive=drive_flag)
         if unzip and self.downloaded_file is not None:
-            if sha1 is not None and self.check_sha1(self.downloaded_file,
-                                                    sha1):
+            if sha1_hash and self.check_sha1(self.downloaded_file, sha1_hash):
                 shutil.unpack_archive(self.downloaded_file, download_path)
             else:
                 os.remove(self.downloaded_file)
                 sys.exit("The checksum of your file failed!"
                          "Your file is corrupted.\nRemoving and exiting...")
 
-    def wget(self, url, filename, download_path):
-        file = os.path.basename(url)
+    @staticmethod
+    def wget(url, filename, download_path):
         newfile = os.path.join(download_path, filename)
 
         try:
