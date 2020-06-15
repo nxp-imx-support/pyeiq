@@ -53,9 +53,6 @@ class Caps:
     def get_name(self):
         return self.name
 
-    def get_format(self):
-        return self.format
-
     def get_width(self):
         return self.width
 
