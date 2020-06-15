@@ -11,8 +11,9 @@ import cv2
 import numpy as np
 from PIL import Image
 
+from eiq.config import FONT
 from eiq.engines.tflite.inference import TFLiteInterpreter
-from eiq.modules.classification.config import *
+from eiq.modules.classification.config import FIRE_CLASSIFICATION, FIRE_MSG, OBJ_CLASSIFICATION
 from eiq.modules.utils import DemoBase
 
 
@@ -35,11 +36,11 @@ class eIQFireClassification(DemoBase):
         self.interpreter.run_inference()
 
         if np.argmax(self.interpreter.get_tensor(0)) == 0:
-            cv2.putText(frame, NO_FIRE, (50, 50),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, CV_GREEN, 2)
+            cv2.putText(frame, FIRE_MSG['non-fire'], (3, 50),
+                        FONT['hershey'], 1, FONT['color']['green'], 2)
         else:
-            cv2.putText(frame, FIRE, (50, 50),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, CV_RED, 2)
+            cv2.putText(frame, FIRE_MSG['fire'], (3, 50),
+                        FONT['hershey'], 1, FONT['color']['red'], 2)
 
         self.overlay.draw_inference_time(frame, self.interpreter.inference_time)
 
@@ -61,11 +62,6 @@ class eIQObjectsClassification(DemoBase):
                          class_name=self.__class__.__name__,
                          data=OBJ_CLASSIFICATION)
 
-        self.font = cv2.FONT_HERSHEY_SIMPLEX
-        self.font_size = 0.8
-        self.font_color = (0, 127, 255)
-        self.font_thickness = 2
-
     def load_labels(self, label_path):
         with open(label_path, 'r') as f:
             return [line.strip() for line in f.readlines()]
@@ -85,11 +81,11 @@ class eIQObjectsClassification(DemoBase):
 
     def display_result(self, top_result, frame, labels):
         for idx, (i, score) in enumerate(top_result):
-            x = 20
+            x = 3
             y = 35 * idx + 35
             cv2.putText(frame, '{} - {:0.4f}'.format(labels[i], score),
-                        (x, y), self.font, self.font_size,
-                        self.font_color, self.font_thickness)
+                        (x, y), FONT['hershey'], FONT['size'],
+                        FONT['color']['orange'], FONT['thickness'])
 
         self.overlay.draw_inference_time(frame, self.interpreter.inference_time)
 
