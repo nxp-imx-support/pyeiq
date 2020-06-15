@@ -24,7 +24,7 @@ ZIP = ".zip"
 
 FONT = {'hershey': cv2.FONT_HERSHEY_SIMPLEX,
         'size': 0.8,
-        'color': {'back': (0, 0, 0),
+        'color': {'black': (0, 0, 0),
                   'blue': (255, 0, 0),
                   'green': (0, 255, 0),
                   'orange': (0, 127, 255),
