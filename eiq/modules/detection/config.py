@@ -74,17 +74,18 @@ OBJ_DETECTION_DNN = {'caffe': "MobileNetSSD_deploy.caffemodel",
                                        "object_detection_image.zip"},
                      'window_title': "PyeIQ - Object Detection DNN"}
 
-OBJ_DETECTION_SSD_LABEL_NAME = "coco_classes.txt"
-OBJ_DETECTION_SSD_MEDIA_NAME = "dog.jpg"
-OBJ_DETECTION_SSD_MODEL_NAME = "ssd_mobilenet_v2.tflite"
-OBJ_DETECTION_SSD_MODEL_SHA1 = "fadfdb7c4bf056edee09cd37c87d06bb19e6ef83"
-OBJ_DETECTION_SSD_MODEL_SRC = {'drive': "https://drive.google.com/file/d/"
-                                        "1t3VmNdkpfp4M-jyz_AD2QUeyS78FyqQT/"
-                                        "view?usp=sharing",
-                               'github': "https://github.com/diegohdorta/"
-                                         "models/raw/master/models/"
-                                         "object_detection_ssd.zip"}
-                                        
+OBJ_DETECTION_SSD = {'image': "dog.jpg",
+                     'labels': "coco_classes.txt",
+                     'model': "ssd_mobilenet_v2.tflite",
+                     'sha1': "fadfdb7c4bf056edee09cd37c87d06bb19e6ef83",
+                     'src': {'drive': "https://drive.google.com/file/d/"
+                                      "1t3VmNdkpfp4M-jyz_AD2QUeyS78FyqQT/"
+                                      "view?usp=sharing",
+                             'github': "https://github.com/diegohdorta/"
+                                       "models/raw/master/models/"
+                                       "object_detection_ssd.zip"},
+                     'window_title': "PyeIQ - Object Detection SSD"}
+
 OBJ_DETECTION_YOLOV3 = {'image': "example.jpg",
                         'labels': "labels.txt",
                         'model': "tiny_yolov3.tflite",
@@ -107,4 +108,3 @@ ZIP = ".zip"
 # Demos Titles
 
 TITLE_OBJECT_DETECTION_CV = "PyeIQ - Object Detection OpenCV"
-TITLE_OBJECT_DETECTION_SSD = "PyeIQ - Object Detection SSD"
