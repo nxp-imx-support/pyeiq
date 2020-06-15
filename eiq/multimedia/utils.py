@@ -258,7 +258,7 @@ class VideoConfig:
             return sink_pipeline, src_pipeline
 
     def opencv_config(self):
-        if self.video_src and os.path.exists(self.video_src):
+        if self.video_src and os.path.isfile(self.video_src):
             return cv2.VideoCapture(self.video_src), None
         else:
             dev = self.devices.search_device(self.video_src)
@@ -266,7 +266,7 @@ class VideoConfig:
             return cv2.VideoCapture(dev), None
 
     def v4l2_config(self):
-        if self.video_src and os.path.exists(self.video_src):
+        if self.video_src and os.path.isfile(self.video_src):
             pipeline = v4l2_video_pipeline(self.video_src)
         else:
             dev = self.devices.search_device(self.video_src)
