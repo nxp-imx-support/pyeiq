@@ -21,14 +21,12 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from eiq.config import BASE_DIR
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.detection.config import *
 from eiq.modules.detection.utils import *
 from eiq.modules.utils import DemoBase
 from eiq.multimedia import gstreamer
 from eiq.multimedia.utils import VideoConfig
-from eiq.utils import args_parser, Downloader
 
 try:
     import svgwrite
@@ -182,33 +180,19 @@ class eIQObjectDetectionDNN(DemoBase):
         self.run_inference(self.detect_objects)
 
 
-class eIQObjectDetectionGStreamer:
+class eIQObjectDetectionGStreamer(DemoBase):
     def __init__(self):
-        self.args = args_parser(download=True, video_src=True, video_fwk=True)
-        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.model_dir = os.path.join(self.base_dir, "model")
+        super().__init__(download=True, video_fwk=True, video_src=True,
+                         class_name=self.__class__.__name__,
+                         data=OBJ_DETECTION_CV_GST)
 
-        self.interpreter = None
         self.tensor = None
-        self.label = None
-        self.model = None
 
         self.videosrc = None
         self.videofile = None
         self.videofmt = "raw"
         self.src_width = 640
         self.src_height = 480
-
-    def gather_data(self):
-        download = Downloader(self.args)
-        download.retrieve_data(OBJ_DETECTION_CV_GST_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_dir,
-                               OBJ_DETECTION_CV_GST_MODEL_SHA1, True)
-
-        self.model = os.path.join(self.base_dir,
-                                  OBJ_DETECTION_CV_GST_MODEL_NAME)
-        self.label = os.path.join(self.base_dir,
-                                  OBJ_DETECTION_CV_GST_LABEL_NAME)
 
     def video_config(self):
         if self.args.video_src and self.args.video_src.startswith("/dev/video"):
@@ -242,7 +226,8 @@ class eIQObjectDetectionGStreamer:
             return output_data - zero_point
         return scale * (output_data - zero_point)
 
-    def avg_fps_counter(self, window_size):
+    @staticmethod
+    def avg_fps_counter(window_size):
         window = collections.deque(maxlen=window_size)
         prev = time.monotonic()
         yield 0.0
@@ -253,13 +238,15 @@ class eIQObjectDetectionGStreamer:
             prev = curr
             yield len(window) / sum(window)
 
-    def load_labels(self, path):
+    @staticmethod
+    def load_labels(path):
         p = re.compile(r'\s*(\d+)(.+)')
         with open(path, 'r', encoding='utf-8') as f:
             lines = (p.match(line).groups() for line in f.readlines())
             return {int(num): text.strip() for num, text in lines}
 
-    def shadow_text(self, dwg, x, y, text, font_size=20):
+    @staticmethod
+    def shadow_text(dwg, x, y, text, font_size=20):
         dwg.add(dwg.text(text, insert=(x + 1, y + 1),
                          fill='black', font_size=font_size))
         dwg.add(dwg.text(text, insert=(x, y),
@@ -278,7 +265,7 @@ class eIQObjectDetectionGStreamer:
         for obj in objs:
             x0, y0, x1, y1 = list(obj.bbox)
             x, y, w, h = x0, y0, x1 - x0, y1 - y0
-            x, y, w, h = int(x * inf_w), int(y * inf_h), \
+            x, y, w, h = int(x * inf_w), int(y * inf_h),\
                          int(w * inf_w), int(h * inf_h)
             x, y = x - box_x, y - box_y
             x, y, w, h = x * scale_x, y * scale_y, w * scale_x, h * scale_y
@@ -289,11 +276,12 @@ class eIQObjectDetectionGStreamer:
                              stroke='red', stroke_width='2'))
         return dwg.tostring()
 
-    def get_output(self, score_threshold=0.1, top_k=3, image_scale=1.0):
+    def get_output(self, score_threshold=0.1, top_k=3):
         boxes = self.output_tensor(0)
         category = self.output_tensor(1)
         scores = self.output_tensor(2)
-        return [gstreamer.make_boxes(i, boxes, category, scores) \
+
+        return [gstreamer.make_boxes(i, boxes, category, scores)
                 for i in range(top_k) if scores[i] >= score_threshold]
 
     def start(self):
@@ -309,7 +297,7 @@ class eIQObjectDetectionGStreamer:
                      "svgwrite' at your terminal. Exiting...")
 
         self.start()
-        labels = self.load_labels(self.label)
+        labels = self.load_labels(self.labels)
         w, h, _ = self.input_image_size()
         inference_size = (w, h)
         fps_counter = self.avg_fps_counter(30)
@@ -321,43 +309,28 @@ class eIQObjectDetectionGStreamer:
             self.interpreter.run_inference()
             objs = self.get_output()
             end_time = time.monotonic()
-            text_lines = ['Inference: {:.2f} ms'.format((end_time-start_time) \
+            text_lines = ['Inference: {:.2f} ms'.format((end_time-start_time)
                                                         * 1000),
-                          'FPS: {} fps'.format(round(next(fps_counter))),]
+                          'FPS: {} fps'.format(round(next(fps_counter)))]
             return self.generate_svg(src_size, inference_size, inference_box,
                                      objs, labels, text_lines)
 
-        result = gstreamer.run_pipeline(user_callback,
-                                        src_size=(self.src_width,
-                                                  self.src_height),
-                                        appsink_size=inference_size,
-                                        videosrc=self.videosrc,
-                                        videofile=self.videofile,
-                                        videofmt=self.videofmt)
+        gstreamer.run_pipeline(user_callback,
+                               src_size=(self.src_width,
+                                         self.src_height),
+                               appsink_size=inference_size,
+                               videosrc=self.videosrc,
+                               videofile=self.videofile,
+                               videofmt=self.videofmt)
 
 
-class eIQObjectDetectionOpenCV:
+class eIQObjectDetectionOpenCV(DemoBase):
     def __init__(self):
-        self.args = args_parser(download=True, video_src=True, video_fwk=True)
-        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.model_dir = os.path.join(self.base_dir, "model")
+        super().__init__(download=True, video_fwk=True, video_src=True,
+                         class_name=self.__class__.__name__,
+                         data=OBJ_DETECTION_CV_GST)
 
-        self.interpreter = None
         self.tensor = None
-
-        self.model = None
-        self.label = None
-
-    def gather_data(self):
-        download = Downloader(self.args)
-        download.retrieve_data(OBJ_DETECTION_CV_GST_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_dir,
-                               OBJ_DETECTION_CV_GST_MODEL_SHA1, True)
-
-        self.model = os.path.join(self.base_dir,
-                                  OBJ_DETECTION_CV_GST_MODEL_NAME)
-        self.label = os.path.join(self.base_dir,
-                                  OBJ_DETECTION_CV_GST_LABEL_NAME)
 
     def set_input(self, image, resample=Image.NEAREST):
         image = image.resize((self.input_image_size()[0:2]), resample)
@@ -379,19 +352,19 @@ class eIQObjectDetectionOpenCV:
             return output_data - zero_point
         return scale * (output_data - zero_point)
 
-    def load_labels(self, path):
+    @staticmethod
+    def load_labels(path):
         p = re.compile(r'\s*(\d+)(.+)')
         with open(path, 'r', encoding='utf-8') as f:
             lines = (p.match(line).groups() for line in f.readlines())
             return {int(num): text.strip() for num, text in lines}
 
-    def get_output(self, score_threshold=0.1, top_k=3, image_scale=1.0):
+    def get_output(self, score_threshold=0.1, top_k=3):
         boxes = self.output_tensor(0)
         class_ids = self.output_tensor(1)
         scores = self.output_tensor(2)
-        count = int(self.output_tensor(3))
 
-        return [gstreamer.make_boxes(i, boxes, class_ids, scores) \
+        return [gstreamer.make_boxes(i, boxes, class_ids, scores)
                 for i in range(top_k) if scores[i] >= score_threshold]
 
     def append_objs_to_img(self, opencv_im, objs):
@@ -404,7 +377,7 @@ class eIQObjectDetectionOpenCV:
             y1 = int(y1 * height)
 
             percent = int(100 * obj.score)
-            label = '{}% {}'.format(percent, self.label.get(obj.id, obj.id))
+            label = '{}% {}'.format(percent, self.labels.get(obj.id, obj.id))
 
             opencv_im = cv2.rectangle(opencv_im, (x0, y0), (x1, y1),
                                       (0, 255, 0), 2)
@@ -417,7 +390,7 @@ class eIQObjectDetectionOpenCV:
         self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
         self.tensor = self.interpreter.interpreter.tensor
-        self.label = self.load_labels(self.label)
+        self.labels = self.load_labels(self.labels)
 
     def run(self):
         self.start()
@@ -440,7 +413,7 @@ class eIQObjectDetectionOpenCV:
             objs = self.get_output()
             opencv_im = self.append_objs_to_img(opencv_im, objs)
 
-            cv2.imshow(TITLE_OBJECT_DETECTION_CV, opencv_im)
+            cv2.imshow(self.data['window_title'], opencv_im)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         video.release()
