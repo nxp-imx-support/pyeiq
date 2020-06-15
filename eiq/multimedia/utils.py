@@ -47,7 +47,6 @@ class Caps:
         self.format = None
         self.width = None
         self.height = None
-        self.pixel_aspect_ratio = None
         self.framerate = None
 
     def get_name(self):
@@ -73,9 +72,6 @@ class Caps:
 
     def set_height(self, height):
         self.height = height
-
-    def set_pixel_aspect_ration(self, pixel_ar):
-        self.pixel_aspect_ratio = pixel_ar
 
     def set_framerate(self, framerate):
         self.framerate = framerate
