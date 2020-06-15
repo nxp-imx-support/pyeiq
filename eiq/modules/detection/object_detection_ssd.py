@@ -321,7 +321,7 @@ class eIQObjectDetectionOpenCV(DemoBase):
                 for i in range(top_k) if scores[i] >= score_threshold]
 
     def append_objs_to_img(self, opencv_im, objs):
-        height, width, channels = opencv_im.shape
+        height, width, _ = opencv_im.shape
         for obj in objs:
             x0, y0, x1, y1 = list(obj.bbox)
             x0 = int(x0 * width)
