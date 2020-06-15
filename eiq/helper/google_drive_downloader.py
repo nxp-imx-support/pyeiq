@@ -1,13 +1,12 @@
 # Copyright 2017 Andrea Palazzi 
+# Copyright 2020 NXP Semiconductors
 #
-## Copyright 2020 NXP Semiconductors
-##
-## This Google Driver class was copied from Andrea Palazzi respecting its rights.
-## All the modified parts below are according to MIT's LICENSE terms.
-##
-## SPDX-License-Identifier: MIT
-## Reference:
-## https://github.com/ndrplz/google-drive-downloader/blob/master/LICENSE
+# This Google Driver class was copied from Andrea Palazzi respecting its rights.
+# All the modified parts below are according to MIT's LICENSE terms.
+#
+# SPDX-License-Identifier: MIT
+# Reference:
+# https://github.com/ndrplz/google-drive-downloader/blob/master/LICENSE
 
 from __future__ import print_function
 import zipfile
@@ -24,6 +23,7 @@ from eiq import config
 class GoogleDriveDownloader:
     CHUNK_SIZE = config.CHUNK_DEFAULT_SIZE
     DOWNLOAD_URL = config.REGULAR_DOWNLOAD_URL
+
     @staticmethod
     def download_file_from_google_drive(
             file_id, dest_path, overwrite=False, unzip=False, showsize=False):
