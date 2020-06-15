@@ -12,5 +12,5 @@ jobs:
           python-version: 3.8
       - name: Run unit tests
         run: |
-          pip3 install requests pytest
+          pip3 install requests pytest opencv-python
           python3 setup.py develop && pytest
