@@ -31,10 +31,6 @@ Gst.init(None)
 
 
 class BBox(collections.namedtuple('BBox', ['xmin', 'ymin', 'xmax', 'ymax'])):
-    """Bounding box.
-    Represents a rectangle which sides are either vertical or horizontal,
-    parallel to the x or y axis.
-    """
     __slots__ = ()
 
 
@@ -81,25 +77,21 @@ class GstPipeline:
         appsink = self.pipeline.get_by_name('appsink')
         appsink.connect('new-sample', self.on_new_sample)
 
-        # Set up a pipeline bus watch to catch errors.
         bus = self.pipeline.get_bus()
         bus.add_signal_watch()
         bus.connect('message', self.on_bus_message)
 
     def run(self):
-        # Start inference worker.
         self.running = True
         worker = threading.Thread(target=self.inference_loop)
         worker.start()
 
-        # Run pipeline.
         self.pipeline.set_state(Gst.State.PLAYING)
         try:
             Gtk.main()
         except BaseException:
             pass
 
-        # Clean up.
         self.pipeline.set_state(Gst.State.NULL)
         while GLib.MainContext.default().iteration(False):
             pass
@@ -159,11 +151,6 @@ class GstPipeline:
                 gstbuffer = self.gstbuffer
                 self.gstbuffer = None
 
-            # Passing Gst.Buffer as input tensor avoids 2 copies of it:
-            # * Python bindings copies the data when mapping gstbuffer
-            # * Numpy copies the data when creating ndarray.
-            # This requires a recent version of the python3-edgetpu package. If this
-            # raises an exception please make sure dependencies are up to date.
             input_tensor = gstbuffer
             svg = self.user_function(
                 input_tensor, self.src_size, self.get_box())
