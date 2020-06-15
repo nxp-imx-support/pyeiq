@@ -208,7 +208,7 @@ class GstVideo:
         resize = (caps.get_value('height'), caps.get_value('width'), 3)
 
         mem = sample.get_buffer()
-        success, arr = mem.map(Gst.MapFlags.READ)
+        _, arr = mem.map(Gst.MapFlags.READ)
         img = np.ndarray(resize, buffer=arr.data, dtype=np.uint8)
 
         img = self.inference_func(img)
