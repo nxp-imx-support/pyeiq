@@ -19,7 +19,7 @@ from subprocess import Popen
 import sys
 import tempfile
 from time import monotonic
-from urllib.error import URLError, HTTPError
+from urllib.error import URLError
 from urllib.parse import urlparse
 import urllib.request
 
