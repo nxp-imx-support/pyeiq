@@ -41,7 +41,6 @@ class eIQObjectsDetection(DemoBase):
                          data=OBJ_DETECTION)
 
         self.class_names = None
-        self.class_names_dict = {}
         self.colors = None
 
     def process_image(self, image):
