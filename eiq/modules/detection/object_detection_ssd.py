@@ -447,45 +447,15 @@ class eIQObjectDetectionOpenCV:
         cv2.destroyAllWindows()
 
 
-class eIQObjectDetectionSSD:
+class eIQObjectDetectionSSD(DemoBase):
     def __init__(self):
-        self.args = args_parser(download=True, image=True, label=True,
-                                model=True, video_src=True, video_fwk=True)
-        self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
-        self.media_dir = os.path.join(self.base_dir, "media")
-        self.model_dir = os.path.join(self.base_dir, "model")
-
-        self.interpreter = None
-        self.image = None
-        self.label = None
-        self.model = None
+        super().__init__(download=True, image=True, labels=True,
+                         model=True,  video_fwk=True, video_src=True,
+                         class_name=self.__class__.__name__,
+                         data=OBJ_DETECTION_SSD)
 
         self.class_names = None
         self.colors = None
-
-    def gather_data(self):
-        download = Downloader(self.args)
-        download.retrieve_data(OBJ_DETECTION_SSD_MODEL_SRC,
-                               self.__class__.__name__ + ZIP, self.base_dir,
-                               OBJ_DETECTION_SSD_MODEL_SHA1, True)
-
-        if self.args.image is not None and os.path.exists(self.args.image):
-            self.image = self.args.image
-        else:
-            self.image = os.path.join(self.media_dir,
-                                      OBJ_DETECTION_SSD_MEDIA_NAME)
-
-        if self.args.label is not None and os.path.exists(self.args.label):
-            self.label = self.args.label
-        else:
-            self.label = os.path.join(self.model_dir,
-                                      OBJ_DETECTION_SSD_LABEL_NAME)
-
-        if self.args.model is not None and os.path.exists(self.args.model):
-            self.model = self.args.model
-        else:
-            self.model = os.path.join(self.model_dir,
-                                      OBJ_DETECTION_SSD_MODEL_NAME)
 
     def run_detection(self, image):
         self.interpreter.set_tensor(image)
@@ -505,14 +475,14 @@ class eIQObjectDetectionSSD:
         result = draw_boxes(frame, out_scores, out_boxes, out_classes,
                             self.class_names, self.colors)
 
-        return TITLE_OBJECT_DETECTION_SSD, result
+        return result
 
     def start(self):
         self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
-        self.class_names = read_classes(self.label)
+        self.class_names = read_classes(self.labels)
         self.colors = generate_colors(self.class_names)
 
     def run(self):
         self.start()
-        run_inference(self.detect_objects, self.image, self.args)
+        self.run_inference(self.detect_objects)
