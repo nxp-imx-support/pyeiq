@@ -221,7 +221,7 @@ class GstVideo:
         success, arr = mem.map(Gst.MapFlags.READ)
         img = np.ndarray(resize, buffer=arr.data, dtype=np.uint8)
 
-        img = self.inference_func(img)[1]
+        img = self.inference_func(img)
         self.appsource.emit("push-buffer", Gst.Buffer.new_wrapped(img.tobytes()))
         mem.unmap(arr)
 
