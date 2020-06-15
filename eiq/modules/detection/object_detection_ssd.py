@@ -1,11 +1,10 @@
 # Copyright 2018 The TensorFlow Authors
+# Copyright 2020 NXP Semiconductors
 #
-## Copyright 2020 NXP Semiconductors
-##
-## This file was copied from TensorFlow respecting its rights. All the modified
-## parts below are according to TensorFlow's LICENSE terms.
-##
-## SPDX-License-Identifier:    Apache-2.0
+# This file was copied from TensorFlow respecting its rights. All the modified
+# parts below are according to TensorFlow's LICENSE terms.
+#
+# SPDX-License-Identifier:    Apache-2.0
 
 import collections
 import os
