@@ -11,8 +11,9 @@ import cv2
 import numpy as np
 from PIL import Image
 
+from eiq.config import FONT
 from eiq.engines.tflite.inference import TFLiteInterpreter
-from eiq.modules.detection.config import *
+from eiq.modules.detection.config import OBJ_DETECTION_YOLOV3
 from eiq.modules.utils import DemoBase
 
 
@@ -184,8 +185,8 @@ class eIQObjectsDetectionYOLOV3(DemoBase):
             bottom = int(min(height, np.floor(y2 + 0.5).astype('int32')))
             right = int(min(width, np.floor(x2 + 0.5).astype('int32')))
 
-            label_size = cv2.getTextSize(element[5], FONT, FONT_SIZE,
-                                         FONT_THICKNESS)[0]
+            label_size = cv2.getTextSize(element[5], FONT['hershey'],
+                                         FONT['size'], FONT['thickness'])[0]
             label_left = int(left - 3)
             label_top = int(top - 3)
             label_right = int(left + 3 + label_size[0])
@@ -196,7 +197,8 @@ class eIQObjectsDetectionYOLOV3(DemoBase):
                           (label_right, label_bottom),
                           (0, 255, 0), cv2.FILLED)
             cv2.putText(frame, element[self.classes], (left, top - 4),
-                        FONT, FONT_SIZE, FONT_COLOR, FONT_THICKNESS)
+                        FONT['hershey'], FONT['size'], FONT['color']['black'],
+                        FONT['thickness'])
 
     def start(self):
         self.gather_data()
