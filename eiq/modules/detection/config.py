@@ -1,9 +1,6 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
-import cv2
-
-
 CORAL_POSENET = {'image': "example.jpg",
                  'model': "posenet_mobilenet_v1_100_257x257"
                           "_multi_kpt_stripped.tflite",
@@ -98,8 +95,3 @@ OBJ_DETECTION_YOLOV3 = {'image': "example.jpg",
                                           "models/raw/master/models/"
                                           "eIQObjectDetectionYOLOV3.zip"},
                         'window_title': "PyeIQ - Object Detection YOLOV3"}
-
-FONT = cv2.FONT_HERSHEY_SIMPLEX
-FONT_SIZE = 0.8
-FONT_COLOR = (0, 0, 0)
-FONT_THICKNESS = 2

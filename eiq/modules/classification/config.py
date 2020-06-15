@@ -24,8 +24,5 @@ OBJ_CLASSIFICATION = {'image': "cat.jpg",
                                         "eIQImageClassification.zip"},
                       'window_title': "PyeIQ Image Classification"}
 
-CV_GREEN = (0, 255, 0)
-CV_RED = (0, 0, 255)
-
-FIRE = "Fire Detected!"
-NO_FIRE = "No Fire"
+FIRE_MSG = {'fire': "Fire Detected!",
+            'non-fire': "No Fire"}
