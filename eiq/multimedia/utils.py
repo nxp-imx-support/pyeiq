@@ -29,24 +29,6 @@ class VideoDevice:
         self.caps = None
         self.default_caps = None
 
-    def get_name(self):
-        return self.name
-
-    def get_caps(self):
-        return self.caps
-
-    def get_default_caps(self):
-        return self.default_caps
-
-    def set_name(self, name):
-        self.name = name
-
-    def set_caps(self, caps):
-        self.caps = caps
-
-    def set_default_caps(self, default):
-        self.default_caps = default
-
 
 class Caps:
     def __init__(self):
@@ -55,33 +37,6 @@ class Caps:
         self.width = None
         self.height = None
         self.framerate = None
-
-    def get_name(self):
-        return self.name
-
-    def get_width(self):
-        return self.width
-
-    def get_height(self):
-        return self.height
-
-    def get_framerate(self):
-        return self.framerate
-
-    def set_name(self, name):
-        self.name = name
-
-    def set_format(self, form):
-        self.format = form
-
-    def set_width(self, width):
-        self.width = width
-
-    def set_height(self, height):
-        self.height = height
-
-    def set_framerate(self, framerate):
-        self.framerate = framerate
 
 
 class Devices:
@@ -103,9 +58,9 @@ class Devices:
             caps = self.get_device_caps(dev_caps.normalize())
             default_caps = None if not caps else caps[0]
 
-            video_dev.set_name(name)
-            video_dev.set_caps(caps)
-            video_dev.set_default_caps(default_caps)
+            video_dev.name = name
+            video_dev.caps = caps
+            video_dev.default_caps = default_caps
             self.devices.append(video_dev)
 
         dev_monitor.stop()
@@ -120,13 +75,13 @@ class Devices:
 
             caps = Caps()
             caps_struct = dev_caps.get_structure(i)
-            caps.set_name(caps_struct.get_name())
-            caps.set_format(caps_struct.get_string("format"))
-            caps.set_width(caps_struct.get_int("width")[1])
-            caps.set_height(caps_struct.get_int("height")[1])
+            caps.name = caps_struct.get_name()
+            caps.format = caps_struct.get_string("format")
+            caps.width = caps_struct.get_int("width")[1]
+            caps.height = caps_struct.get_int("height")[1]
             framerate = ("{}/{}".format(*caps_struct.get_fraction(
                                         "framerate")[1:]))
-            caps.set_framerate(framerate)
+            caps.framerate = framerate
             caps_list.append(caps)
 
         return caps_list
@@ -135,7 +90,7 @@ class Devices:
         dev = None
 
         for device in self.devices:
-            if device.get_name() == dev_name:
+            if device.name == dev_name:
                 dev = device
 
             if not dev:
@@ -147,7 +102,7 @@ class Devices:
                 if not dev:
                     sys.exit("No video device found. Exiting...")
                 else:
-                    print("Using {} as video device".format(dev.get_name()))
+                    print("Using {} as video device".format(dev.name))
 
         return dev
 
@@ -246,9 +201,9 @@ class VideoConfig:
         else:
             dev = self.devices.search_device(self.video_src)
             caps = dev.get_default_caps()
-            sink_pipeline = set_appsink_pipeline(device=dev.get_name())
-            src_pipeline = set_appsrc_pipeline(width=caps.get_width(),
-                                               height=caps.get_height())
+            sink_pipeline = set_appsink_pipeline(device=dev.name)
+            src_pipeline = set_appsrc_pipeline(width=caps.width,
+                                               height=caps.height)
             return sink_pipeline, src_pipeline
 
     def opencv_config(self):
@@ -256,7 +211,7 @@ class VideoConfig:
             return cv2.VideoCapture(self.video_src), None
         else:
             dev = self.devices.search_device(self.video_src)
-            dev = int(dev.get_name()[10:])
+            dev = int(dev.name[10:])
             return cv2.VideoCapture(dev), None
 
     def v4l2_config(self):
@@ -265,9 +220,9 @@ class VideoConfig:
         else:
             dev = self.devices.search_device(self.video_src)
             caps = dev.get_default_caps()
-            pipeline = v4l2_camera_pipeline(width=caps.get_width(),
-                                            height=caps.get_height(),
-                                            device=dev.get_name(),
-                                            frate=caps.get_framerate())
+            pipeline = v4l2_camera_pipeline(width=caps.width,
+                                            height=caps.height,
+                                            device=dev.name,
+                                            frate=caps.framerate)
 
         return cv2.VideoCapture(pipeline), None
