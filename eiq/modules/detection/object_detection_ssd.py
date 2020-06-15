@@ -7,7 +7,9 @@
 # SPDX-License-Identifier:    Apache-2.0
 
 import collections
+import colorsys
 import os
+import random
 import sys
 import time
 
@@ -19,8 +21,9 @@ import cv2
 import numpy as np
 from PIL import Image
 
+from eiq.config import FONT
 from eiq.engines.tflite.inference import TFLiteInterpreter
-from eiq.modules.detection.config import *
+from eiq.modules.detection.config import OBJ_DETECTION, OBJ_DETECTION_CV_GST, OBJ_DETECTION_DNN
 from eiq.modules.utils import DemoBase
 from eiq.multimedia import gstreamer
 from eiq.multimedia.utils import VideoConfig
@@ -39,8 +42,20 @@ class eIQObjectsDetection(DemoBase):
                          class_name=self.__class__.__name__,
                          data=OBJ_DETECTION)
 
-        self.class_names = None
         self.colors = None
+
+    def generate_colors(self):
+        hsv_tuples = [(x / len(self.labels), 1., 1.)
+                      for x in range(len(self.labels))]
+
+        colors = list(map(lambda x: colorsys.hsv_to_rgb(*x), hsv_tuples))
+        colors = list(map(lambda x: (int(x[0] * 255), int(x[1] * 255),
+                                     int(x[2] * 255)), colors))
+        random.seed(10101)
+        random.shuffle(colors)
+        random.seed(None)
+
+        self.colors = colors
 
     def process_image(self, image):
         self.interpreter.set_tensor(np.expand_dims(image, axis=0))
@@ -68,9 +83,8 @@ class eIQObjectsDetection(DemoBase):
     def start(self):
         self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
-        self.class_names = read_classes(self.labels)
-        self.colors = generate_colors(self.class_names)
         self.labels = self.load_labels(self.labels)
+        self.generate_colors()
 
     def run(self):
         self.start()
@@ -120,19 +134,21 @@ class eIQObjectDetectionDNN(DemoBase):
                 right = int(width * det[0, 0, i, 5])
                 bottom = int(height * det[0, 0, i, 6])
                 cv2.rectangle(frame, (left, top), (right, bottom),
-                              FONT_COLOR, FONT_THICKNESS)
+                              FONT['color']['black'], FONT['thickness'])
 
                 if index in self.labels:
                     label = ("{0}: {1:.3f}".format(self.labels[index],
                                                    confidence))
-                    label_size = cv2.getTextSize(label, FONT, FONT_SIZE,
-                                                 FONT_THICKNESS + 1)[0]
+                    label_size = cv2.getTextSize(label, FONT['hershey'],
+                                                 FONT['size'],
+                                                 FONT['thickness'] + 1)[0]
                     top = max(top, label_size[1])
                     cv2.rectangle(frame, (left, top - label_size[1]),
                                   (left + label_size[0], top),
-                                  FONT_COLOR, cv2.FILLED)
-                    cv2.putText(frame, label, (left, top), FONT, FONT_SIZE,
-                                (255, 255, 255), FONT_THICKNESS - 1)
+                                  FONT['color']['black'], cv2.FILLED)
+                    cv2.putText(frame, label, (left, top), FONT['hershey'],
+                                FONT['size'], (255, 255, 255),
+                                FONT['thickness'] - 1)
 
         return frame
 
