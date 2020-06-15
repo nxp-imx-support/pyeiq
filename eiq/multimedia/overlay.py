@@ -8,7 +8,6 @@ from eiq.helper.config import *
 
 class OpenCVOverlay:
     def __init__(self):
-        self.frame = None
         self.time = None
 
     def draw_inference_time(self, frame, time):
