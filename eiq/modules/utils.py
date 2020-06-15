@@ -1,9 +1,10 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
+import os
+import re
 import sys
 import threading
-import os
 
 import cv2
 
@@ -56,6 +57,13 @@ class DemoBase:
                 self.model = self.args.model
         if not self.model and self.data and 'model' in self.data:
             self.model = os.path.join(self.model_dir, self.data['model'])
+
+    @staticmethod
+    def load_labels(path):
+        p = re.compile(r'\s*(\d+)(.+)')
+        with open(path, 'r', encoding='utf-8') as f:
+            lines = (p.match(line).groups() for line in f.readlines())
+            return {int(num): text.strip() for num, text in lines}
 
     def run_inference(self, inference_func):
         if self.args.video_src:
