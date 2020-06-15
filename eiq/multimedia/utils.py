@@ -1,4 +1,11 @@
 # Copyright 2020 NXP Semiconductors
+#
+# This file was partial copied from the link below and modified acoording to
+# its license terms.
+#
+# Reference:
+# https://github.com/toradex/torizon-samples/blob/master/dlr-gstreamer/inference.py
+#
 # SPDX-License-Identifier: BSD-3-Clause
 
 import atexit
