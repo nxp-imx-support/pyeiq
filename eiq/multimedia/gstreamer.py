@@ -24,9 +24,8 @@ import threading
 
 import gi
 gi.require_version('Gst', '1.0')
-gi.require_version('GstBase', '1.0')
 gi.require_version('Gtk', '3.0')
-from gi.repository import GLib, GObject, Gst, GstBase, Gtk
+from gi.repository import GLib, GObject, Gst, Gtk
 
 import numpy as np
 
