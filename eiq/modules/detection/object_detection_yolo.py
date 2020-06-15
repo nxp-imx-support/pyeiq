@@ -1,12 +1,11 @@
 # Copyright 2020 Michael Kuo
+# Copyright 2020 NXP Semiconductors
 #
-## Copyright 2020 NXP Semiconductors
-##
-## Parts of this file were copied from Michael Kuo's github repository 
-## respecting its rights. All the modified parts below are according to
-## MIT LICENSE terms.
-##
-## SPDX-License-Identifier:    MIT
+# Parts of this file were copied from Michael Kuo's github repository 
+# respecting its rights. All the modified parts below are according to
+# MIT LICENSE terms.
+#
+# SPDX-License-Identifier:    MIT
 
 import os
 
