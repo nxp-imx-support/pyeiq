@@ -1,3 +1,15 @@
+# Copyright 2019 Google LLC
+# Copyright 2020 NXP Semiconductors
+#
+# This file was copied from Google LLC respecting its rights. All the modified
+# parts below are according to Google LLC's LICENSE terms.
+#
+# SPDX-License-Identifier:    Apache-2.0
+#
+# References:
+# https://github.com/ggsonic/posenet-tflite
+# https://github.com/mikeshihyaolin/tf-pose-estimation
+
 from enum import Enum
 import math
 
