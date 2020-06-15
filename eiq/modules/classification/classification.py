@@ -13,7 +13,6 @@ from PIL import Image
 
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.classification.config import *
-from eiq.modules.classification.utils import load_labels
 from eiq.modules.utils import DemoBase
 
 
@@ -67,6 +66,10 @@ class eIQObjectsClassification(DemoBase):
         self.font_color = (0, 127, 255)
         self.font_thickness = 2
 
+    def load_labels(self, label_path):
+        with open(label_path, 'r') as f:
+            return [line.strip() for line in f.readlines()]
+
     def process_image(self, image, k=3):
         input_data = np.expand_dims(image, axis=0)
         self.interpreter.set_tensor(input_data)
@@ -103,7 +106,7 @@ class eIQObjectsClassification(DemoBase):
     def start(self):
         self.gather_data()
         self.interpreter = TFLiteInterpreter(self.model)
-        self.labels = load_labels(self.labels)
+        self.labels = self.load_labels(self.labels)
 
     def run(self):
         self.start()
