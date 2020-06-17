@@ -22,20 +22,6 @@ CORAL_POSENET = {'config': {'mean': 127.5,
                                    "raw/master/models/posenet_model.zip"},
                  'window_title': "PyeIQ - Coral Posenet"}
 
-EMOTIONS_DETECTION = {'expressions': ['anger', 'disgust', 'fear', 'happiness',
-                                      'neutral', 'sadness'],
-                      'face_cascade': "haarcascade_frontalface_default.xml",
-                      'image': "grace_hopper.jpg",
-                      'model': "model.tflite",
-                      'sha1': "d112d8e378f8457a48b66aea80bc4e714e8e2e41",
-                      'src': {'drive': "https://drive.google.com/file/d/"
-                                       "15VTXVJ7GwS_Rr2vvl9xve9UAcFO3LFzG/"
-                                       "view?usp=sharing",
-                              'github': "https://github.com/diegohdorta/"
-                                        "models/raw/master/models/"
-                                        "eIQEmotionsDetection.zip"},
-                      'window_title': "PyeIQ - Emotions Detection"}
-
 FACE_EYES_DETECTION = {'eye_cascade': "haarcascade_eye.xml",
                        'face_cascade': "haarcascade_frontalface_default.xml",
                        'image': "grace_hopper.jpg",
@@ -47,6 +33,20 @@ FACE_EYES_DETECTION = {'eye_cascade': "haarcascade_eye.xml",
                                          "models/raw/master/models/"
                                          "eIQFaceAndEyesDetection.zip"},
                        'window_title': "PyeIQ - Face and Eyes Detection"}
+
+FACIAL_EXPRESSION_DETECTION = {'expressions': ['anger', 'disgust', 'fear', 'happiness',
+                                               'neutral', 'sadness'],
+                               'face_cascade': "haarcascade_frontalface_default.xml",
+                               'image': "grace_hopper.jpg",
+                               'model': "model.tflite",
+                               'sha1': "d112d8e378f8457a48b66aea80bc4e714e8e2e41",
+                               'src': {'drive': "https://drive.google.com/file/d/"
+                                                "15VTXVJ7GwS_Rr2vvl9xve9UAcFO3LFzG/"
+                                                "view?usp=sharing",
+                                       'github': "https://github.com/diegohdorta/"
+                                                 "models/raw/master/models/"
+                                                 "eIQEmotionsDetection.zip"},
+                               'window_title': "PyeIQ - Facial Expression Detection"}
 
 OBJ_DETECTION = {'image': "bus.jpg",
                  'labels': "coco_labels.txt",

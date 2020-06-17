@@ -2,11 +2,11 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
-from eiq.modules.detection.facial_detection import eIQEmotionsDetection
+from eiq.modules.detection.facial_detection import eIQFacialExpressionDetection
 
 
 def main():
-    app = eIQEmotionsDetection()
+    app = eIQFacialExpressionDetection()
     app.run()
 
 

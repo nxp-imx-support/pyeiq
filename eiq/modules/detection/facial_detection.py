@@ -9,15 +9,15 @@ from PIL import Image
 
 from eiq.config import FONT
 from eiq.engines.tflite.inference import TFLiteInterpreter
-from eiq.modules.detection.config import EMOTIONS_DETECTION, FACE_EYES_DETECTION
+from eiq.modules.detection.config import FACIAL_EXPRESSION_DETECTION, FACE_EYES_DETECTION
 from eiq.modules.utils import DemoBase
 
 
-class eIQEmotionsDetection(DemoBase):
+class eIQFacialExpressionDetection(DemoBase):
     def __init__(self):
         super().__init__(download=True, image=True, video_fwk=True,
                          video_src=True, class_name=self.__class__.__name__,
-                         data=EMOTIONS_DETECTION)
+                         data=FACIAL_EXPRESSION_DETECTION)
 
         self.face_cascade = None
 
@@ -39,7 +39,7 @@ class eIQEmotionsDetection(DemoBase):
 
         return image.astype(np.float32)
 
-    def detect_emotion(self, image, x, y, w, h):
+    def detect_facial_expression(self, image, x, y, w, h):
         image = self.preprocess_image(image, x, y, w, h)
 
         self.interpreter.set_tensor(image)
@@ -61,9 +61,9 @@ class eIQEmotionsDetection(DemoBase):
                                                    minSize=(150, 150))
 
         for (x, y, w, h) in faces:
-            emotion = self.detect_emotion(gray, x, y, w, h)
+            expression = self.detect_facial_expression(gray, x, y, w, h)
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            cv2.putText(frame, emotion, (x, y-5), FONT['hershey'],
+            cv2.putText(frame, expression, (x, y-5), FONT['hershey'],
                         0.7, (0, 0, 255), 2, cv2.LINE_AA)
 
         return frame
