@@ -97,16 +97,11 @@ class eIQObjectDetectionDNN(DemoBase):
                          video_fwk=True, video_src=True,
                          class_name=self.__class__.__name__,
                          data=OBJ_DETECTION_DNN)
+        self.config = self.data['config']
 
         self.caffe = None
         self.proto = None
         self.nn = None
-
-        self.normalize = 127.5
-        self.scale_factor = 0.009718
-        self.threshold = 0.2
-        self.width = 300
-        self.height = 300
 
     def gather_data(self):
         super().gather_data()
@@ -116,18 +111,22 @@ class eIQObjectDetectionDNN(DemoBase):
 
     def detect_objects(self, frame):
         height, width = frame.shape[:2]
-        image = cv2.resize(frame, (self.height, self.width))
-        blob = cv2.dnn.blobFromImage(image, self.scale_factor,
-                                     (self.height, self.width),
-                                     (self.normalize, self.normalize,
-                                      self.normalize), False)
+        image = cv2.resize(frame, (self.config['dims'],
+                                   self.config['dims']))
+        blob = cv2.dnn.blobFromImage(image, self.config['scale'],
+                                     (self.config['dims'],
+                                      self.config['dims']),
+                                     (self.config['normalize'],
+                                      self.config['normalize'],
+                                      self.config['normalize']), False)
+
         self.nn.setInput(blob)
         det = self.nn.forward()
 
         for i in range(det.shape[2]):
             confidence = det[0, 0, i, 2]
 
-            if confidence > self.threshold:
+            if confidence > self.config['threshold']:
                 index = int(det[0, 0, i, 1])
                 left = int(width * det[0, 0, i, 3])
                 top = int(height * det[0, 0, i, 4])

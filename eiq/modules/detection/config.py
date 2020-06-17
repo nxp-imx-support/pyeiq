@@ -1,7 +1,17 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
-CORAL_POSENET = {'image': "example.jpg",
+LEFT = 0
+TOP = 1
+RIGHT = 2
+BOTTOM = 3
+CONFIDENCE = 4
+CLASSES = 5
+
+CORAL_POSENET = {'config': {'mean': 127.5,
+                            'std': 127.5,
+                            'confidence': 0.4},
+                 'image': "example.jpg",
                  'model': "posenet_mobilenet_v1_100_257x257"
                           "_multi_kpt_stripped.tflite",
                  'sha1': "fd4fa2ebdaeb43a8f6633888456bfb068e04a5ae",
@@ -60,6 +70,10 @@ OBJ_DETECTION_CV_GST = {'labels': "coco_labels.txt",
                         'window_title': "PyeIQ - Object Detection OpenCV"}
 
 OBJ_DETECTION_DNN = {'caffe': "MobileNetSSD_deploy.caffemodel",
+                     'config': {'dims': 300,
+                                'normalize': 127.5,
+                                'scale': 0.009718,
+                                'threshold': 0.2},
                      'image': "dog.jpg",
                      'labels': "labels.txt",
                      'proto': "MobileNetSSD_deploy.prototxt",
@@ -84,7 +98,18 @@ OBJ_DETECTION_SSD = {'image': "dog.jpg",
                                        "object_detection_ssd.zip"},
                      'window_title': "PyeIQ - Object Detection SSD"}
 
-OBJ_DETECTION_YOLOV3 = {'image': "example.jpg",
+OBJ_DETECTION_YOLOV3 = {'config': {'anchors': [[0.57273, 0.677385],
+                                               [1.87446, 2.06253],
+                                               [3.33843, 5.47434],
+                                               [7.88282, 3.52778],
+                                               [9.77052, 9.16828]],
+                                   'block_size': 32,
+                                   'boxes': 5,
+                                   'grid_h': 13,
+                                   'grid_w': 13,
+                                   'overlap_threshold': 0.2,
+                                   'threshold': 0.3},
+                        'image': "example.jpg",
                         'labels': "labels.txt",
                         'model': "tiny_yolov3.tflite",
                         'sha1': "406438b9a5a530f6f6874341219a749e4f209b6e",

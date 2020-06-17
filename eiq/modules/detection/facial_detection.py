@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 from PIL import Image
 
+from config import FONT
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.detection.config import EMOTIONS_DETECTION, FACE_EYES_DETECTION
 from eiq.modules.utils import DemoBase
@@ -72,7 +73,7 @@ class eIQEmotionsDetection(DemoBase):
         for (x, y, w, h) in faces:
             emotion = self.detect_emotion(gray, x, y, w, h)
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            cv2.putText(frame, emotion, (x, y-5), cv2.FONT_HERSHEY_SIMPLEX,
+            cv2.putText(frame, emotion, (x, y-5), FONT['hershey'],
                         0.7, (0, 0, 255), 2, cv2.LINE_AA)
 
         return frame

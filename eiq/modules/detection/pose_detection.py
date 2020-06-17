@@ -28,10 +28,7 @@ class eIQCoralPoseNet(DemoBase):
                          video_fwk=True, video_src=True,
                          class_name=self.__class__.__name__,
                          data=CORAL_POSENET)
-
-        self.input_mean = 127.5
-        self.input_std = 127.5
-        self.min_confidence = 0.4
+        self.config = self.data['config']
 
     class BodyPart(Enum):
         NOSE = 0,
@@ -79,7 +76,7 @@ class eIQCoralPoseNet(DemoBase):
         image = np.expand_dims(image, axis=0)
 
         if self.interpreter.dtype() == np.float32:
-            image = (np.float32(image) - self.input_mean) / self.input_std
+            image = (np.float32(image)-self.config['mean']) / self.config['std']
 
         self.interpreter.set_tensor(image)
         self.interpreter.run_inference()
@@ -157,8 +154,8 @@ class eIQCoralPoseNet(DemoBase):
                        [self.BodyPart.RIGHT_KNEE, self.BodyPart.RIGHT_ANKLE]]
 
         for line in body_joints:
-            if person.keyPoints[line[0].value[0]].score > self.min_confidence \
-                    and person.keyPoints[line[1].value[0]].score > self.min_confidence:
+            if person.keyPoints[line[0].value[0]].score > self.config['confidence'] \
+                    and person.keyPoints[line[1].value[0]].score > self.config['confidence']:
                 start_point_x = int(person.keyPoints[line[0].value[0]].position.x)
                 start_point_y = int(person.keyPoints[line[0].value[0]].position.y)
                 end_point_x = int(person.keyPoints[line[1].value[0]].position.x)
@@ -167,7 +164,7 @@ class eIQCoralPoseNet(DemoBase):
                           fill=(255, 255, 0), width=3)
 
         for key_point in person.keyPoints:
-            if key_point.score > self.min_confidence:
+            if key_point.score > self.config['confidence']:
                 left_top_x = int(key_point.position.x) - 5
                 left_top_y = int(key_point.position.y) - 5
                 right_bottom_x = int(key_point.position.x) + 5

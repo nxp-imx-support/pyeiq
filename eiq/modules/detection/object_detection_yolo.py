@@ -13,7 +13,7 @@ from PIL import Image
 
 from eiq.config import FONT
 from eiq.engines.tflite.inference import TFLiteInterpreter
-from eiq.modules.detection.config import OBJ_DETECTION_YOLOV3
+from eiq.modules.detection.config import LEFT, TOP, RIGHT, BOTTOM, CONFIDENCE, CLASSES, OBJ_DETECTION_YOLOV3
 from eiq.modules.utils import DemoBase
 
 
@@ -23,24 +23,7 @@ class eIQObjectsDetectionYOLOV3(DemoBase):
                          model=True, video_fwk=True, video_src=True,
                          class_name=self.__class__.__name__,
                          data=OBJ_DETECTION_YOLOV3)
-
-        self.anchors = [[0.57273, 0.677385], [1.87446, 2.06253],
-                        [3.33843, 5.47434], [7.88282, 3.52778],
-                        [9.77052, 9.16828]]
-        self.block_size = 32
-        self.grid_height = 13
-        self.grid_width = 13
-        self.boxes_per_block = 5
-
-        self.overlap_threshold = 0.2
-        self.threshold = 0.3
-
-        self.left = 0
-        self.top = 1
-        self.right = 2
-        self.bottom = 3
-        self.confidence = 4
-        self.classes = 5
+        self.config = self.data['config']
 
     @staticmethod
     def expit(x):
@@ -54,7 +37,7 @@ class eIQObjectsDetectionYOLOV3(DemoBase):
         return softmax_x
 
     def sort_results(self, e):
-        return e[self.confidence]
+        return e[CONFIDENCE]
 
     def get_input_data(self, image):
         image = image.resize((self.interpreter.width(),
@@ -94,22 +77,25 @@ class eIQObjectsDetectionYOLOV3(DemoBase):
                     primary = previous_prediction
                     secondary = prediction
 
-                    if (primary[self.left] < secondary[self.right]) \
-                            and (primary[self.right] > secondary[self.left]) \
-                            and (primary[self.top] < secondary[self.bottom]) \
-                            and (primary[self.bottom] > secondary[self.top]):
-                        intersection = max(0, min(primary[self.right],
-                                                  secondary[self.right]) - max(primary[self.left],
-                                                                               secondary[self.left])) \
-                                       * max(0, min(primary[self.bottom],
-                                                    secondary[self.bottom]) - max(primary[self.top],
-                                                                                  secondary[self.top]))
+                    if (primary[LEFT] < secondary[RIGHT]) \
+                            and (primary[RIGHT] > secondary[LEFT]) \
+                            and (primary[TOP] < secondary[BOTTOM]) \
+                            and (primary[BOTTOM] > secondary[TOP]):
+                        intersection = max(0, min(primary[RIGHT],
+                                                  secondary[RIGHT])
+                                                  - max(primary[LEFT],
+                                           secondary[LEFT])) \
+                                       * max(0, min(primary[BOTTOM],
+                                                    secondary[BOTTOM])
+                                                    - max(primary[TOP],
+                                             secondary[TOP]))
 
-                        main = np.abs(primary[self.right] - primary[self.left]) \
-                               * np.abs(primary[self.bottom] - primary[self.top])
+                        main = np.abs(primary[RIGHT] - primary[LEFT]) \
+                               * np.abs(primary[BOTTOM] - primary[TOP])
                         intersect_proportion = intersection / main
 
-                    overlaps = overlaps or (intersect_proportion > self.overlap_threshold)
+                    overlaps = overlaps or (intersect_proportion >
+                                            self.config['overlap_threshold'])
 
                 if not overlaps:
                     predictions.append(prediction)
@@ -119,9 +105,9 @@ class eIQObjectsDetectionYOLOV3(DemoBase):
     def check_result(self, data):
         results = []
 
-        for row in range(self.grid_height):
-            for column in range(self.grid_width):
-                for box in range(self.boxes_per_block):
+        for row in range(self.config['grid_h']):
+            for column in range(self.config['grid_w']):
+                for box in range(self.config['boxes']):
                     item = data[row][column]
                     offset = (len(self.labels) + 5) * box
 
@@ -135,15 +121,17 @@ class eIQObjectsDetectionYOLOV3(DemoBase):
 
                     confidence_in_class = max_class * confidence
 
-                    if confidence_in_class >= self.threshold:
+                    if confidence_in_class >= self.config['threshold']:
                         x_pos = (column + self.expit(item[offset])) \
-                                * self.block_size
+                                * self.config['block_size']
                         y_pos = (row + self.expit(item[offset + 1])) \
-                                * self.block_size
-                        w = (np.exp(item[offset + 2]) * self.anchors[box][0]) \
-                            * self.block_size
-                        h = (np.exp(item[offset + 3]) * self.anchors[box][1]) \
-                            * self.block_size
+                                * self.config['block_size']
+                        w = (np.exp(item[offset + 2])
+                             * self.config['anchors'][box][0]) \
+                            * self.config['block_size']
+                        h = (np.exp(item[offset + 3])
+                             * self.config['anchors'][box][1]) \
+                            * self.config['block_size']
 
                         left = max(0, x_pos - w / 2)
                         top = max(0, y_pos - h / 2)
@@ -175,10 +163,10 @@ class eIQObjectsDetectionYOLOV3(DemoBase):
         height_ratio = height / self.interpreter.height()
 
         for element in predictions:
-            x1 = int(element[self.left] * width_ratio)
-            x2 = int(element[self.right] * width_ratio)
-            y1 = int(element[self.top] * height_ratio)
-            y2 = int(element[self.bottom] * height_ratio)
+            x1 = int(element[LEFT] * width_ratio)
+            x2 = int(element[RIGHT] * width_ratio)
+            y1 = int(element[TOP] * height_ratio)
+            y2 = int(element[BOTTOM] * height_ratio)
 
             top = int(max(0, np.floor(y1 + 0.5).astype('int32')))
             left = int(max(0, np.floor(x1 + 0.5).astype('int32')))
@@ -196,7 +184,7 @@ class eIQObjectsDetectionYOLOV3(DemoBase):
             cv2.rectangle(frame, (label_left, label_top),
                           (label_right, label_bottom),
                           (0, 255, 0), cv2.FILLED)
-            cv2.putText(frame, element[self.classes], (left, top - 4),
+            cv2.putText(frame, element[CLASSES], (left, top - 4),
                         FONT['hershey'], FONT['size'], FONT['color']['black'],
                         FONT['thickness'])
 
