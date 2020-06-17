@@ -23,10 +23,9 @@ from PIL import Image
 
 from eiq.config import FONT
 from eiq.engines.tflite.inference import TFLiteInterpreter
-from eiq.modules.detection.config import OBJ_DETECTION, OBJ_DETECTION_CV_GST, OBJ_DETECTION_DNN
+from eiq.modules.detection.config import OBJ_DETECTION, OBJ_DETECTION_DNN, OBJ_DETECTION_GST
 from eiq.modules.utils import DemoBase
 from eiq.multimedia import gstreamer
-from eiq.multimedia.utils import VideoConfig
 
 try:
     import svgwrite
@@ -165,7 +164,7 @@ class eIQObjectDetectionGStreamer(DemoBase):
     def __init__(self):
         super().__init__(download=True, video_fwk=True, video_src=True,
                          class_name=self.__class__.__name__,
-                         data=OBJ_DETECTION_CV_GST)
+                         data=OBJ_DETECTION_GST)
 
         self.tensor = None
 
@@ -296,92 +295,3 @@ class eIQObjectDetectionGStreamer(DemoBase):
                                videosrc=self.videosrc,
                                videofile=self.videofile,
                                videofmt=self.videofmt)
-
-
-class eIQObjectDetectionOpenCV(DemoBase):
-    def __init__(self):
-        super().__init__(download=True, video_fwk=True, video_src=True,
-                         class_name=self.__class__.__name__,
-                         data=OBJ_DETECTION_CV_GST)
-
-        self.tensor = None
-
-    def set_input(self, image, resample=Image.NEAREST):
-        image = image.resize((self.input_image_size()[0:2]), resample)
-        self.input_tensor()[:, :] = image
-
-    def input_image_size(self):
-        return self.interpreter.input_details[0]['shape'][1:]
-
-    def input_tensor(self):
-        return self.tensor(self.interpreter.input_details[0]['index'])()[0]
-
-    def output_tensor(self, i):
-        output_data = np.squeeze(self.tensor(
-                                 self.interpreter.output_details[i]['index'])())
-        if 'quantization' not in self.interpreter.output_details:
-            return output_data
-        scale, zero_point = self.interpreter.output_details['quantization']
-        if scale == 0:
-            return output_data - zero_point
-        return scale * (output_data - zero_point)
-
-    def get_output(self, score_threshold=0.1, top_k=3):
-        boxes = self.output_tensor(0)
-        class_ids = self.output_tensor(1)
-        scores = self.output_tensor(2)
-
-        return [gstreamer.make_boxes(i, boxes, class_ids, scores)
-                for i in range(top_k) if scores[i] >= score_threshold]
-
-    def append_objs_to_img(self, opencv_im, objs):
-        height, width, _ = opencv_im.shape
-        for obj in objs:
-            x0, y0, x1, y1 = list(obj.bbox)
-            x0 = int(x0 * width)
-            y0 = int(y0 * height)
-            x1 = int(x1 * width)
-            y1 = int(y1 * height)
-
-            percent = int(100 * obj.score)
-            label = '{}% {}'.format(percent, self.labels.get(obj.id, obj.id))
-
-            opencv_im = cv2.rectangle(opencv_im, (x0, y0), (x1, y1),
-                                      (0, 255, 0), 2)
-            opencv_im = cv2.putText(opencv_im, label, (x0, y0 + 30),
-                                    cv2.FONT_HERSHEY_SIMPLEX, 1.0,
-                                    (255, 0, 0), 2)
-        return opencv_im
-
-    def start(self):
-        self.gather_data()
-        self.interpreter = TFLiteInterpreter(self.model)
-        self.tensor = self.interpreter.interpreter.tensor
-        self.labels = self.load_labels(self.labels)
-
-    def run(self):
-        self.start()
-        video_config = VideoConfig(self.args)
-
-        video = video_config.opencv_config()[0]
-        if (not video) or (not video.isOpened()):
-            sys.exit("Your video device could not be found. Exiting...")
-
-        while video.isOpened():
-            ret, frame = video.read()
-            if not ret:
-                break
-            opencv_im = frame
-            opencv_im_rgb = cv2.cvtColor(opencv_im, cv2.COLOR_BGR2RGB)
-            pil_im = Image.fromarray(opencv_im_rgb)
-
-            self.set_input(pil_im)
-            self.interpreter.run_inference()
-            objs = self.get_output()
-            opencv_im = self.append_objs_to_img(opencv_im, objs)
-
-            cv2.imshow(self.data['window_title'], opencv_im)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-        video.release()
-        cv2.destroyAllWindows()

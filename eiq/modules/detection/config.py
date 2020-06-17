@@ -60,17 +60,6 @@ OBJ_DETECTION = {'image': "bus.jpg",
                                    "eIQObjectDetection.zip"},
                  'window_title': "PyeIQ - Object Detection"}
 
-OBJ_DETECTION_CV_GST = {'labels': "coco_labels.txt",
-                        'model': "mobilenet_ssd_v2_coco_quant_postprocess.tflite",
-                        'sha1': "4736e758d8d626047df7cd1b3c38c72e77fd32ee",
-                        'src': {'drive': "https://drive.google.com/file/d/"
-                                         "1l2gKkPIPPPI0Q4QrVBXgSOkQUDVHogOi/"
-                                         "view?usp=sharing",
-                                'github': "https://github.com/diegohdorta/"
-                                          "models/raw/master/models/"
-                                          "eIQObjectDetectionCVGST.zip"},
-                        'window_title': "PyeIQ - Object Detection OpenCV"}
-
 OBJ_DETECTION_DNN = {'caffe': "MobileNetSSD_deploy.caffemodel",
                      'config': {'dims': 300,
                                 'normalize': 127.5,
@@ -87,6 +76,17 @@ OBJ_DETECTION_DNN = {'caffe': "MobileNetSSD_deploy.caffemodel",
                                        "models/raw/master/models/"
                                        "object_detection_image.zip"},
                      'window_title': "PyeIQ - Object Detection DNN"}
+
+OBJ_DETECTION_GST = {'labels': "coco_labels.txt",
+                     'model': "mobilenet_ssd_v2_coco_quant_postprocess.tflite",
+                     'sha1': "4736e758d8d626047df7cd1b3c38c72e77fd32ee",
+                     'src': {'drive': "https://drive.google.com/file/d/"
+                                      "1l2gKkPIPPPI0Q4QrVBXgSOkQUDVHogOi/"
+                                      "view?usp=sharing",
+                             'github': "https://github.com/diegohdorta/"
+                                       "models/raw/master/models/"
+                                       "eIQObjectDetectionCVGST.zip"},
+                     'window_title': "PyeIQ - Object Detection OpenCV"}
 
 OBJ_DETECTION_SSD = {'image': "dog.jpg",
                      'labels': "coco_classes.txt",
