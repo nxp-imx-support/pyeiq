@@ -61,7 +61,7 @@ class Downloader:
 
     @staticmethod
     def download_from_url(url, filename=None, download_path=None):
-        timer = InferenceTimer()
+        timer = Timer()
 
         try:
             log("Downloading '{0}'".format(filename))
@@ -159,7 +159,7 @@ def log(*args):
     logging.info(" ".join("{}".format(a) for a in args))
 
 
-class InferenceTimer:
+class Timer:
     def __init__(self):
         self.time = 0
 

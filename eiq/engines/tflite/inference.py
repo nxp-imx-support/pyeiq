@@ -6,7 +6,7 @@ import os
 import numpy as np
 from tflite_runtime.interpreter import Interpreter
 
-from eiq.utils import InferenceTimer
+from eiq.utils import Timer
 
 
 class TFLiteInterpreter:
@@ -45,7 +45,7 @@ class TFLiteInterpreter:
         self.interpreter.set_tensor(self.input_details[0]['index'], image)
 
     def run_inference(self):
-        timer = InferenceTimer()
+        timer = Timer()
         with timer.timeit("Inference time"):
             self.interpreter.invoke()
         self.inference_time = timer.time
