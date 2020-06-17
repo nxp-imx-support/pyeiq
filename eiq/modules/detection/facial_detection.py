@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 from PIL import Image
 
-from config import FONT
+from eiq.config import FONT
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.detection.config import EMOTIONS_DETECTION, FACE_EYES_DETECTION
 from eiq.modules.utils import DemoBase
@@ -46,20 +46,10 @@ class eIQEmotionsDetection(DemoBase):
         self.interpreter.run_inference()
 
         results = self.interpreter.get_tensor(0)
-        classes = np.argmax(results, axis=1)
+        classes = int(np.argmax(results, axis=1))
 
-        if classes == 0:
-            return 'anger'
-        elif classes == 1:
-            return 'disgust'
-        elif classes == 2:
-            return 'fear'
-        elif classes == 3:
-            return "happiness"
-        elif classes == 4:
-            return "neutral"
-        elif classes == 5:
-            return 'sadness'
+        if 0 <= classes <= 5:
+            return self.data['expressions'][classes]
         else:
             return 'surprise'
 

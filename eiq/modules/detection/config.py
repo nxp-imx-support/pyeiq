@@ -22,7 +22,9 @@ CORAL_POSENET = {'config': {'mean': 127.5,
                                    "raw/master/models/posenet_model.zip"},
                  'window_title': "PyeIQ - Coral Posenet"}
 
-EMOTIONS_DETECTION = {'face_cascade': "haarcascade_frontalface_default.xml",
+EMOTIONS_DETECTION = {'expressions': ['anger', 'disgust', 'fear', 'happiness',
+                                      'neutral', 'sadness'],
+                      'face_cascade': "haarcascade_frontalface_default.xml",
                       'image': "grace_hopper.jpg",
                       'model': "model.tflite",
                       'sha1': "d112d8e378f8457a48b66aea80bc4e714e8e2e41",
