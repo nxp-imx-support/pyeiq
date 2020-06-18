@@ -15,8 +15,6 @@ aux_links:
   "Source Code Available on CAF":
     - "https://source.codeaurora.org/external/imxsupport/pyeiq/"
 
-footer_content: "&copy; 2020 NXP Semiconductors | <a href=\"https://source.codeaurora.org/external/imxsupport/pyeiq/tree/LICENSE.md\">LICENSE TERMS</a> | <a href=\"https://www.nxp.com/eiq\">eIQ&trade; NXP Semiconductors</a>"
+footer_content: "<a href=\"https://source.codeaurora.org/external/imxsupport/pyeiq/tree/LICENSE.md\">LICENSE TERMS</a>"
 
 color_scheme: nil
-
-#ga_tracking: UA-140696581-2
