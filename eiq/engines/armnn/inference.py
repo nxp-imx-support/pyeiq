@@ -53,7 +53,7 @@ class aNNInterpreter:
         return ann.workload_tensors_to_ndarray(self.output_tensors)
 
     def run_inference(self):
-        timer = InferenceTimer()
+        timer = Timer()
         with timer.timeit("Inference time armNN"):
             self.runtime.EnqueueWorkload(0, self.input_tensors, self.output_tensors)
         self.inference_time = timer.time
