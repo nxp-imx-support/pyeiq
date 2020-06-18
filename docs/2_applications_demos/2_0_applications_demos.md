@@ -12,20 +12,20 @@ has_children: true
 {:toc}
 ---
 
-| **Application Name**                  | **Framework**        | **i.MX Board** | **BSP Release** | **Inference Core** | **Status**               |
-|---------------------------------------|----------------------|----------------|-----------------|--------------------|--------------------------|
-| **Object Classification**             | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][workflow-build] |
-| **Object Detection SSD**              | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][workflow-build] |
-| **Object Detection YOLOv3**           | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][workflow-build] |
-| **Object Detection DNN**              | ![Framework][opencv] | ![imx][boards] | ![BSP][release] | ![Core][cpu]       | ![build][workflow-build] |
-| **Facial Expression Detection**       | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][workflow-build] |
-| **Fire Classification**               | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][workflow-build] |
-| **Fire Classification**               | ![Framework][armnn]  | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][workflow-build] |
-| **PoseNet Detection**                 | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][workflow-build] |
-| **Face/Eyes Detection**               | ![Framework][opencv] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][workflow-build] |
-| **Switch Classification Application** | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][cpugpunpu] | ![build][workflow-build] |
-| **Switch Detection Application**      | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][cpugpunpu] | ![build][workflow-build] |
-| **Player Application**                | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][workflow-build] |
+| **Application Name**                  | **Framework**        | **i.MX Board** | **BSP Release** | **Inference Core** | **Status**        |
+|---------------------------------------|----------------------|----------------|-----------------|--------------------|-------------------|
+| **Object Classification**             | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][passing] |
+| **Object Detection SSD**              | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][passing] |
+| **Object Detection YOLOv3**           | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][passing] |
+| **Object Detection DNN**              | ![Framework][opencv] | ![imx][boards] | ![BSP][release] | ![Core][cpu]       | ![build][passing] |
+| **Facial Expression Detection**       | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][passing] |
+| **Fire Classification**               | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][passing] |
+| **Fire Classification**               | ![Framework][armnn]  | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][passing] |
+| **PoseNet Detection**                 | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][passing] |
+| **Face/Eyes Detection**               | ![Framework][opencv] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][passing] |
+| **Switch Classification Application** | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][cpugpunpu] | ![build][passing] |
+| **Switch Detection Application**      | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][cpugpunpu] | ![build][passing] |
+| **Player Application**                | ![Framework][tflite] | ![imx][boards] | ![BSP][release] | ![Core][gpunpu]    | ![build][passing] |
 
 
 [boards]: https://img.shields.io/badge/-8QM%2C%208MPlus-lightgrey
@@ -36,5 +36,5 @@ has_children: true
 [cpu]: https://img.shields.io/badge/-CPU-green
 [gpunpu]: https://img.shields.io/badge/-GPU%2C%20NPU-green
 [cpugpunpu]: https://img.shields.io/badge/-CPU%2C%20GPU%2C%20NPU-green
-[workflow-build]: https://github.com/diegohdorta/pyeiq/workflows/Build/badge.svg
+[passing]: https://img.shields.io/badge/Build-passing-success
 
