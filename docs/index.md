@@ -12,10 +12,10 @@ nav_order: 1
 <b>A Python Framework for eIQ on i.MX Processors</b>
 </h1>
 
-[PyeIQ][caf] is written on top of [eIQ™ ML Software Development Environment][eiq]. Provides
-a set of Python classes allowing the user to run Machine Learning applications in
-a simplified and efficiently way without spending time on cross-compilations,
-deployments or reading extensive guides.
+[PyeIQ][caf] is written on top of [eIQ™ ML Software Development Environment][eiq]
+and provides a set of Python classes allowing the user to run Machine Learning
+applications in a simplified and efficiently way without spending time on
+cross-compilations, deployments or reading extensive guides.
 
 
 ![ready_to_use.png](media/ready_to_use_small.png)                                       | ![open_source.png](media/open_source_small.png)
