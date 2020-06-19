@@ -7,36 +7,35 @@ import shutil
 import sys
 from setuptools import setup, find_packages
 
+BASE_DIR = os.path.join(os.path.abspath(os.sep), "opt", "eiq")
+DEMOS_DIR = os.path.join(os.getcwd(), "eiq", ".demos")
+DEMOS_INSTALL_DIR = os.path.join(BASE_DIR, "demos")
+APPS_INSTALL_DIR = os.path.join(BASE_DIR, "apps")
+
+SWITCH_LABEL_APP = os.path.join(os.getcwd(), "eiq", "apps", "switch_image",
+                                "switch_image.py")
+
 this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-base_dir = os.path.join("/opt", "eiq")
-demos_dir = os.path.join(os.getcwd(), "eiq", ".demos")
-switch_label = "eiq/apps/switch_image/switch_image.py"
-images_player = "eiq/apps/images_player/images_player.py"
-
-install_dir_demos = os.path.join(base_dir, "demos")
-install_dir_apps = os.path.join(base_dir, "apps")
-
-if os.path.exists(base_dir):
+if os.path.exists(BASE_DIR):
     try:
-        print("Removing {0}...".format(base_dir))
-        shutil.rmtree(base_dir)
+        print("Removing {0}...".format(BASE_DIR))
+        shutil.rmtree(BASE_DIR)
     except:
-        print("shutil.rmtree() has failed"
-              "trying to remove: {}".format(base_dir))
+        print("shutil.rmtree() has failed "
+              "trying to remove: {}".format(BASE_DIR))
 
-shutil.copytree(demos_dir, install_dir_demos)
+shutil.copytree(DEMOS_DIR, DEMOS_INSTALL_DIR)
 
 try:
-    pathlib.Path(install_dir_apps).mkdir(parents=True, exist_ok=True)
+    pathlib.Path(APPS_INSTALL_DIR).mkdir(parents=True, exist_ok=True)
 except:
-    sys.exit("Path().mkdir() has failed"
-             "trying to create: {}".format(install_dir_apps))
+    sys.exit("Path().mkdir() has failed "
+             "trying to create: {}".format(APPS_INSTALL_DIR))
 
-shutil.copy(switch_label, install_dir_apps)
-shutil.copy(images_player, install_dir_apps)
+shutil.copy(SWITCH_LABEL_APP, APPS_INSTALL_DIR)
 
 setup(name="eiq",
       version="1.0.0",
