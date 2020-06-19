@@ -22,6 +22,7 @@ import numpy as np
 from PIL import Image
 
 from eiq.config import FONT
+from eiq.engines.opencv.inference import OpenCVDNN
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.detection.config import OBJ_DETECTION, OBJ_DETECTION_DNN, OBJ_DETECTION_GST
 from eiq.modules.utils import DemoBase
@@ -112,25 +113,21 @@ class eIQObjectDetectionDNN(DemoBase):
         height, width = frame.shape[:2]
         image = cv2.resize(frame, (self.config['dims'],
                                    self.config['dims']))
-        blob = cv2.dnn.blobFromImage(image, self.config['scale'],
-                                     (self.config['dims'],
-                                      self.config['dims']),
-                                     (self.config['normalize'],
-                                      self.config['normalize'],
-                                      self.config['normalize']), False)
+        self.nn.create_blob(image, self.config['dims'],
+                            self.config['scale'],
+                            self.config['normalize'])
 
-        self.nn.setInput(blob)
-        det = self.nn.forward()
+        self.nn.run_inference()
 
-        for i in range(det.shape[2]):
-            confidence = det[0, 0, i, 2]
+        for i in range(self.nn.det.shape[2]):
+            confidence = self.nn.det[0, 0, i, 2]
 
             if confidence > self.config['threshold']:
-                index = int(det[0, 0, i, 1])
-                left = int(width * det[0, 0, i, 3])
-                top = int(height * det[0, 0, i, 4])
-                right = int(width * det[0, 0, i, 5])
-                bottom = int(height * det[0, 0, i, 6])
+                index = int(self.nn.det[0, 0, i, 1])
+                left = int(width * self.nn.det[0, 0, i, 3])
+                top = int(height * self.nn.det[0, 0, i, 4])
+                right = int(width * self.nn.det[0, 0, i, 5])
+                bottom = int(height * self.nn.det[0, 0, i, 6])
                 cv2.rectangle(frame, (left, top), (right, bottom),
                               FONT['color']['black'], FONT['thickness'])
 
@@ -153,7 +150,7 @@ class eIQObjectDetectionDNN(DemoBase):
     def start(self):
         self.gather_data()
         self.labels = self.load_labels(self.labels)
-        self.nn = cv2.dnn.readNetFromCaffe(self.proto, self.caffe)
+        self.nn = OpenCVDNN(self.caffe, self.proto)
 
     def run(self):
         self.start()
