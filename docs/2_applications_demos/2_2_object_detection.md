@@ -79,18 +79,75 @@ More details on [eIQ™][eiq] page.
 /opt/eiq/demos# python3 eiq_objects_detection_tflite.py --help
 ```
 
-## **Object Detection YoloV3**
-
-
 ## **Object Detection DNN**
 
+### **Inference Engine and Algorithm**
 
+![opencvframework][opencv]
+
+This demo uses:
+
+ * OpenCV DNN as an inference engine [^4] ;
+ * Deep Neural Networks as default algorithm [^5] .
+    
+More details on [eIQ™][eiq] page.
+
+### **Running Object Detection DNN**
+
+#### **Using Images for Inference**
+
+##### **Default Image**
+
+1. Run the Object Detection demo using the following line:
+```console
+/opt/eiq/demos# python3 eiq_objects_detection_dnn.py
+```
+  * This runs inference on a default image:
+  ![image_dnn](media/image_opencvdnn.gif)
+
+##### **Custom Image**
+
+1. Pass any image as an argument:
+```console
+/opt/eiq/demos# python3 eiq_objects_detection_dnn.py --image=/path_to_the_image
+```
+
+#### **Using Video Source for Inference**
+
+##### **Video File**
+
+1. Run the Object Detection using the following line:
+```console
+/opt/eiq/demos# python3 python3 eiq_objects_detection_dnn.py --video_src=/path_to_the_video
+```
+  * This runs inference on a video file:
+  ![video_dnn](media/video_opencvdnn.gif)
+
+##### **Video Camera or Webcam**
+
+1. Specify the camera device:
+```console
+/opt/eiq/demos# python3 python3 eiq_objects_detection_dnn.py --video_src=/dev/video<index>
+```
+
+### **Extra Parameters**
+
+1. Use **--help** argument to check all the available configurations:
+```console
+/opt/eiq/demos# python3 python3 eiq_objects_detection_dnn.py --help
+```
+
+## **Object Detection YoloV3**
 
 ## **References**
 
 [^1]: https://en.wikipedia.org/wiki/Object_detection
 [^2]: https://www.tensorflow.org/lite
 [^3]: https://arxiv.org/abs/1512.02325
+[^4]: https://github.com/opencv/opencv/tree/master/samples/dnn
+[^5]: https://docs.opencv.org/master/d2/d58/tutorial_table_of_content_dnn.html
+
 
 [tflite]: https://img.shields.io/badge/TFLite-2.1.0-orange
+[opencv]: https://img.shields.io/badge/OpenCV-4.2.0-yellow
 [eiq]: https://www.nxp.com/design/software/development-software/eiq-ml-development-environment:EIQ
