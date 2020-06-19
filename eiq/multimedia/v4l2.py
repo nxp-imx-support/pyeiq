@@ -16,5 +16,5 @@ def v4l2_video_pipeline(device, leaky="leaky=downstream max-size-buffers=1",
                         sync="sync=false drop=True max-buffers=1 "\
                              "emit-signals=True max-lateness=8000000000"):
 
-    return (("filesrc location={} ! decodebin ! queue {} ! videoconvert ! "\
+    return (("filesrc location={} ! qtdemux name=d d.video_0 ! decodebin ! queue {} ! videoconvert ! "\
              "appsink {}").format(device, leaky, sync))
