@@ -118,7 +118,7 @@ More details on [eIQ™][eiq] page.
 
 1. Run the Object Detection using the following line:
 ```console
-/opt/eiq/demos# python3 python3 eiq_objects_detection_dnn.py --video_src=/path_to_the_video
+/opt/eiq/demos# python3 eiq_objects_detection_dnn.py -f opencv --video_src=/path_to_the_video
 ```
   * This runs inference on a video file:
   ![video_dnn](media/video_opencvdnn.gif)
@@ -127,14 +127,14 @@ More details on [eIQ™][eiq] page.
 
 1. Specify the camera device:
 ```console
-/opt/eiq/demos# python3 python3 eiq_objects_detection_dnn.py --video_src=/dev/video<index>
+/opt/eiq/demos# python3 eiq_objects_detection_dnn.py --video_src=/dev/video<index>
 ```
 
 ### **Extra Parameters**
 
 1. Use **--help** argument to check all the available configurations:
 ```console
-/opt/eiq/demos# python3 python3 eiq_objects_detection_dnn.py --help
+/opt/eiq/demos# python3 eiq_objects_detection_dnn.py --help
 ```
 
 ## **Object Detection YoloV3**
