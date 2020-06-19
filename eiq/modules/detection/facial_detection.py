@@ -11,6 +11,7 @@ from eiq.config import FONT
 from eiq.engines.tflite.inference import TFLiteInterpreter
 from eiq.modules.detection.config import FACIAL_EXPRESSION_DETECTION, FACE_EYES_DETECTION
 from eiq.modules.utils import DemoBase
+from eiq.utils import Timer
 
 
 class eIQFacialExpressionDetection(DemoBase):
@@ -83,6 +84,7 @@ class eIQFaceAndEyesDetection(DemoBase):
         super().__init__(download=True, image=True, video_fwk=True,
                          video_src=True, class_name=self.__class__.__name__,
                          data=FACE_EYES_DETECTION)
+        self.timer = Timer()
 
         self.eye_cascade = None
         self.face_cascade = None
@@ -97,7 +99,9 @@ class eIQFaceAndEyesDetection(DemoBase):
 
     def detect_face(self, frame):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = self.face_cascade.detectMultiScale(gray, 1.3, 5)
+
+        with self.timer.timeit("Inference time"):
+            faces = self.face_cascade.detectMultiScale(gray, 1.3, 5)
 
         for (x, y, w, h) in faces:
             cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
