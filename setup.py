@@ -12,7 +12,7 @@ with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 base_dir = os.path.join("/opt", "eiq")
-demos_dir = os.path.join(os.getcwd(), "eiq", "demos")
+demos_dir = os.path.join(os.getcwd(), "eiq", ".demos")
 switch_label = "eiq/apps/switch_image/switch_image.py"
 images_player = "eiq/apps/images_player/images_player.py"
 
