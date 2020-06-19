@@ -19,7 +19,7 @@ from gi.repository import Gst
 import cv2
 import numpy as np
 
-from eiq.multimedia.gstreamer import set_appsink_pipeline, set_appsrc_pipeline
+from eiq.multimedia.gstreamer import set_appsink_pipeline, set_appsink_video_pipeline, set_appsrc_pipeline
 from eiq.multimedia.v4l2 import v4l2_camera_pipeline, v4l2_video_pipeline
 
 
@@ -197,7 +197,9 @@ class VideoConfig:
 
     def gstreamer_config(self):
         if self.video_src and os.path.isfile(self.video_src):
-            sys.exit("Video file not supported by GStreamer framework.")
+            sink_pipeline = set_appsink_video_pipeline(self.video_src)
+            src_pipeline = set_appsrc_pipeline()
+            return sink_pipeline, src_pipeline
         else:
             dev = self.devices.search_device(self.video_src)
             caps = dev.default_caps

@@ -42,6 +42,17 @@ def make_boxes(i, boxes, class_ids, scores):
                             xmax=np.minimum(1.0, xmax),
                             ymax=np.minimum(1.0, ymax)))
 
+def set_appsink_video_pipeline(device,
+                        leaky="leaky=downstream max-size-buffers=1",
+                        sync="drop=True max-buffers=1 emit-signals=True max-lateness=8000000000"):
+
+    return (("filesrc location={} ! qtdemux name=d d.video_0 ! \
+                queue ! decodebin ! videorate ! videoconvert ! \
+                videoscale n-threads=4 method=nearest-neighbour ! \
+                video/x-raw,format=RGB,width=1920,height=1080 ! \
+                queue {} ! appsink name=sink {}"
+            ).format(device,
+                    leaky, sync))
 
 def set_appsink_pipeline(device,
                         leaky="leaky=downstream max-size-buffers=1",
@@ -57,8 +68,8 @@ def set_appsink_pipeline(device,
 def set_appsrc_pipeline(width=1920, height=1080):
     return (("appsrc name=src is-live=True block=True ! \
                 video/x-raw,format=RGB,width=1920,height=1080, \
-                framerate=20/1,interlace-mode=(string)progressive ! \
-                videoconvert ! waylandsink"
+                framerate=30/1,interlace-mode=(string)progressive ! \
+                videoconvert ! imxvideoconvert_g2d ! waylandsink"
             ).format(width, height))
 
 class GstPipeline:
