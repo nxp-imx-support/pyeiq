@@ -8,7 +8,7 @@ import sys
 from setuptools import setup, find_packages
 
 BASE_DIR = os.path.join(os.path.abspath(os.sep), "opt", "eiq")
-DEMOS_DIR = os.path.join(os.getcwd(), "eiq", ".demos")
+DEMOS_DIR = os.path.join(os.getcwd(), "eiq", "demos")
 DEMOS_INSTALL_DIR = os.path.join(BASE_DIR, "demos")
 APPS_INSTALL_DIR = os.path.join(BASE_DIR, "apps")
 
