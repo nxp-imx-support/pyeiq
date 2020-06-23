@@ -30,6 +30,7 @@ class DemoBase:
         self.data = data
         self.image = None
         self.labels = None
+        self.media_src = None
         self.model = None
 
         self.interpreter = None
@@ -45,6 +46,8 @@ class DemoBase:
                 self.image = self.args.image
         if not self.image and self.data and 'image' in self.data:
             self.image = os.path.join(self.media_dir, self.data['image'])
+        if self.image:
+            self.media_src = os.path.basename(self.image)
 
         if hasattr(self.args, 'labels'):
             if self.args.labels and os.path.isfile(self.args.labels):
@@ -69,6 +72,11 @@ class DemoBase:
         if self.args.video_src:
             video_config = VideoConfig(self.args)
             sink, src = video_config.get_config()
+
+            if os.path.isfile(self.args.video_src):
+                self.media_src = os.path.basename(self.args.video_src)
+            else:
+                self.media_src = video_config.dev.name
 
             if not src:
                 if (not sink) or (not sink.isOpened()):
