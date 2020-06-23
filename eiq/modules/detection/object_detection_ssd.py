@@ -75,7 +75,8 @@ class eIQObjectsDetection(DemoBase):
         image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         image = image.resize((self.interpreter.width(), self.interpreter.height()))
         top_result = self.process_image(image)
-        frame = self.overlay.display_result(frame, self.interpreter.inference_time,
+        frame = self.overlay.display_result(frame, self.model, self.media_src,
+                                            self.interpreter.inference_time,
                                             top_result, self.labels, self.colors)
 
         return frame
