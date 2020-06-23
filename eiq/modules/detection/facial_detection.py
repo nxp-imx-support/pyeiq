@@ -67,6 +67,9 @@ class eIQFacialExpressionDetection(DemoBase):
             cv2.putText(frame, expression, (x, y-5), FONT['hershey'],
                         0.7, (0, 0, 255), 2, cv2.LINE_AA)
 
+        self.overlay.draw_info(frame, self.model, self.media_src,
+                               self.interpreter.inference_time)
+
         return frame
 
     def start(self):
