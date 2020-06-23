@@ -18,16 +18,16 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from eiq.engines.tflite.inference import TFLiteInterpreter
-from eiq.modules.detection.config import CORAL_POSENET
+from eiq.modules.detection.config import POSE_DETECTION
 from eiq.modules.utils import DemoBase
 
 
-class eIQCoralPoseNet(DemoBase):
+class eIQPoseDetection(DemoBase):
     def __init__(self):
         super().__init__(download=True, image=True, model=True,
                          video_fwk=True, video_src=True,
                          class_name=self.__class__.__name__,
-                         data=CORAL_POSENET)
+                         data=POSE_DETECTION)
         self.config = self.data['config']
 
     class BodyPart(Enum):
@@ -56,8 +56,8 @@ class eIQCoralPoseNet(DemoBase):
 
     class KeyPoint:
         def __init__(self):
-            self.bodyPart = eIQCoralPoseNet.BodyPart.NOSE
-            self.position = eIQCoralPoseNet.Position()
+            self.bodyPart = eIQPoseDetection.BodyPart.NOSE
+            self.position = eIQPoseDetection.Position()
             self.score = 0.0
 
     class Person:

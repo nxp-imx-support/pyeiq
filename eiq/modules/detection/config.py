@@ -8,20 +8,6 @@ BOTTOM = 3
 CONFIDENCE = 4
 CLASSES = 5
 
-CORAL_POSENET = {'config': {'mean': 127.5,
-                            'std': 127.5,
-                            'confidence': 0.4},
-                 'image': "example.jpg",
-                 'model': "posenet_mobilenet_v1_100_257x257"
-                          "_multi_kpt_stripped.tflite",
-                 'sha1': "fd4fa2ebdaeb43a8f6633888456bfb068e04a5ae",
-                 'src': {'drive': "https://drive.google.com/file/d/"
-                                  "1EoAGgsooOQbPYV7Okgt6VbcrdMEHZRkW/"
-                                  "view?usp=sharing",
-                         'github': "https://github.com/diegohdorta/models/"
-                                   "raw/master/models/posenet_model.zip"},
-                 'window_title': "PyeIQ - Coral Posenet"}
-
 FACE_EYES_DETECTION = {'eye_cascade': "haarcascade_eye.xml",
                        'face_cascade': "haarcascade_frontalface_default.xml",
                        'image': "grace_hopper.jpg",
@@ -122,3 +108,17 @@ OBJ_DETECTION_YOLOV3 = {'config': {'anchors': [[0.57273, 0.677385],
                                           "models/raw/master/models/"
                                           "eIQObjectDetectionYOLOV3.zip"},
                         'window_title': "PyeIQ - Object Detection YOLOV3"}
+
+POSE_DETECTION = {'config': {'mean': 127.5,
+                             'std': 127.5,
+                             'confidence': 0.4},
+                  'image': "example.jpg",
+                  'model': "posenet_mobilenet_v1_100_257x257"
+                           "_multi_kpt_stripped.tflite",
+                  'sha1': "fd4fa2ebdaeb43a8f6633888456bfb068e04a5ae",
+                  'src': {'drive': "https://drive.google.com/file/d/"
+                                   "1EoAGgsooOQbPYV7Okgt6VbcrdMEHZRkW/"
+                                   "view?usp=sharing",
+                          'github': "https://github.com/diegohdorta/models/"
+                                    "raw/master/models/posenet_model.zip"},
+                  'window_title': "PyeIQ - Pose Detection"}
