@@ -7,6 +7,8 @@
 ##
 ## SPDX-License-Identifier:    Apache-2.0
 
+import os
+
 import cv2
 import numpy as np
 from PIL import Image
@@ -42,7 +44,8 @@ class eIQFireClassification(DemoBase):
             cv2.putText(frame, FIRE_MSG['fire'], (3, 50),
                         FONT['hershey'], 1, FONT['color']['red'], 2)
 
-        self.overlay.draw_inference_time(frame, self.interpreter.inference_time)
+        self.overlay.draw_info(frame, self.model, self.media_src,
+                               self.interpreter.inference_time)
 
         return frame
 
@@ -87,7 +90,8 @@ class eIQObjectsClassification(DemoBase):
                         (x, y), FONT['hershey'], FONT['size'],
                         FONT['color']['orange'], FONT['thickness'])
 
-        self.overlay.draw_inference_time(frame, self.interpreter.inference_time)
+        self.overlay.draw_info(frame, self.model, self.media_src,
+                               self.interpreter.inference_time)
 
     def classify_image(self, frame):
         image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
