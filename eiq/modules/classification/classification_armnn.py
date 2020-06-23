@@ -84,7 +84,10 @@ class eIQObjectsClassification(DemoBase):
     def display_result(self, top_result, frame, labels):
         for idx, (i, score) in enumerate(top_result):
             x = 3
-            y = 35 * idx + 35
+            y = 35 * idx + 25
+            cv2.putText(frame, '{} - {:0.4f}'.format(labels[i], score),
+                        (x, y), FONT['hershey'], FONT['size'],
+                        FONT['color']['black'], FONT['thickness'] + 2)
             cv2.putText(frame, '{} - {:0.4f}'.format(labels[i], score),
                         (x, y), FONT['hershey'], FONT['size'],
                         FONT['color']['orange'], FONT['thickness'])
