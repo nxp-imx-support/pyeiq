@@ -94,7 +94,7 @@ class Devices:
                 dev = device
 
             if not dev:
-                print("The specified video_src does not exists.\n"
+                print("The specified video_src was not found.\n"
                       "Searching for default video device...")
                 if self.devices:
                     dev = self.devices[0]
@@ -183,6 +183,7 @@ class VideoConfig:
         self.video_src = args.video_src
         self.devices = Devices()
         self.devices.get_video_devices()
+        self.dev = self.devices.search_device(self.video_src)
 
     def get_config(self):
         if self.video_fwk == "gstreamer":
@@ -201,9 +202,8 @@ class VideoConfig:
             src_pipeline = set_appsrc_pipeline()
             return sink_pipeline, src_pipeline
         else:
-            dev = self.devices.search_device(self.video_src)
-            caps = dev.default_caps
-            sink_pipeline = set_appsink_pipeline(device=dev.name)
+            caps = self.dev.default_caps
+            sink_pipeline = set_appsink_pipeline(device=self.dev.name)
             src_pipeline = set_appsrc_pipeline(width=caps.width,
                                                height=caps.height)
             return sink_pipeline, src_pipeline
@@ -212,19 +212,17 @@ class VideoConfig:
         if self.video_src and os.path.isfile(self.video_src):
             return cv2.VideoCapture(self.video_src), None
         else:
-            dev = self.devices.search_device(self.video_src)
-            dev = int(dev.name[10:])
+            dev = int(self.dev.name[10:])
             return cv2.VideoCapture(dev), None
 
     def v4l2_config(self):
         if self.video_src and os.path.isfile(self.video_src):
             pipeline = v4l2_video_pipeline(self.video_src)
         else:
-            dev = self.devices.search_device(self.video_src)
-            caps = dev.default_caps
+            caps = self.dev.default_caps
             pipeline = v4l2_camera_pipeline(width=caps.width,
                                             height=caps.height,
-                                            device=dev.name,
+                                            device=self.dev.name,
                                             frate=caps.framerate)
 
         return cv2.VideoCapture(pipeline), None
