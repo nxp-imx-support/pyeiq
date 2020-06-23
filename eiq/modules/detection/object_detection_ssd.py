@@ -146,6 +146,9 @@ class eIQObjectDetectionDNN(DemoBase):
                                 FONT['size'], (255, 255, 255),
                                 FONT['thickness'] - 1)
 
+        self.overlay.draw_info(frame, self.caffe, self.media_src,
+                               self.nn.inference_time)
+
         return frame
 
     def start(self):
