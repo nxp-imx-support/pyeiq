@@ -1,21 +1,46 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
+import os
+
 import cv2
 import numpy as np
 
-from eiq.config import FONT, INF_TIME_MESSAGE
+from eiq.config import FONT, INF_TIME_MSG, MODEL_MSG, SRC_MSG
 
 class OpenCVOverlay:
     def __init__(self):
         self.time = None
 
-    def draw_inference_time(self, frame, time):
-        cv2.putText(frame, "{}: {}".format(INF_TIME_MESSAGE, time),
-                    (3, 12), FONT['hershey'], 0.4,
+    def draw_info(self, frame, model, src, time):
+        model = os.path.basename(model)
+
+        y_offset = frame.shape[0] - cv2.getTextSize(time, FONT['hershey'],
+                                                    0.5, 2)[0][1]
+        cv2.putText(frame, "{}: {}".format(INF_TIME_MSG, time),
+                    (3, y_offset), FONT['hershey'], 0.5,
+                    FONT['color']['black'], 2, cv2.LINE_AA)
+        cv2.putText(frame, "{}: {}".format(INF_TIME_MSG, time),
+                    (3, y_offset), FONT['hershey'], 0.5,
                     FONT['color']['white'], 1, cv2.LINE_AA)
 
-    def display_result(self, frame, time, result, labels, colors):
+        y_offset -= (cv2.getTextSize(src, FONT['hershey'], 0.5, 2)[0][1] + 3)
+        cv2.putText(frame, "{}: {}".format(SRC_MSG, src),
+                    (3, y_offset), FONT['hershey'], 0.5,
+                    FONT['color']['black'], 2, cv2.LINE_AA)
+        cv2.putText(frame, "{}: {}".format(SRC_MSG, src),
+                    (3, y_offset), FONT['hershey'], 0.5,
+                    FONT['color']['white'], 1, cv2.LINE_AA)
+
+        y_offset -= (cv2.getTextSize(model, FONT['hershey'], 0.5, 2)[0][1] + 3)
+        cv2.putText(frame, "{}: {}".format(MODEL_MSG, model),
+                    (3, y_offset), FONT['hershey'], 0.5,
+                    FONT['color']['black'], 2, cv2.LINE_AA)
+        cv2.putText(frame, "{}: {}".format(MODEL_MSG, model),
+                    (3, y_offset), FONT['hershey'], 0.5,
+                    FONT['color']['white'], 1, cv2.LINE_AA)
+
+    def display_result(self, frame, model, src, time, result, labels, colors):
         width = frame.shape[1]
         height = frame.shape[0]
 
@@ -49,6 +74,6 @@ class OpenCVOverlay:
                         FONT['hershey'], FONT['size'],
                         FONT['color']['black'],
                         FONT['thickness'])
-            self.draw_inference_time(frame, time)
+            self.draw_info(frame, model, src, time)
 
         return frame
