@@ -10,7 +10,7 @@ FIRE_CLASSIFICATION = {'image': "fire.jpg",
                                'github': "https://github.com/diegohdorta/"
                                          "models/raw/master/models/"
                                          "eIQFireClassification.zip"},
-                       'window_title': "PyeIQ Fire Classification"}
+                       'window_title': "PyeIQ - Fire Classification"}
 
 OBJ_CLASSIFICATION = {'image': "cat.jpg",
                       'labels': "labels_mobilenet_quant_v1_224.txt",
@@ -22,7 +22,7 @@ OBJ_CLASSIFICATION = {'image': "cat.jpg",
                               'github': "https://github.com/diegohdorta/"
                                         "models/raw/master/models/"
                                         "eIQImageClassification.zip"},
-                      'window_title': "PyeIQ Image Classification"}
+                      'window_title': "PyeIQ - Image Classification"}
 
 FIRE_MSG = {'fire': "Fire Detected!",
             'non-fire': "No Fire"}
