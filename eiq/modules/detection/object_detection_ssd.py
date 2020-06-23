@@ -35,7 +35,7 @@ except ImportError:
     has_svgwrite = False
 
 
-class eIQObjectsDetection(DemoBase):
+class eIQObjectDetection(DemoBase):
     def __init__(self):
         super().__init__(download=True, image=True, labels=True,
                          model=True, video_fwk=True, video_src=True,
@@ -71,7 +71,7 @@ class eIQObjectsDetection(DemoBase):
                 result.append({'pos': positions[idx], '_id': classes[idx]})
         return result
 
-    def detect_objects(self, frame):
+    def detect_object(self, frame):
         image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         image = image.resize((self.interpreter.width(), self.interpreter.height()))
         top_result = self.process_image(image)
@@ -89,7 +89,7 @@ class eIQObjectsDetection(DemoBase):
 
     def run(self):
         self.start()
-        self.run_inference(self.detect_objects)
+        self.run_inference(self.detect_object)
 
 
 class eIQObjectDetectionDNN(DemoBase):
@@ -110,7 +110,7 @@ class eIQObjectDetectionDNN(DemoBase):
         self.caffe = os.path.join(self.model_dir, self.data['caffe'])
         self.proto = os.path.join(self.model_dir, self.data['proto'])
 
-    def detect_objects(self, frame):
+    def detect_object(self, frame):
         height, width = frame.shape[:2]
         image = cv2.resize(frame, (self.config['dims'],
                                    self.config['dims']))
@@ -158,7 +158,7 @@ class eIQObjectDetectionDNN(DemoBase):
 
     def run(self):
         self.start()
-        self.run_inference(self.detect_objects)
+        self.run_inference(self.detect_object)
 
 
 class eIQObjectDetectionGStreamer(DemoBase):

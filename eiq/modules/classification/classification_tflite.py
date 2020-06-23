@@ -63,7 +63,7 @@ class eIQFireClassification(DemoBase):
         self.run_inference(self.fire_classification)
 
 
-class eIQObjectsClassification(DemoBase):
+class eIQObjectClassification(DemoBase):
     def __init__(self):
         super().__init__(download=True, image=True, labels=True,
                          model=True, video_fwk=True, video_src=True,

@@ -17,7 +17,7 @@ from eiq.modules.detection.config import LEFT, TOP, RIGHT, BOTTOM, CONFIDENCE, C
 from eiq.modules.utils import DemoBase
 
 
-class eIQObjectsDetectionYOLOV3(DemoBase):
+class eIQObjectDetectionYOLOV3(DemoBase):
     def __init__(self):
         super().__init__(download=True, image=True, labels=True,
                          model=True, video_fwk=True, video_src=True,
@@ -146,7 +146,7 @@ class eIQObjectsDetectionYOLOV3(DemoBase):
 
         return self.non_maximal_suppression(results)
 
-    def detect_objects(self, frame):
+    def detect_object(self, frame):
         image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         image = self.get_input_data(image)
         self.interpreter.set_tensor(image)
@@ -197,4 +197,4 @@ class eIQObjectsDetectionYOLOV3(DemoBase):
 
     def run(self):
         self.start()
-        self.run_inference(self.detect_objects)
+        self.run_inference(self.detect_object)

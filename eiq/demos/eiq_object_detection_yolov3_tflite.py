@@ -2,11 +2,11 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
-from eiq.modules.classification.classification import eIQObjectsClassification
+from eiq.modules.detection.object_detection_yolo import eIQObjectDetectionYOLOV3
 
 
 def main():
-    app = eIQObjectsClassification()
+    app = eIQObjectDetectionYOLOV3()
     app.run()
 
 
