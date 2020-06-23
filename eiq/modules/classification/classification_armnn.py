@@ -35,14 +35,16 @@ class eIQFireClassification(DemoBase):
         self.interpreter.run_inference()
 
         if np.argmax(self.interpreter.get_tensor(0)) == 0:
-            cv2.putText(frame, FIRE_MSG['non-fire'], (3, 50),
-                        FONT['hershey'], 1, FONT['color']['green'], 2)
+            color = FONT['color']['green']
+            msg = FIRE_MSG['non-fire']
         else:
-            cv2.putText(frame, FIRE_MSG['fire'], (3, 50),
-                        FONT['hershey'], 1, FONT['color']['red'], 2)
+            color = FONT['color']['red']
+            msg = FIRE_MSG['fire']
 
-        self.overlay.draw_info(frame, self.model, self.media_src,
-                                         self.interpreter.inference_time)
+        cv2.putText(frame, msg, (3, 30), FONT['hershey'],
+                    1, FONT['color']['black'], 5)
+        cv2.putText(frame, msg, (3, 30  ), FONT['hershey'],
+                    1, color, 2)
 
         return frame
 
