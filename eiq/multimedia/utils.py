@@ -29,6 +29,9 @@ class VideoDevice:
         self.name = None
         self.caps = None
         self.default_caps = None
+        self.full_hd_caps = None
+        self.hd_caps = None
+        self.vga_caps = None
 
 
 class Caps:
@@ -57,11 +60,17 @@ class Devices:
 
             name = dev_props.get_string("device.path")
             caps = self.get_device_caps(dev_caps.normalize())
-            default_caps = None if not caps else caps[0]
+            full_hd_caps, hd_caps, vga_caps = self.get_std_caps(caps)
+            default_caps = hd_caps
+            if (not default_caps) and caps:
+                default_caps = caps[0]
 
             video_dev.name = name
             video_dev.caps = caps
             video_dev.default_caps = default_caps
+            video_dev.full_hd_caps = full_hd_caps
+            video_dev.hd_caps = hd_caps
+            video_dev.vga_caps = vga_caps
             self.devices.append(video_dev)
 
         dev_monitor.stop()
@@ -86,6 +95,22 @@ class Devices:
             caps_list.append(caps)
 
         return caps_list
+
+    @staticmethod
+    def get_std_caps(dev_caps):
+        full_hd_caps = None
+        hd_caps = None
+        vga_caps = None
+
+        for caps in dev_caps:
+            if  (caps.width == 1920) and (caps.height == 1080):
+                full_hd_caps = caps
+            elif (caps.width == 1280) and (caps.height == 720):
+                hd_caps = caps
+            elif (caps.width == 640) and (caps.height == 480):
+                vga_caps = caps
+
+        return full_hd_caps, hd_caps, vga_caps
 
     def search_device(self, dev_name):
         dev = None
@@ -183,11 +208,33 @@ class GstVideo:
 
 class VideoConfig:
     def __init__(self, args):
+        self.res = args.res
         self.video_fwk = args.video_fwk
         self.video_src = args.video_src
         self.devices = Devices()
         self.devices.get_video_devices()
         self.dev = self.devices.search_device(self.video_src)
+        self.dev_caps = self.get_caps()
+
+    def get_caps(self):
+        if self.res == "full_hd":
+                return self.validate_caps(self.dev.full_hd_caps)
+        elif self.res == "vga":
+                return self.validate_caps(self.dev.vga_caps)
+        else:
+            if self.res != "hd":
+                print("Invalid resolution, trying to use hd instead.")
+
+            return self.validate_caps(self.dev.hd_caps)
+
+    def validate_caps(self, caps):
+            if caps:
+                return caps
+            else:
+                print("Resolution not supported. Using "
+                      "{}x{} instead.".format(self.dev.default_caps.width,
+                                              self.dev.default_caps.height))
+                return self.dev.default_caps
 
     def get_config(self):
         if self.video_fwk == "gstreamer":
@@ -206,10 +253,9 @@ class VideoConfig:
             src_pipeline = set_appsrc_pipeline()
             return sink_pipeline, src_pipeline
         else:
-            caps = self.dev.default_caps
             sink_pipeline = set_appsink_pipeline(device=self.dev.name)
-            src_pipeline = set_appsrc_pipeline(width=caps.width,
-                                               height=caps.height)
+            src_pipeline = set_appsrc_pipeline(width=self.dev_caps.width,
+                                               height=self.dev_caps.height)
             return sink_pipeline, src_pipeline
 
     def opencv_config(self):
@@ -223,10 +269,9 @@ class VideoConfig:
         if self.video_src and os.path.isfile(self.video_src):
             pipeline = v4l2_video_pipeline(self.video_src)
         else:
-            caps = self.dev.default_caps
-            pipeline = v4l2_camera_pipeline(width=caps.width,
-                                            height=caps.height,
+            pipeline = v4l2_camera_pipeline(width=self.dev_caps.width,
+                                            height=self.dev_caps.height,
                                             device=self.dev.name,
-                                            frate=caps.framerate)
+                                            frate=self.dev_caps.framerate)
 
         return cv2.VideoCapture(pipeline), None
