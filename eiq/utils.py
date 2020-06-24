@@ -18,6 +18,7 @@ import shutil
 from subprocess import Popen
 import sys
 import tempfile
+import collections
 from time import monotonic
 from urllib.error import URLError
 from urllib.parse import urlparse
@@ -158,6 +159,21 @@ class Downloader:
 def log(*args):
     logging.info(" ".join("{}".format(a) for a in args))
 
+class Framerate:
+    def __init__(self):
+        self.fps = 0
+
+    @contextmanager
+    def fpsit(self, message: str = None):
+        window = collections.deque(maxlen=30)
+        begin = monotonic()
+        try:
+            yield
+        finally:
+            end = monotonic()
+            window.append(end - begin)
+            self.fps = len(window) / sum(window)
+            print("{0}: {1}".format(message, self.fps))
 
 class Timer:
     def __init__(self):

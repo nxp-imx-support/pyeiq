@@ -11,7 +11,7 @@ import cv2
 from eiq.config import BASE_DIR, ZIP
 from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.multimedia.utils import GstVideo, VideoConfig
-from eiq.utils import args_parser, Downloader
+from eiq.utils import args_parser, Downloader, Framerate
 
 
 class DemoBase:
@@ -22,6 +22,7 @@ class DemoBase:
                                 video_fwk, video_src)
         self.overlay = OpenCVOverlay()
         self.class_name = class_name
+        self.framerate = Framerate()
 
         self.base_dir = os.path.join(BASE_DIR, self.class_name)
         self.media_dir = os.path.join(self.base_dir, "media")
@@ -84,7 +85,9 @@ class DemoBase:
                 while sink.isOpened():
                     ret, frame = sink.read()
                     if ret:
-                        cv2.imshow(self.data['window_title'], inference_func(frame))
+                        self.overlay.draw_fps(frame, round(self.fps.fps))
+                        with self.framerate.fpsit("FPS"):
+                            cv2.imshow(self.data['window_title'], inference_func(frame))
                     else:
                         print("Your video device could not capture any image.")
                         break
@@ -92,8 +95,9 @@ class DemoBase:
                         break
                 sink.release()
             else:
-                gst_video = GstVideo(sink, src, inference_func)
-                gst_video.run()
+                with self.framerate.fpsit("FPS"):
+                    gst_video = GstVideo(sink, src, inference_func, self.framerate.fps)
+                    gst_video.run()
         else:
             try:
                 frame = cv2.imread(self.image, cv2.IMREAD_COLOR)

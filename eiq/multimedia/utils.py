@@ -21,6 +21,7 @@ import numpy as np
 
 from eiq.multimedia.gstreamer import set_appsink_pipeline, set_appsink_video_pipeline, set_appsrc_pipeline
 from eiq.multimedia.v4l2 import v4l2_camera_pipeline, v4l2_video_pipeline
+from eiq.multimedia.overlay import OpenCVOverlay
 
 
 class VideoDevice:
@@ -108,14 +109,15 @@ class Devices:
 
 
 class GstVideo:
-    def __init__(self, sink, src, inference_func):
+    def __init__(self, sink, src, inference_func, framerate):
         self.sink = sink
         self.src = src
         self.inference_func = inference_func
-
+        self.fps = framerate
         self.appsource = None
         self.sink_pipeline = None
         self.src_pipeline = None
+        self.overlay = OpenCVOverlay()
 
         atexit.register(self.exit_handler)
 
@@ -169,6 +171,8 @@ class GstVideo:
         mem = sample.get_buffer()
         _, arr = mem.map(Gst.MapFlags.READ)
         img = np.ndarray(resize, buffer=arr.data, dtype=np.uint8)
+
+        self.overlay.draw_fps(img, round(self.fps))
 
         img = self.inference_func(img)
         self.appsource.emit("push-buffer", Gst.Buffer.new_wrapped(img.tobytes()))

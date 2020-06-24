@@ -17,6 +17,7 @@ CHUNK_DEFAULT_SIZE = 32768
 REGULAR_DOWNLOAD_URL = 'https://docs.google.com/uc?export=download'
 
 INF_TIME_MSG = "INFERENCE TIME"
+FPS_MSG = "FPS"
 MODEL_MSG = "MODEL"
 SRC_MSG = "SOURCE"
 MAX_TIME = datetime.timedelta(9, 9, 9)

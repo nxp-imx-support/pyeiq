@@ -6,11 +6,20 @@ import os
 import cv2
 import numpy as np
 
-from eiq.config import FONT, INF_TIME_MSG, MODEL_MSG, SRC_MSG
+from eiq.config import FONT, INF_TIME_MSG, MODEL_MSG, SRC_MSG, FPS_MSG
 
 class OpenCVOverlay:
     def __init__(self):
         self.time = None
+        self.fps = None
+
+    def draw_fps(self, frame, fps):
+        cv2.putText(frame, "{}: {}".format(FPS_MSG, fps),
+                    (3, 20), FONT['hershey'], 0.8,
+                    FONT['color']['black'], 2, cv2.LINE_AA)
+        cv2.putText(frame, "{}: {}".format(FPS_MSG, fps),
+                    (3, 20), FONT['hershey'], 0.8,
+                    FONT['color']['white'], 1, cv2.LINE_AA)
 
     def draw_info(self, frame, model, src, time):
         model = os.path.basename(model)
