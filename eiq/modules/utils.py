@@ -85,7 +85,7 @@ class DemoBase:
                 while sink.isOpened():
                     ret, frame = sink.read()
                     if ret:
-                        self.overlay.draw_fps(frame, round(self.fps.fps))
+                        self.overlay.draw_fps(frame, round(self.framerate.fps))
                         with self.framerate.fpsit("FPS"):
                             cv2.imshow(self.data['window_title'], inference_func(frame))
                     else:
