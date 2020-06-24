@@ -18,9 +18,10 @@ applications in a simplified and efficiently way without spending time on
 cross-compilations, deployments or reading extensive guides.
 
 
-![ready_to_use.png](media/ready_to_use_small.png)                                       | ![open_source.png](media/open_source_small.png)
-:--------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------:
-**Ready-to-use**: Cutting-edge ML samples demonstrating full power of the of framework.  | **Free and Open Source**: Framework under BSD-3-Clause fully extensible and customizable.
+![open_source.png](media/OSI_Standard_Logo_100X130.png)                                           |
+:--------------------------------------------------------------------------------------:  |
+**Free and Open Source**: Framework under BSD-3-Clause fully extensible and customizable. |
+**Ready-to-use**: Cutting-edge ML samples demonstrating full power of the of framework.   |
 
 
 ### **Samples**
