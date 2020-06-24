@@ -14,26 +14,28 @@ class OpenCVOverlay:
         self.fps = None
 
     def draw_fps(self, frame, fps):
-        cv2.putText(frame, "{}: {}".format(FPS_MSG, fps),
-                    (3, 20), FONT['hershey'], 0.8,
+        fps_msg = "{}: {}".format(FPS_MSG, fps)
+        x_offset = frame.shape[1] - (cv2.getTextSize(fps_msg, FONT['hershey'],
+                                                     0.8, 2)[0][0] + 10)
+        cv2.putText(frame, fps_msg,
+                    (x_offset, 25), FONT['hershey'], 0.8,
                     FONT['color']['black'], 2, cv2.LINE_AA)
-        cv2.putText(frame, "{}: {}".format(FPS_MSG, fps),
-                    (3, 20), FONT['hershey'], 0.8,
+        cv2.putText(frame, fps_msg,
+                    (x_offset, 25), FONT['hershey'], 0.8,
                     FONT['color']['white'], 1, cv2.LINE_AA)
 
     def draw_info(self, frame, model, src, time):
         model = os.path.basename(model)
 
-        y_offset = frame.shape[0] - cv2.getTextSize(time, FONT['hershey'],
-                                                    0.5, 2)[0][1]
         cv2.putText(frame, "{}: {}".format(INF_TIME_MSG, time),
-                    (3, y_offset), FONT['hershey'], 0.5,
+                    (3, 20), FONT['hershey'], 0.5,
                     FONT['color']['black'], 2, cv2.LINE_AA)
         cv2.putText(frame, "{}: {}".format(INF_TIME_MSG, time),
-                    (3, y_offset), FONT['hershey'], 0.5,
+                    (3, 20), FONT['hershey'], 0.5,
                     FONT['color']['white'], 1, cv2.LINE_AA)
 
-        y_offset -= (cv2.getTextSize(src, FONT['hershey'], 0.5, 2)[0][1] + 3)
+        y_offset = frame.shape[0] - cv2.getTextSize(src, FONT['hershey'],
+                                                    0.5, 2)[0][1]
         cv2.putText(frame, "{}: {}".format(SRC_MSG, src),
                     (3, y_offset), FONT['hershey'], 0.5,
                     FONT['color']['black'], 2, cv2.LINE_AA)
