@@ -1,3 +1,6 @@
+# Copyright 2020 NXP Semiconductors
+# SPDX-License-Identifier: BSD-3-Clause
+
 import os
 import cv2 as opencv
 import numpy as np
