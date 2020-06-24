@@ -18,8 +18,9 @@ class DemoBase:
     def __init__(self, download=False, image=False, labels=False,
                  model=False, video_fwk=False, video_src=False,
                  class_name=None, data=None):
-        self.args = args_parser(download, image, labels, model,
-                                video_fwk, video_src)
+        self.args = args_parser(download=download, image=image, labels=labels,
+                                model=model, res=True, video_fwk=video_fwk,
+                                video_src=video_src)
         self.overlay = OpenCVOverlay()
         self.class_name = class_name
         self.framerate = Framerate()

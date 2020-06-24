@@ -214,8 +214,8 @@ def copy_dir(src, target):
                 shutil.copy(file_path, target)
 
 
-def args_parser(download=False, image=False, labels=False,
-                model=False, video_fwk=False, video_src=False):
+def args_parser(download=False, image=False, labels=False, model=False,
+                res=False, video_fwk=False, video_src=False):
     parser = ArgumentParser()
     if download:
         parser.add_argument(
@@ -234,6 +234,15 @@ def args_parser(download=False, image=False, labels=False,
         parser.add_argument(
             '-m', '--model', default=None,
             help="path of the .tflite model to be executed")
+    if res:
+        parser.add_argument(
+            '-r', '--res', default='hd',
+            help="Choose the video capture device resolution as bellow:"
+                 "full_hd: 1920x1080. "
+                 "hd: 1280x720. "
+                 "vga: 640x480. "
+                 "Default resolution is hd, if supported, else it uses the "
+                 "best supported resolution.")
     if video_fwk:
         parser.add_argument(
             '-f', '--video_fwk', default='v4l2',
