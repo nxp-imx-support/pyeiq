@@ -16,7 +16,7 @@ SWITCH_LABEL_APP = os.path.join(os.getcwd(), "eiq", "apps", "switch_image",
                                 "switch_image.py")
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(this_directory, 'pypi.md'), encoding='utf-8') as f:
+with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 if os.path.exists(BASE_DIR):
