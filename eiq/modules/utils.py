@@ -129,6 +129,7 @@ class DemoBase:
                                                 inference_func(frame)))
                 thread.daemon = True
                 thread.start()
+                print("Done.")
                 thread.join()
             except KeyboardInterrupt:
                 sys.exit("")
