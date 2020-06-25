@@ -15,7 +15,7 @@ import os
 import pathlib
 import requests
 import shutil
-from subprocess import Popen
+from subprocess import PIPE, Popen
 import sys
 import tempfile
 import collections
@@ -195,6 +195,20 @@ class Timer:
 
 def get_temporary_path(*path):
     return os.path.join(tempfile.gettempdir(), *path)
+
+
+def file_type(file_path):
+    if os.path.isfile(file_path):
+        try:
+            proc = Popen(['file', '-bi', '{}'.format(file_path)], stdout=PIPE)
+            stdout = proc.communicate()[0].decode('ascii')
+            stdout = stdout.split(';')[0]
+            stdout = stdout.split('/')[0]
+
+            return stdout
+        except:
+            return None
+    return None
 
 
 def args_parser(download=False, image=False, labels=False, model=False,
