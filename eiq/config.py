@@ -11,7 +11,8 @@ import cv2
 INIT_MODULE_FILE = "__init__.py"
 
 TMP_FILE_PATH = "eiq"
-BASE_DIR = os.path.join(os.path.abspath(os.sep), tempfile.gettempdir(), TMP_FILE_PATH)
+HOME = os.environ['HOME']
+BASE_DIR = os.path.join(HOME, ".cache", "eiq")
 
 CHUNK_DEFAULT_SIZE = 32768
 REGULAR_DOWNLOAD_URL = 'https://docs.google.com/uc?export=download'
