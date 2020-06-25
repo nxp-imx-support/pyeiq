@@ -1,7 +1,6 @@
 <p align="center">
-  <img src="guides/media/pyeiq.png" height="191" width="176">
+  <img src="https://raw.githubusercontent.com/diegohdorta/models/master/media/pyeiq.png" height="191" width="176">
 </p>
-
 
 ##  **A Python Framework for eIQ on i.MX Processors**
 
@@ -19,8 +18,7 @@ cross-compilations, deployments or reading extensive guides.
 
 | **Object Classification (~3ms)**  | Object Detection **(~15ms)** |
 |-------------------------------|--------------------------|
-| ![oc](guides/media/car_classification.gif)  | ![od](guides/media/car_detection.gif) |
-
+| ![oc](https://raw.githubusercontent.com/diegohdorta/models/master/media/car_classification.gif)  | ![od](https://raw.githubusercontent.com/diegohdorta/models/master/media/car_detection.gif) |
 
 [eiq]: https://www.nxp.com/design/software/development-software/eiq-ml-development-environment:EIQ
 [eiqpackage]: https://img.shields.io/badge/pip3%20install-eiq-green
