@@ -263,7 +263,11 @@ class VideoConfig:
             return cv2.VideoCapture(self.video_src), None
         else:
             dev = int(self.dev.name[10:])
-            return cv2.VideoCapture(dev), None
+            video = cv2.VideoCapture(dev)
+            video.set(cv2.CAP_PROP_FRAME_WIDTH, self.dev_caps.width)
+            video.set(cv2.CAP_PROP_FRAME_HEIGHT, self.dev_caps.height)
+
+            return video, None
 
     def v4l2_config(self):
         if self.video_src and os.path.isfile(self.video_src):
