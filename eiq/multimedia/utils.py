@@ -115,21 +115,21 @@ class Devices:
     def search_device(self, dev_name):
         dev = None
 
-        for device in self.devices:
-            if device.name == dev_name:
-                dev = device
-
-            if not dev:
-                print("The specified video_src was not found.\n"
-                      "Searching for default video device...")
-                if self.devices:
-                    dev = self.devices[0]
+        if dev_name.startswith("/dev/video"):
+            for device in self.devices:
+                if device.name == dev_name:
+                    dev = device
 
                 if not dev:
-                    sys.exit("No video device found. Exiting...")
-                else:
-                    print("Using {} as video device".format(dev.name))
+                    print("The specified video_src was not found.\n"
+                          "Searching for default video device...")
 
+        if not dev and self.devices:
+            dev = self.devices[0]
+        elif not dev:
+            sys.exit("No video device found. Exiting...")
+
+        print("Using {} as video device".format(dev.name))
         return dev
 
 
