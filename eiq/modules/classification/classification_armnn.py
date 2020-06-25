@@ -46,6 +46,9 @@ class eIQFireClassification(DemoBase):
         cv2.putText(frame, msg, (3, 60), FONT['hershey'],
                     1, color, 2)
 
+        self.overlay.draw_info(frame, self.model, self.media_src,
+                               self.interpreter.inference_time)
+
         return frame
 
     def start(self):
