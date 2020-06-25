@@ -1,7 +1,5 @@
 # PyeIQ
 
-![Build][workflow-build]
-![Unit Tests][workflow-tests]
 ![pip3][eiqpackage]
 [![PyPI version](https://badge.fury.io/py/eiq.svg)](https://badge.fury.io/py/eiq)
 ![GitHub issues][license]
@@ -9,23 +7,17 @@
 
 ##  A Python Framework for eIQ on i.MX Processors
 
-[Getting Started](guides/Getting_Started_with_PyeIQ.md) •
-[Docker](guides/Docker.md) •
-[Available Demos](guides/Tables.md) •
-[Contribute](guides/Contribute.md)
-
-PyeIQ is written on top of [eIQ™ ML Software Development Environment][eiq]. Provides
-a set of Python classes allowing the user to run Machine Learning applications in
-a simplified and efficiently way without spending time on cross-compilations,
-deployments or reading extensive guides.
+PyeIQ is written on top of [eIQ™ ML Software Development Environment][eiq] and
+provides a set of Python classes allowing the user to run Machine Learning
+applications in a simplified and efficiently way without spending time on
+cross-compilations, deployments or reading extensive guides.
 
 ### Official Releases
 
-| **PyeIQ Version**     | **Release Date** | **i.MX Board** | **BSP Release** | **Building Status** | **Notes** |
-|-----------------------|------------------|----------------|-----------------|---------------------|-----------|
-| ![tag][tag_v1]        | April 29, 2020   | ![imx][boards] | ![BSP][release] | ![build][passing]   | PoC       |
-| ![tag][tag_v2]        | Planned for June | -              | -               | -                   | -         |
-| ![tag][tag_v3]        | Planned for Sept | -              | -               | -                   | -         |
+| **PyeIQ Version**     | **Release Date** | **i.MX Board** | **BSP Release**              | **Status** | **Notes** |
+|-----------------------|------------------|----------------|------------------------------|---------------------|-----------|
+| ![tag][tag_v1]        | April 29, 2020   | ![imx][boards] | ![BSP][release_5.4.3_2.0.0]  | ![build][passing]   | PoC       |
+| ![tag][tag_v2]        | Planned for June | ![imx][boards] | ![BSP][release_5.4.24_2.1.0] | ![build][passing]   | Stable    |
 
 ### Installation for Users on i.MX Board
 
@@ -50,8 +42,6 @@ PyeIQ is hosted on [PyPI][pypirepo] repository referring to the latest tag on [C
 Free use of this software is granted under the terms of the BSD 3-Clause License.
 
 [eiq]: https://www.nxp.com/design/software/development-software/eiq-ml-development-environment:EIQ
-[workflow-build]: https://github.com/diegohdorta/pyeiq/workflows/Build/badge.svg
-[workflow-tests]: https://github.com/diegohdorta/pyeiq/workflows/Unit%20Tests/badge.svg
 [eiqpackage]: https://img.shields.io/badge/pip3%20install-eiq-green
 [pypirepo]: https://pypi.org/project/eiq/#description
 [pypicaf]: https://source.codeaurora.org/external/imxsupport/pyeiq/
@@ -59,7 +49,8 @@ Free use of this software is granted under the terms of the BSD 3-Clause License
 [gitter-url]: https://gitter.im/pyeiq-imx/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
 [gitter-image]: https://badges.gitter.im/pyeiq-imx/community.svg
 [boards]: https://img.shields.io/badge/-8QM%2C%208MPlus-lightgrey
-[release]: https://img.shields.io/badge/-5.4.3__2.0.0-blueviolet
+[release_5.4.3_2.0.0]: https://img.shields.io/badge/-5.4.3__2.0.0-blueviolet
+[release_5.4.24_2.1.0]: https://img.shields.io/badge/-5.4.24__2.1.0-blueviolet
 [tag_v1]: https://img.shields.io/badge/-v1.0.0-blue
 [tag_v2]: https://img.shields.io/badge/-v2.0.0-blue
 [tag_v3]: https://img.shields.io/badge/-v3.0.0-blue
