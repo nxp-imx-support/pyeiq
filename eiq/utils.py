@@ -197,23 +197,6 @@ def get_temporary_path(*path):
     return os.path.join(tempfile.gettempdir(), *path)
 
 
-def copy_dir(src, target):
-    try:
-        pathlib.Path(target).mkdir(parents=True, exist_ok=True)
-    except:
-        sys.exit("Path().mkdir() has failed"
-                 "trying to create: {}".format(target))
-
-    for file in os.listdir(src):
-        file_path = os.path.join(src, file)
-
-        if os.path.isdir(file_path):
-            copy_dir(file_path, os.path.join(target, file))
-        else:
-            if file != INIT_MODULE_FILE:
-                shutil.copy(file_path, target)
-
-
 def args_parser(download=False, image=False, labels=False, model=False,
                 res=False, video_fwk=False, video_src=False):
     parser = ArgumentParser()
