@@ -44,9 +44,9 @@ class eIQFireClassification(DemoBase):
             color = FONT['color']['red']
             msg = FIRE_MSG['fire']
 
-        cv2.putText(frame, msg, (3, 30), FONT['hershey'],
+        cv2.putText(frame, msg, (3, 60), FONT['hershey'],
                     1, FONT['color']['black'], 5)
-        cv2.putText(frame, msg, (3, 30  ), FONT['hershey'],
+        cv2.putText(frame, msg, (3, 60  ), FONT['hershey'],
                     1, color, 2)
 
         self.overlay.draw_info(frame, self.model, self.media_src,
@@ -90,7 +90,7 @@ class eIQObjectClassification(DemoBase):
     def display_result(self, top_result, frame, labels):
         for idx, (i, score) in enumerate(top_result):
             x = 3
-            y = 35 * idx + 25
+            y = 35 * idx + 60
             cv2.putText(frame, '{} - {:0.4f}'.format(labels[i], score),
                         (x, y), FONT['hershey'], FONT['size'],
                         FONT['color']['black'], FONT['thickness'] + 2)
