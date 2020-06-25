@@ -3,7 +3,6 @@
 
 import datetime
 import os
-import tempfile
 
 import cv2
 
