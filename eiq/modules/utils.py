@@ -121,6 +121,7 @@ class DemoBase:
                     gst_video.run()
         else:
             try:
+                inference_func(cv2.imread(self.image, cv2.IMREAD_COLOR))
                 frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
                 thread = threading.Thread(target=display_image,
                                           args=(self.data['window_title'],
