@@ -11,7 +11,7 @@ import cv2
 from eiq.config import BASE_DIR, ZIP
 from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.multimedia.utils import GstVideo, VideoConfig
-from eiq.utils import args_parser, Downloader, file_type,Framerate
+from eiq.utils import args_parser, Downloader, file_type, Framerate
 
 
 class DemoBase:
@@ -46,7 +46,7 @@ class DemoBase:
         self.validate_media()
 
         if hasattr(self.args, 'image'):
-            if self.args.image and (self.args.image == 'image'):
+            if self.args.image and (file_type(self.args.image) == 'image'):
                 self.image = self.args.image
         if not self.image and self.data and 'image' in self.data:
             self.image = os.path.join(self.media_dir, self.data['image'])
