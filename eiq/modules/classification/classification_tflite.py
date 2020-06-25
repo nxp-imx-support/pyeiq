@@ -7,8 +7,6 @@
 ##
 ## SPDX-License-Identifier:    Apache-2.0
 
-import os
-
 import cv2
 import numpy as np
 from PIL import Image

@@ -116,6 +116,9 @@ class eIQFaceAndEyesDetection(DemoBase):
                 cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh),
                               (0, 255, 0), 2)
 
+        self.overlay.draw_info(frame, "haarcascade_frontalface_default.xml",
+                               self.media_src, self.timer.time)
+
         return frame
 
     def start(self):
