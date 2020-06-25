@@ -173,7 +173,6 @@ class Framerate:
             end = monotonic()
             window.append(end - begin)
             self.fps = len(window) / sum(window)
-            print("{0}: {1}".format(message, self.fps))
 
 class Timer:
     def __init__(self):
@@ -187,7 +186,6 @@ class Timer:
         finally:
             end = monotonic()
             self.convert(end - begin)
-            print("{0}: {1}".format(message, self.time))
 
     def convert(self, elapsed):
         self.time = str(timedelta(seconds=elapsed))
