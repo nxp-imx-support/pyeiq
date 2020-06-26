@@ -3,47 +3,27 @@
 
 # Switch Label Image
 
-SWITCH_IMAGES_MEDIA_SHA1 = "9e468ed566c3402daf24e93f5a503d663e03f448"
-SWITCH_IMAGES_MEDIA_SRC = {'drive': "https://drive.google.com/file/d/"
-                                    "1C8GIVJUh7SqNf3f35Xd3j3Xt3oaje-O1/"
-                                    "view?usp=sharing",
-                           'github': "https://github.com/diegohdorta/"
-                                     "models/raw/master/media/"
-                                     "eIQSwitchLabelImage.zip"}
+SWITCH_IMAGE = {'bin': "label_image",
+                'labels': "labels.txt",
+                'model': "mobilenet_v1_1.0_224_quant.tflite",
+                'sha1': "2e71d5c1ba5695713260a0492b971c84a0785213",
+                'src': {'drive': "https://drive.google.com/file/d/"
+                                 "16RU5SHg72S1C-arbvA2nYlwAYTyKBYjz/"
+                                 "view?usp=sharing",
+                        'github': "https://github.com/diegohdorta/"
+                                  "models/raw/master/models/"
+                                  "eIQSwitchLabelImage.zip"},
+                'msg': {'confidence': "<b>CONFIDENCE</b>",
+                        'inf_time': "<b>INFERENCE TIME</b>",
+                        'labels': "<b>LABELS</b>",
+                        'model_name': "<b>MODEL NAME</b>",
+                        'select_img': "<b>SELECT AN IMAGE</b>"},
+                'window_title': "PyeIQ - Label Image Switch App"}
 
-DEFAULT_TFLITE_IMAGE = "/usr/bin/tensorflow-lite-2.1.0/examples/grace_hopper.bmp"
-
-TFLITE_LABEL_IMAGE_ACCEL = "cd /usr/bin/tensorflow-lite-2.1.0/examples/; " \
-                           "VSI_NN_LOG_LEVEL=0 ./label_image " \
-                           "-m /usr/bin/tensorflow-lite-2.1.0/examples/mobilenet_v1_1.0_224_quant.tflite " \
-                           "-t 1 -i {} " \
-                           "-l labels.txt -a 1 -v 0 -c 100"
-
-TFLITE_LABEL_IMAGE_NO_ACCEL = "cd /usr/bin/tensorflow-lite-2.1.0/examples/; " \
-                              "VSI_NN_LOG_LEVEL=0 ./label_image " \
-                              "-m /usr/bin/tensorflow-lite-2.1.0/examples/mobilenet_v1_1.0_224_quant.tflite " \
-                              "-t 1 -i {} " \
-                              "-l labels.txt -a 0 -v 0 -c 100"
+RUN_LABEL_IMAGE = "VSI_NN_LOG_LEVEL=0 {0} -m {1} -t 1 -i {2} -l {3} -a {4} -v 0 -c 100"
 
 REGEX_GET_INTEGER_FLOAT = "\d+\.\d+|\d+"
-
 REGEX_GET_STRING = "[^a-zA-Z\s]"
-
-SWITCH_MODEL_NAME = "<b>MODEL NAME</b>"
-
-SWITCH_LABELS = "<b>LABELS</b>"
-
-SWITCH_RESULTS = "<b>RESULTS (%)</b>"
-
-SWITCH_INFERENCE_TIME = "<b>INFERENCE TIME</b>"
-
-SWITCH_SELECT_IMAGE = "<b>SELECT AN IMAGE</b>"
-
-ZIP = ".zip"
-
-# Apps Titles
-
-TITLE_LABEL_IMAGE_SWITCH = "PyeIQ - Label Image Switch App"
 
 # ML Player
 
