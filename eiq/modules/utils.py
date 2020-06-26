@@ -10,7 +10,7 @@ import cv2
 
 from eiq.config import BASE_DIR, ZIP
 from eiq.multimedia.overlay import OpenCVOverlay
-from eiq.multimedia.utils import GstVideo, VideoConfig
+from eiq.multimedia.utils import GstVideo, save_image, VideoConfig
 from eiq.utils import args_parser, Downloader, file_type, Framerate
 
 
@@ -26,6 +26,7 @@ class DemoBase:
         self.framerate = Framerate()
 
         self.base_dir = os.path.join(BASE_DIR, self.class_name)
+        self.save_dir = os.path.join(BASE_DIR, "media")
         self.media_dir = os.path.join(self.base_dir, "media")
         self.model_dir = os.path.join(self.base_dir, "model")
 
@@ -126,10 +127,11 @@ class DemoBase:
                 frame = cv2.imread(self.image, cv2.IMREAD_COLOR)
                 thread = threading.Thread(target=display_image,
                                           args=(self.data['window_title'],
-                                                inference_func(frame)))
+                                                inference_func(frame),
+                                                self.save_dir,
+                                                self.class_name))
                 thread.daemon = True
                 thread.start()
-                print("Done.")
                 thread.join()
             except KeyboardInterrupt:
                 sys.exit("")
@@ -137,6 +139,8 @@ class DemoBase:
         cv2.destroyAllWindows()
 
 
-def display_image(window_title, image):
+def display_image(window_title, image, dest, name):
+    save_image(image, dest, name)
     cv2.imshow(window_title, image)
+    print("Done.")
     cv2.waitKey()
