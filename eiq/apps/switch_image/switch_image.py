@@ -2,32 +2,43 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import os
-from PIL import Image
+from random import randint
 from socket import gethostname
 import threading
 
 import gi
-gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, GdkPixbuf, GLib
+gi.require_versions({'GdkPixbuf': "2.0", 'Gtk': "3.0"})
+from gi.repository.GdkPixbuf import Colorspace, Pixbuf
+from gi.repository import GLib, Gtk
 
-from eiq.apps import config
-from eiq.apps.utils import convert_image_to_png
-from eiq.apps.utils import run_label_image_no_accel, run_label_image_accel
-from eiq.config import BASE_DIR
+import cv2
+import numpy as np
+
+from eiq.apps.config import SWITCH_IMAGE
+from eiq.apps.utils import run_label_image
+from eiq.config import BASE_DIR, ZIP
 from eiq.utils import args_parser, Downloader
 
 
 class eIQSwitchLabelImage(Gtk.Window):
 
     def __init__(self):
-        Gtk.Window.__init__(self, title=config.TITLE_LABEL_IMAGE_SWITCH)
-        self.args = args_parser(download=True, image=True)
+        Gtk.Window.__init__(self, title=SWITCH_IMAGE['window_title'])
         self.set_default_size(1280, 720)
         self.set_position(Gtk.WindowPosition.CENTER)
+        self.args = args_parser(download=True)
+        self.data = SWITCH_IMAGE
+        self.msg = self.data['msg']
         self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
+        self.bin_dir = os.path.join(self.base_dir, "bin")
         self.media_dir = os.path.join(self.base_dir, "media")
+        self.model_dir = os.path.join(self.base_dir, "model")
 
-        grid = Gtk.Grid(row_spacing = 10, column_spacing = 10, border_width = 18,)
+        self.binary = os.path.join(self.bin_dir, self.data['bin'])
+        self.model = os.path.join(self.model_dir, self.data['model'])
+        self.labels = os.path.join(self.model_dir, self.data['labels'])
+
+        grid = Gtk.Grid(row_spacing=10, column_spacing=10, border_width=18)
         self.add(grid)
         self.hw_accel = self.get_hw_accel()
         self.value_returned = []
@@ -35,14 +46,12 @@ class eIQSwitchLabelImage(Gtk.Window):
         self.value_returned_box = []
         self.label_returned_box = []
         self.displayed_image = Gtk.Image()
-        self.image = config.DEFAULT_TFLITE_IMAGE
         self.image_map = Gtk.ListStore(str)
 
         download = Downloader(self.args)
-        download.retrieve_data(config.SWITCH_IMAGES_MEDIA_SRC,
-                               self.__class__.__name__ + config.ZIP,
-                               self.base_dir, config.SWITCH_IMAGES_MEDIA_SHA1,
-                               True)
+        download.retrieve_data(self.data['src'],
+                               self.__class__.__name__ + ZIP,
+                               self.base_dir, self.data['sha1'], True)
 
         self.get_bmp_images()
 
@@ -71,29 +80,26 @@ class eIQSwitchLabelImage(Gtk.Window):
             self.value_returned_box.append(Gtk.Box())
             self.label_returned_box.append(Gtk.Box())
 
-        if self.args.image is not None and os.path.exists(self.args.image):
-            if str(self.args.image).endswith(".bmp"):
-                self.image = self.args.image
-
+        self.image = self.get_random_image()
         self.set_displayed_image(self.image)
         self.set_initial_entrys()
 
         model_label = Gtk.Label()
-        model_label.set_markup(config.SWITCH_MODEL_NAME)
-        self.model_name_label  = Gtk.Label.new(None)
+        model_label.set_markup(self.msg['model_name'])
+        self.model_name_label = Gtk.Label.new(None)
         result_label = Gtk.Label()
-        result_label.set_markup(config.SWITCH_LABELS)
+        result_label.set_markup(self.msg['labels'])
         percentage_label = Gtk.Label()
-        percentage_label.set_markup(config.SWITCH_RESULTS)
+        percentage_label.set_markup(self.msg['confidence'])
         inference_label = Gtk.Label()
-        inference_label.set_markup(config.SWITCH_INFERENCE_TIME)
+        inference_label.set_markup(self.msg['inf_time'])
         self.inference_value_label = Gtk.Label.new(None)
         image_label = Gtk.Label()
-        image_label.set_markup(config.SWITCH_SELECT_IMAGE)
+        image_label.set_markup(self.msg['select_img'])
         image_label.set_xalign(0.0)
 
         model_box.pack_start(model_label, True, True, 0)
-        model_name_box.pack_start(self.model_name_label , True, True, 0)
+        model_name_box.pack_start(self.model_name_label, True, True, 0)
         result_box.pack_start(result_label, True, True, 0)
         percentage_box.pack_start(percentage_label, True, True, 0)
         inference_box.pack_start(inference_label, True, True, 0)
@@ -130,8 +136,13 @@ class eIQSwitchLabelImage(Gtk.Window):
         grid.attach(image_box, 2, 1, 4, 10)
 
     def set_displayed_image(self, image):
-        image_converted = convert_image_to_png(image)
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(image_converted, 507, 606, True)
+        img = cv2.imread(image)
+        img = cv2.resize(img, (640, 480))
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+        height, width = img.shape[:2]
+        arr = np.ndarray.tostring(img)
+        pixbuf = Pixbuf.new_from_data(arr, Colorspace.RGB, False, 8, width,
+                                      height, width * 3, None, None)
         self.displayed_image.set_from_pixbuf(pixbuf)
 
     def on_combo_image_changed(self, combo):
@@ -147,7 +158,18 @@ class eIQSwitchLabelImage(Gtk.Window):
         for file in os.listdir(self.media_dir):
             self.image_map.append([file])
 
-    def get_hw_accel(self):
+    def get_random_image(self):
+        images = []
+
+        for file in os.listdir(self.media_dir):
+            file = os.path.join(self.media_dir, file)
+            images.append(file)
+
+        index = randint(0, len(images))
+        return images[index]
+
+    @staticmethod
+    def get_hw_accel():
         if gethostname() == "imx8mpevk":
             return "NPU"
 
@@ -197,11 +219,12 @@ class eIQSwitchLabelImage(Gtk.Window):
 
     def run_inference(self, accel):
         if accel:
-            print ("Running Inference on {0}".format(self.hw_accel))
-            x = run_label_image_accel(self.image)
+            print("Running Inference on {0}".format(self.hw_accel))
         else:
-            print ("Running Inference on CPU")
-            x = run_label_image_no_accel(self.image)
+            print("Running Inference on CPU")
+
+        x = run_label_image(accel, self.binary, self.model,
+                            self.image, self.labels)
 
         GLib.idle_add(self.set_post_inference, x)
 
@@ -210,6 +233,7 @@ class eIQSwitchLabelImage(Gtk.Window):
         thread = threading.Thread(target=self.run_inference, args=(True,))
         thread.daemon = True
         thread.start()
+
 
 def main():
     app = eIQSwitchLabelImage()
