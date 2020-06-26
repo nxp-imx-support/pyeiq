@@ -103,7 +103,7 @@ More details on [eIQ™][eiq] page.
 /opt/eiq/demos# python3 eiq_objects_detection_dnn.py
 ```
   * This runs inference on a default image:
-  ![image_dnn][image_eiqobjectdetectiondnn]
+  ![image_dnn][image_eIQObjectDetectionDNN]
 
 ##### **Custom Image**
 
@@ -120,8 +120,6 @@ More details on [eIQ™][eiq] page.
 ```console
 /opt/eiq/demos# python3 eiq_objects_detection_dnn.py -f opencv --video_src=/path_to_the_video
 ```
-  * This runs inference on a video file:
-  ![video_dnn](media/video_opencvdnn.gif)
 
 ##### **Video Camera or Webcam**
 
@@ -151,7 +149,7 @@ More details on [eIQ™][eiq] page.
 
 [video_eIQObjectDetection]: ../media/demos/eIQObjectDetection/video_eIQObjectDetection.gif
 
-[image_eiqobjectdetectiondnn]: docs/media/demos/eIQObjectDetectionDNN/image_eiqobjectdetectiondnn_resized_logo.gif
+[image_eIQObjectDetectionDNN]: ../media/demos/eIQObjectDetectionDNN/image_eiqobjectdetectiondnn_resized_logo.gif
 
 [tflite]: https://img.shields.io/badge/TFLite-2.1.0-orange
 [opencv]: https://img.shields.io/badge/OpenCV-4.2.0-yellow
