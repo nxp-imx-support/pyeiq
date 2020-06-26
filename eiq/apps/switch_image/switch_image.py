@@ -4,6 +4,7 @@
 import os
 from random import randint
 from socket import gethostname
+from stat import S_IEXEC
 import threading
 
 import gi
@@ -52,6 +53,7 @@ class eIQSwitchLabelImage(Gtk.Window):
         download.retrieve_data(self.data['src'],
                                self.__class__.__name__ + ZIP,
                                self.base_dir, self.data['sha1'], True)
+        os.chmod(self.binary, S_IEXEC)
 
         self.get_bmp_images()
 
