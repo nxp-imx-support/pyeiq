@@ -23,6 +23,7 @@ SRC_MSG = "SOURCE"
 MAX_TIME = datetime.timedelta(9, 9, 9)
 ID = 5
 
+PNG = ".png"
 ZIP = ".zip"
 
 FONT = {'hershey': cv2.FONT_HERSHEY_SIMPLEX,

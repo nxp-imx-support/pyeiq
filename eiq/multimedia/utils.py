@@ -10,6 +10,7 @@
 
 import atexit
 import os
+import pathlib
 import sys
 
 import gi
@@ -19,6 +20,7 @@ from gi.repository import Gst
 import cv2
 import numpy as np
 
+from eiq.config import PNG
 from eiq.multimedia.gstreamer import set_appsink_pipeline, set_appsink_video_pipeline, set_appsrc_pipeline
 from eiq.multimedia.v4l2 import v4l2_camera_pipeline, v4l2_video_pipeline
 from eiq.multimedia.overlay import OpenCVOverlay
@@ -279,3 +281,23 @@ class VideoConfig:
                                             frate=self.dev_caps.framerate)
 
         return cv2.VideoCapture(pipeline), None
+
+
+def save_image(image, dest, name):
+    if not os.path.exists(dest):
+        pathlib.Path(dest).mkdir(parents=True, exist_ok=True)
+
+    count = 1
+    img_name = os.path.join(dest, name+PNG)
+
+    if os.path.exists(img_name):
+        img_name = "{}({}){}".format(name, count, PNG)
+        img_name = os.path.join(dest, img_name)
+
+        while os.path.exists(img_name):
+            count += 1
+            img_name = "{}({}){}".format(name, count, PNG)
+            img_name = os.path.join(dest, img_name)
+
+    cv2.imwrite(img_name, image)
+    print("Image saved as {}".format(img_name))
