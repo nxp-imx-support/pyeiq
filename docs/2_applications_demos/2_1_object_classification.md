@@ -29,7 +29,7 @@ diagnosis to a given patient based on observed characteristics of the patient [^
 This demo uses:
 
  * TensorFlow Lite as an inference engine [^2] ;
- * Mobilenet as default algorithm [^3] .
+ * MobileNet as default algorithm [^3] .
 
 More details on [eIQ™][eiq] page.
 
