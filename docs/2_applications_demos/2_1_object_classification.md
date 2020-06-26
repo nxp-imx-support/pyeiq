@@ -30,7 +30,7 @@ This demo uses:
 
  * TensorFlow Lite as an inference engine [^2] ;
  * Mobilenet as default algorithm [^3] .
-    
+
 More details on [eIQ™][eiq] page.
 
 ### **Running Object Classification**
@@ -44,7 +44,7 @@ More details on [eIQ™][eiq] page.
 /opt/eiq/demos# python3 eiq_objects_classification_tflite.py
 ```
   * This runs inference on a default image:
-  ![classification](media/image_classification.jpg)
+  ![classification][image_eIQObjectClassification]
 
 ##### **Custom Image**
 
@@ -62,7 +62,7 @@ More details on [eIQ™][eiq] page.
 /opt/eiq/demos# python3 eiq_objects_classification_tflite.py --video_src=/path_to_the_video
 ```
   * This runs inference on a video file:
-  ![classification_video](media/video_classification.gif)
+  ![classification_video][video_eIQObjectClassification]
 
 #### **Video Camera or Webcam**
 
@@ -83,6 +83,9 @@ More details on [eIQ™][eiq] page.
 [^1]: https://en.wikipedia.org/wiki/Statistical_classification
 [^2]: https://www.tensorflow.org/lite
 [^3]: https://arxiv.org/abs/1704.04861
+
+[image_eIQObjectClassification]: ../media/demos/eIQObjectClassification/image_eIQObjectClassification_resized_logo.gif
+[video_eIQObjectClassification]: ../media/demos/eIQObjectClassification/video_eIQObjectClassification.gif
 
 [tflite]: https://img.shields.io/badge/TFLite-2.1.0-orange
 [eiq]: https://www.nxp.com/design/software/development-software/eiq-ml-development-environment:EIQ
