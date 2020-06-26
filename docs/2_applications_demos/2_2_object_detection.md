@@ -135,7 +135,63 @@ More details on [eIQ™][eiq] page.
 /opt/eiq/demos# python3 eiq_objects_detection_dnn.py --help
 ```
 
-## **Object Detection YoloV3**
+## **Object Detection YOLOv3**
+
+### **Inference Engine and Algorithm**
+
+![tfliteframework][tflite]
+
+This demo uses:
+
+ * TensorFlow Lite as an inference engine [^2] ;
+ * YOLOv3 as default algorithm [^6] .
+
+More details on [eIQ™][eiq] page.
+
+**NOTE:** This demo needs a quantized model to work properly.
+
+### **Running Object Detection YOLOv3**
+
+#### **Using Images for Inference**
+
+##### **Default Image**
+
+1. Run the Object Detection demo using the following line:
+```console
+/opt/eiq/demos# python3 eiq_objects_detection_yolov3_tflite.py
+```
+  * This runs inference on a default image:
+  ![image_yolov3][image_eIQObjectDetectionYOLOv3]
+
+##### **Custom Image**
+
+1. Pass any image as an argument:
+```console
+/opt/eiq/demos# python3 eiq_objects_detection_yolov3_tflite.py --image=/path_to_the_image
+```
+
+#### **Using Video Source for Inference**
+
+##### **Video File**
+
+1. Run the Object Detection using the following line:
+```console
+/opt/eiq/demos# python3 eiq_objects_detection_yolov3_tflite.py -f opencv --video_src=/path_to_the_video
+```
+
+##### **Video Camera or Webcam**
+
+1. Specify the camera device:
+```console
+/opt/eiq/demos# python3 eiq_objects_detection_yolov3_tflite.py --video_src=/dev/video<index>
+```
+
+### **Extra Parameters**
+
+1. Use **--help** argument to check all the available configurations:
+```console
+/opt/eiq/demos# python3 eiq_objects_detection_yolov3_tflite.py --help
+```
 
 ## **References**
 
@@ -144,12 +200,15 @@ More details on [eIQ™][eiq] page.
 [^3]: https://arxiv.org/abs/1512.02325
 [^4]: https://github.com/opencv/opencv/tree/master/samples/dnn
 [^5]: https://docs.opencv.org/master/d2/d58/tutorial_table_of_content_dnn.html
+[^6]: https://pjreddie.com/darknet/yolo/
 
 [image_eIQObjectDetection]: ../media/demos/eIQObjectDetection/image_eiqobjectdetection_resized_logo.gif
 
 [video_eIQObjectDetection]: ../media/demos/eIQObjectDetection/video_eIQObjectDetection.gif
 
 [image_eIQObjectDetectionDNN]: ../media/demos/eIQObjectDetectionDNN/image_eiqobjectdetectiondnn_resized_logo.gif
+
+[image_eIQObjectDetectionYOLOv3]: ../media/demos/eIQObjectDetectionYOLOV3/image_eiqobjectdetectionyolov3_resized_logo.gif
 
 [tflite]: https://img.shields.io/badge/TFLite-2.1.0-orange
 [opencv]: https://img.shields.io/badge/OpenCV-4.2.0-yellow
