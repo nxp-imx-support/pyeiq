@@ -31,7 +31,7 @@ This demo uses:
 
  * TensorFlow Lite as an inference engine [^2] ;
  * Single Shot Detection as default algorithm [^3] .
-    
+
 More details on [eIQ™][eiq] page.
 
 ### **Running Object Detection SSD**
@@ -45,7 +45,7 @@ More details on [eIQ™][eiq] page.
 /opt/eiq/demos# python3 eiq_objects_detection_tflite.py
 ```
   * This runs inference on a default image:
-  ![detection](media/image_detection.jpg)
+  ![detection][image_eIQObjectDetection]
 
 ##### **Custom Image**
 
@@ -63,7 +63,7 @@ More details on [eIQ™][eiq] page.
 /opt/eiq/demos# python3 eiq_objects_detection_tflite.py --video_src=/path_to_the_video
 ```
   * This runs inference on a video file:
-  ![detection_video](media/video_detection.gif)
+  ![detection_video][video_eIQObjectDetection]
 
 ##### **Video Camera or Webcam**
 
@@ -89,7 +89,7 @@ This demo uses:
 
  * OpenCV DNN as an inference engine [^4] ;
  * Deep Neural Networks as default algorithm [^5] .
-    
+
 More details on [eIQ™][eiq] page.
 
 ### **Running Object Detection DNN**
@@ -103,7 +103,7 @@ More details on [eIQ™][eiq] page.
 /opt/eiq/demos# python3 eiq_objects_detection_dnn.py
 ```
   * This runs inference on a default image:
-  ![image_dnn](media/image_opencvdnn.gif)
+  ![image_dnn][image_eiqobjectdetectiondnn]
 
 ##### **Custom Image**
 
@@ -147,6 +147,11 @@ More details on [eIQ™][eiq] page.
 [^4]: https://github.com/opencv/opencv/tree/master/samples/dnn
 [^5]: https://docs.opencv.org/master/d2/d58/tutorial_table_of_content_dnn.html
 
+[image_eIQObjectDetection]: ../media/demos/eIQObjectDetection/image_eiqobjectdetection_resized_logo.gif
+
+[video_eIQObjectDetection]: ../media/demos/eIQObjectDetection/video_eIQObjectDetection.gif
+
+[image_eiqobjectdetectiondnn]: docs/media/demos/eIQObjectDetectionDNN/image_eiqobjectdetectiondnn_resized_logo.gif
 
 [tflite]: https://img.shields.io/badge/TFLite-2.1.0-orange
 [opencv]: https://img.shields.io/badge/OpenCV-4.2.0-yellow
