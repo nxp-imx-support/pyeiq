@@ -12,8 +12,11 @@ DEMOS_DIR = os.path.join(os.getcwd(), "eiq", "demos")
 DEMOS_INSTALL_DIR = os.path.join(BASE_DIR, "demos")
 APPS_INSTALL_DIR = os.path.join(BASE_DIR, "apps")
 
-SWITCH_LABEL_APP = os.path.join(os.getcwd(), "eiq", "apps", "switch_image",
+SWITCH_IMAGE_APP = os.path.join(os.getcwd(), "eiq", "apps", "switch_image",
                                 "switch_image.py")
+
+SWITCH_VIDEO_APP = os.path.join(os.getcwd(), "eiq", "apps", "switch_video",
+                                "switch_video.py")
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
@@ -35,7 +38,8 @@ except:
     sys.exit("Path().mkdir() has failed "
              "trying to create: {}".format(APPS_INSTALL_DIR))
 
-shutil.copy(SWITCH_LABEL_APP, APPS_INSTALL_DIR)
+shutil.copy(SWITCH_IMAGE_APP, APPS_INSTALL_DIR)
+shutil.copy(SWITCH_VIDEO_APP, APPS_INSTALL_DIR)
 
 setup(name="eiq",
       version="1.0.0",
