@@ -39,7 +39,7 @@ More details on [eIQ™][eiq] page.
 
 ##### **Default Image**
 
-1. Run the Object Classification demo using the following line:
+1. Run the _Object Classification_ demo using the following line:
 ```console
 /opt/eiq/demos# python3 eiq_objects_classification_tflite.py
 ```
@@ -57,7 +57,7 @@ More details on [eIQ™][eiq] page.
 
 ##### **Video File**
 
-1. Run the Object Classification using the following line:
+1. Run the _Object Classification_ using the following line:
 ```console
 /opt/eiq/demos# python3 eiq_objects_classification_tflite.py --video_src=/path_to_the_video
 ```
