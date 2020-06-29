@@ -5,7 +5,7 @@ nav_order: 1
 ---
 
 <p align="center">
-  <img src="media/pyeiq.png" height="191" width="176">
+  <img src="media/logo/color/pyeiq_alpha_logo.png" height="191" width="176">
 </p>
 
 <h1 align="center">
