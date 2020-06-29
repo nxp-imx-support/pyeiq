@@ -19,11 +19,7 @@ fire losses by alarming users early through early fire detection. Image fire
 detection is based on an algorithmic analysis of images.
 However, there is a lower accuracy, delayed detection, and a large amount of
 computation in common detection algorithms, including manually and machine
-automatically extracting image features. Therefore, novel image fire detection
-algorithms based on the advanced object detection CNN models of Faster-RCNN,
-R–FCN, SSD, and YOLO v3 are proposed in this paper. A comparison of the proposed
-and current algorithms reveals that the accuracy of fire detection algorithms
-based on object detection CNNs is higher than other algorithms [^1] .
+automatically extracting image features [^1] .
 
 
 ## **Fire Classification**
