@@ -35,7 +35,8 @@ based on object detection CNNs is higher than other algorithms [^1] .
 This demo uses:
 
  * TensorFlow Lite as an inference engine [^2] ;
- * CNN as default algorithm [^3] .
+ * ArmNN as an inference engine [^3] ;
+ * CNN as default algorithm [^4] .
 
 More details on [eIQ™][eiq] page.
 
@@ -132,7 +133,8 @@ More details on [eIQ™][eiq] page.
 
 [^1]: https://doi.org/10.1016/j.csite.2020.100625
 [^2]: https://www.tensorflow.org/lite
-[^3]: https://en.wikipedia.org/wiki/Convolutional_neural_network
+[^3]: https://github.com/ARM-software/armnn
+[^4]: https://en.wikipedia.org/wiki/Convolutional_neural_network
 
 
 [image_eiqfireclassification]: ../media/demos/eIQFireClassification/image_eiqfireclassification_resized_logo.gif
