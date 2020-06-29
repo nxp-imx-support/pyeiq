@@ -17,7 +17,7 @@ from eiq.modules.classification.config import FIRE_CLASSIFICATION, FIRE_MSG, OBJ
 from eiq.modules.utils import DemoBase
 
 
-class eIQFireClassification(DemoBase):
+class eIQFireClassificationArmNN(DemoBase):
     def __init__(self):
         super().__init__(download=True, image=True, model=True,
                          video_fwk=True, video_src=True,
@@ -60,7 +60,7 @@ class eIQFireClassification(DemoBase):
         self.run_inference(self.fire_classification)
 
 
-class eIQObjectClassification(DemoBase):
+class eIQObjectClassificationArmNN(DemoBase):
     def __init__(self):
         super().__init__(download=True, image=True, labels=True,
                          model=True, video_fwk=True, video_src=True,
