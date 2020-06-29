@@ -42,7 +42,7 @@ More details on [eIQ™][eiq] page.
 
 ##### **Default Image**
 
-1. Run the Object Detection demo using the following line:
+1. Run the _Facial Expression Detection_ demo using the following line:
 ```console
 /opt/eiq/demos# python3 eiq_facial_expression_detection.py
 ```
@@ -60,7 +60,7 @@ More details on [eIQ™][eiq] page.
 
 ##### **Video File**
 
-1. Run the Object Detection using the following line:
+1. Run the _Facial Expression Detection_ using the following line:
 ```console
 /opt/eiq/demos# python3 eiq_facial_expression_detection.py --video_src=/path_to_the_video
 ```
@@ -98,7 +98,7 @@ More details on [eIQ™][eiq] page.
 
 ##### **Default Image**
 
-1. Run the Object Detection demo using the following line:
+1. Run the _Face and Eyes Detection_ demo using the following line:
 ```console
 /opt/eiq/demos# python3 eiq_face_and_eyes_detection.py
 ```
@@ -116,7 +116,7 @@ More details on [eIQ™][eiq] page.
 
 ##### **Video File**
 
-1. Run the Object Detection using the following line:
+1. Run the _Face and Eyes Detection_ using the following line:
 ```console
 /opt/eiq/demos# python3 eiq_face_and_eyes_detection.py --video_src=/path_to_the_video
 ```
