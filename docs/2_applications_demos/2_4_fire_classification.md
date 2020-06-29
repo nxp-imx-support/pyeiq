@@ -84,14 +84,14 @@ More details on [eIQ™][eiq] page.
 
 * **TensorFlow Lite**
 
-1. Run the Object Detection using the following line:
+1. Run the _Fire Classification_ using the following line:
 ```console
 /opt/eiq/demos# python3 eiq_fire_classification_tflite.py --video_src=/path_to_the_video
 ```
 
 * **Arm NN**
 
-1. Run the Object Detection using the following line:
+1. Run the _Fire Classification_ using the following line:
 ```console
 /opt/eiq/demos# python3 eiq_fire_classification_armnn.py --video_src=/path_to_the_video
 ```
