@@ -23,7 +23,7 @@ has_children: true
 | **Facial Expression Detection**       | ![Framework][tflite] | ![imx][boards] | ![BSP][release_5.4.24_2.1.0] | ![Core][gpunpu]    | ![build][passing] |
 | **Fire Classification**               | ![Framework][tflite] | ![imx][boards] | ![BSP][release_5.4.24_2.1.0] | ![Core][gpunpu]    | ![build][passing] |
 | **Fire Classification**               | ![Framework][armnn]  | ![imx][boards] | ![BSP][release_5.4.24_2.1.0] | ![Core][gpunpu]    | ![build][passing] |
-| **PoseNet Detection**                 | ![Framework][tflite] | ![imx][boards] | ![BSP][release_5.4.24_2.1.0] | ![Core][gpunpu]    | ![build][passing] |
+| **Pose Detection**                    | ![Framework][tflite] | ![imx][boards] | ![BSP][release_5.4.24_2.1.0] | ![Core][gpunpu]    | ![build][passing] |
 | **Face/Eyes Detection**               | ![Framework][opencv] | ![imx][boards] | ![BSP][release_5.4.24_2.1.0] | ![Core][gpunpu]    | ![build][passing] |
 
 ## **Applications**
