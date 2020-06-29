@@ -48,4 +48,6 @@ The demos and applications are installed in the **/opt/eiq/** folder.
 
 ## Available Applications and Demos
 
-See the **Applications and Demos** sections to check the available ones.
+See the [**Applications and Demos**][pyeiq_apps_demos] sections to check the available ones.
+
+[pyeiq_apps_demos]: https://pyeiq.dev/2_applications_demos/2_0_applications_demos.html
