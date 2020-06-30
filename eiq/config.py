@@ -12,6 +12,7 @@ INIT_MODULE_FILE = "__init__.py"
 TMP_FILE_PATH = "eiq"
 HOME = os.environ['HOME']
 BASE_DIR = os.path.join(HOME, ".cache", "eiq")
+CACHED_MEDIA = os.path.join(BASE_DIR, "media")
 
 CHUNK_DEFAULT_SIZE = 32768
 REGULAR_DOWNLOAD_URL = 'https://docs.google.com/uc?export=download'

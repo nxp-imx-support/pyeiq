@@ -209,46 +209,36 @@ def file_type(file_path):
     return None
 
 
-def args_parser(download=False, image=False, labels=False, model=False,
-                res=False, video_fwk=False, video_src=False):
+def args_parser():
     parser = ArgumentParser()
-    if download:
-        parser.add_argument(
-            '-d', '--download', default=None,
-            help="Choose from which server the models are going to be "
-                 "downloaded")
-    if image:
-        parser.add_argument(
-            '-i', '--image', default=None,
-            help="path of the image to be classified")
-    if labels:
-        parser.add_argument(
-            '-l', '--labels', default=None,
-            help="path of the file containing labels")
-    if model:
-        parser.add_argument(
-            '-m', '--model', default=None,
-            help="path of the .tflite model to be executed")
-    if res:
-        parser.add_argument(
-            '-r', '--res', default='hd',
-            help="Choose the video capture device resolution as bellow:"
-                 "full_hd: 1920x1080. "
-                 "hd: 1280x720. "
-                 "vga: 640x480. "
-                 "Default resolution is hd, if supported, else it uses the "
-                 "best supported resolution.")
-    if video_fwk:
-        parser.add_argument(
-            '-f', '--video_fwk', default='v4l2',
-            help="Choose the video framework according to the options below:"
-                 "v4l2: GStreamer appsink + OpenCV.imshow(). Default."
-                 "opencv: OpenCV.VideoCapture() + OpenCV.imxshow()."
-                 "gstreamer: GStreamer appsink + GStreamer appsrc.")
-    if video_src:
-        parser.add_argument(
-            '-v', '--video_src', default=None,
-            help="Choose your video source, it can be the path to a video file"
-                 " or your video device, e.g, /dev/video<x>")
+
+    parser.add_argument('--clear-cache', action='store_true')
+    parser.add_argument('--info', action='store_true')
+    parser.add_argument('--list-demos', action='store_true')
+    parser.add_argument('--list-apps', action='store_true')
+    parser.add_argument('--run', default=None)
+
+    parser.add_argument('-d', '--download', default=None,
+                        help="Choose from which server the models are going to be "
+                        "downloaded")
+    parser.add_argument('-i', '--image', default=None,
+                        help="path of the image to be classified")
+    parser.add_argument('-l', '--labels', default=None,
+                        help="path of the file containing labels")
+    parser.add_argument('-m', '--model', default=None,
+                        help="path of the .tflite model to be executed")
+    parser.add_argument('-r', '--res', default='hd',
+                        help="Choose the video capture device resolution as bellow:"
+                        "full_hd: 1920x1080. hd: 1280x720. vga: 640x480. "
+                        "Default resolution is hd, if supported, else it uses the "
+                        "best supported resolution.")
+    parser.add_argument('-f', '--video_fwk', default='v4l2',
+                        help="Choose the video framework according to the options below:"
+                        "v4l2: GStreamer appsink + OpenCV.imshow(). Default."
+                        "opencv: OpenCV.VideoCapture() + OpenCV.imxshow()."
+                        "gstreamer: GStreamer appsink + GStreamer appsrc.")
+    parser.add_argument('-v', '--video_src', default=None,
+                        help="Choose your video source, it can be the path to a video file"
+                        " or your video device, e.g, /dev/video<x>")
 
     return parser.parse_args()

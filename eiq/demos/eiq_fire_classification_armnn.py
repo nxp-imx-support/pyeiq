@@ -2,11 +2,11 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
-from eiq.modules.classification.classification_armnn import eIQFireClassification
+from eiq.modules.classification.classification_armnn import eIQFireClassificationArmNN
 
 
 def main():
-    app = eIQFireClassification()
+    app = eIQFireClassificationArmNN()
     app.run()
 
 

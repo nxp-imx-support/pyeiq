@@ -2,11 +2,11 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
-from eiq.modules.classification.classification_tflite import eIQFireClassification
+from eiq.modules.classification.classification_tflite import eIQFireClassificationTFLite
 
 
 def main():
-    app = eIQFireClassification()
+    app = eIQFireClassificationTFLite()
     app.run()
 
 

@@ -22,12 +22,11 @@ from eiq.utils import args_parser, Downloader
 
 
 class eIQSwitchLabelImage(Gtk.Window):
-
     def __init__(self):
         Gtk.Window.__init__(self, title=SWITCH_IMAGE['window_title'])
         self.set_default_size(1280, 720)
         self.set_position(Gtk.WindowPosition.CENTER)
-        self.args = args_parser(download=True)
+        self.args = args_parser()
         self.data = SWITCH_IMAGE
         self.msg = self.data['msg']
         self.base_dir = os.path.join(BASE_DIR, self.__class__.__name__)
@@ -236,13 +235,8 @@ class eIQSwitchLabelImage(Gtk.Window):
         thread.daemon = True
         thread.start()
 
-
-def main():
-    app = eIQSwitchLabelImage()
-    app.connect("destroy", Gtk.main_quit)
-    app.show_all()
-    Gtk.main()
-
-
-if __name__ == '__main__':
-    main()
+    def run(self):
+        app = eIQSwitchLabelImage()
+        app.connect("destroy", Gtk.main_quit)
+        app.show_all()
+        Gtk.main()

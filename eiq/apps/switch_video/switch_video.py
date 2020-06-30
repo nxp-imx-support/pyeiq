@@ -18,7 +18,7 @@ from eiq.utils import args_parser, Downloader
 
 class eIQVideoSwitchCore:
     def __init__(self):
-        self.args = args_parser(download=True)
+        self.args = args_parser()
         self.pid = [0, 0]
         self.device = None
         self.class_name = self.__class__.__name__
@@ -104,8 +104,3 @@ class eIQVideoSwitchCore:
                                      cv2.IMREAD_COLOR)
                 cv2.imshow(self.data['window_title'], image)
                 cv2.waitKey(1)
-
-
-if __name__ == "__main__":
-    app = eIQVideoSwitchCore()
-    app.run()
