@@ -18,11 +18,8 @@ from eiq.modules.utils import DemoBase
 
 
 class eIQFireClassificationTFLite(DemoBase):
-    def __init__(self):
-        super().__init__(download=True, image=True, model=True,
-                         video_fwk=True, video_src=True,
-                         class_name=self.__class__.__name__,
-                         data=FIRE_CLASSIFICATION)
+    def __init__(self, args=None):
+        super().__init__(args, self.__class__.__name__, FIRE_CLASSIFICATION)
 
     def fire_classification(self, frame):
         image = cv2.resize(frame, (self.interpreter.width(),
@@ -44,7 +41,7 @@ class eIQFireClassificationTFLite(DemoBase):
 
         cv2.putText(frame, msg, (3, 60), FONT['hershey'],
                     1, FONT['color']['black'], 5)
-        cv2.putText(frame, msg, (3, 60  ), FONT['hershey'],
+        cv2.putText(frame, msg, (3, 60), FONT['hershey'],
                     1, color, 2)
 
         self.overlay.draw_info(frame, self.model, self.media_src,
@@ -62,11 +59,8 @@ class eIQFireClassificationTFLite(DemoBase):
 
 
 class eIQObjectClassificationTFLite(DemoBase):
-    def __init__(self):
-        super().__init__(download=True, image=True, labels=True,
-                         model=True, video_fwk=True, video_src=True,
-                         class_name=self.__class__.__name__,
-                         data=OBJ_CLASSIFICATION)
+    def __init__(self, args=None):
+        super().__init__(args, self.__class__.__name__, OBJ_CLASSIFICATION)
 
     def load_labels(self, label_path):
         with open(label_path, 'r') as f:

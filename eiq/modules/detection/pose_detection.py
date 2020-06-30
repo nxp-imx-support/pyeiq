@@ -23,11 +23,8 @@ from eiq.modules.utils import DemoBase
 
 
 class eIQPoseDetection(DemoBase):
-    def __init__(self):
-        super().__init__(download=True, image=True, model=True,
-                         video_fwk=True, video_src=True,
-                         class_name=self.__class__.__name__,
-                         data=POSE_DETECTION)
+    def __init__(self, args=None):
+        super().__init__(args, self.__class__.__name__, POSE_DETECTION)
         self.config = self.data['config']
 
     class BodyPart(Enum):

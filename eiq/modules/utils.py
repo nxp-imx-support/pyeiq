@@ -15,15 +15,15 @@ from eiq.utils import args_parser, Downloader, file_type, Framerate
 
 
 class DemoBase:
-    def __init__(self, download=False, image=False, labels=False,
-                 model=False, video_fwk=False, video_src=False,
-                 class_name=None, data=None):
-        self.args = args_parser(download=download, image=image, labels=labels,
-                                model=model, res=True, video_fwk=video_fwk,
-                                video_src=video_src)
-        self.overlay = OpenCVOverlay()
+    def __init__(self, args=None, class_name=None, data=None):
+        if args:
+            self. args = args
+        else:
+            self.args = args_parser()
+
         self.class_name = class_name
         self.framerate = Framerate()
+        self.overlay = OpenCVOverlay()
 
         self.base_dir = os.path.join(BASE_DIR, self.class_name)
         self.save_dir = os.path.join(BASE_DIR, "media")

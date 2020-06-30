@@ -18,11 +18,8 @@ from eiq.modules.utils import DemoBase
 
 
 class eIQObjectDetectionYOLOV3(DemoBase):
-    def __init__(self):
-        super().__init__(download=True, image=True, labels=True,
-                         model=True, video_fwk=True, video_src=True,
-                         class_name=self.__class__.__name__,
-                         data=OBJ_DETECTION_YOLOV3)
+    def __init__(self, args=None):
+        super().__init__(args, self.__class__.__name__, OBJ_DETECTION_YOLOV3)
         self.config = self.data['config']
 
     @staticmethod

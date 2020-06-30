@@ -36,11 +36,8 @@ except ImportError:
 
 
 class eIQObjectDetection(DemoBase):
-    def __init__(self):
-        super().__init__(download=True, image=True, labels=True,
-                         model=True, video_fwk=True, video_src=True,
-                         class_name=self.__class__.__name__,
-                         data=OBJ_DETECTION)
+    def __init__(self, args=None):
+        super().__init__(args, self.__class__.__name__, OBJ_DETECTION)
 
         self.colors = None
 
@@ -93,11 +90,8 @@ class eIQObjectDetection(DemoBase):
 
 
 class eIQObjectDetectionDNN(DemoBase):
-    def __init__(self):
-        super().__init__(download=True, image=True, labels=True,
-                         video_fwk=True, video_src=True,
-                         class_name=self.__class__.__name__,
-                         data=OBJ_DETECTION_DNN)
+    def __init__(self, args=None):
+        super().__init__(args, self.__class__.__name__, OBJ_DETECTION_DNN)
         self.config = self.data['config']
 
         self.caffe = None
@@ -162,10 +156,8 @@ class eIQObjectDetectionDNN(DemoBase):
 
 
 class eIQObjectDetectionGStreamer(DemoBase):
-    def __init__(self):
-        super().__init__(download=True, video_fwk=True, video_src=True,
-                         class_name=self.__class__.__name__,
-                         data=OBJ_DETECTION_GST)
+    def __init__(self, args=None):
+        super().__init__(args, self.__class__.__name__, OBJ_DETECTION_GST)
 
         self.tensor = None
 

@@ -18,15 +18,11 @@ from eiq.modules.utils import DemoBase
 
 
 class eIQFireClassificationArmNN(DemoBase):
-    def __init__(self):
-        super().__init__(download=True, image=True, model=True,
-                         video_fwk=True, video_src=True,
-                         class_name=self.__class__.__name__,
-                         data=FIRE_CLASSIFICATION)
+    def __init__(self, args=None):
+        super().__init__(args, self.__class__.__name__, FIRE_CLASSIFICATION)
 
     def fire_classification(self, frame):
-        image = cv2.resize(frame, (128,
-                                   128))
+        image = cv2.resize(frame, (128, 128))
         image = np.expand_dims(image, axis=0)
 
         image = np.array(image, dtype=np.float32) / 255.0
@@ -61,11 +57,8 @@ class eIQFireClassificationArmNN(DemoBase):
 
 
 class eIQObjectClassificationArmNN(DemoBase):
-    def __init__(self):
-        super().__init__(download=True, image=True, labels=True,
-                         model=True, video_fwk=True, video_src=True,
-                         class_name=self.__class__.__name__,
-                         data=OBJ_CLASSIFICATION)
+    def __init__(self, args=None):
+        super().__init__(args, self.__class__.__name__, OBJ_CLASSIFICATION)
 
     def load_labels(self, label_path):
         with open(label_path, 'r') as f:
@@ -96,12 +89,11 @@ class eIQObjectClassificationArmNN(DemoBase):
                         FONT['color']['orange'], FONT['thickness'])
 
         self.overlay.draw_info(frame, self.model, self.media_src,
-                                         self.interpreter.inference_time)
+                               self.interpreter.inference_time)
 
     def classify_image(self, frame):
         image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-        image = image.resize((128,
-                              128))
+        image = image.resize((128, 128))
 
         top_result = self.process_image(image)
         self.display_result(top_result, frame, self.labels)

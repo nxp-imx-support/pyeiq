@@ -15,10 +15,9 @@ from eiq.utils import Timer
 
 
 class eIQFacialExpressionDetection(DemoBase):
-    def __init__(self):
-        super().__init__(download=True, image=True, video_fwk=True,
-                         video_src=True, class_name=self.__class__.__name__,
-                         data=FACIAL_EXPRESSION_DETECTION)
+    def __init__(self, args=None):
+        super().__init__(args, self.__class__.__name__,
+                         FACIAL_EXPRESSION_DETECTION)
 
         self.face_cascade = None
 
@@ -83,10 +82,8 @@ class eIQFacialExpressionDetection(DemoBase):
 
 
 class eIQFaceAndEyesDetection(DemoBase):
-    def __init__(self):
-        super().__init__(download=True, image=True, video_fwk=True,
-                         video_src=True, class_name=self.__class__.__name__,
-                         data=FACE_EYES_DETECTION)
+    def __init__(self, args=None):
+        super().__init__(args, self.__class__.__name__, FACE_EYES_DETECTION)
         self.timer = Timer()
 
         self.eye_cascade = None
