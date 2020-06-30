@@ -21,6 +21,11 @@ class eIQFacialExpressionDetection(DemoBase):
 
         self.face_cascade = None
 
+    @staticmethod
+    def description():
+        return ("This demo uses:\n   * TensorFlow Lite and OpenCV as inference engines."
+                "\n   * CNN and Haar Cascade as default algorithms.\n")
+
     def gather_data(self):
         super().gather_data()
 
@@ -88,6 +93,11 @@ class eIQFaceAndEyesDetection(DemoBase):
 
         self.eye_cascade = None
         self.face_cascade = None
+
+    @staticmethod
+    def description():
+        return ("This demo uses:\n   * OpenCV as inference engine."
+                "\n   * Haar Cascade as default algorithm.\n")
 
     def gather_data(self):
         super().gather_data()

@@ -23,6 +23,11 @@ class eIQObjectDetectionYOLOV3(DemoBase):
         self.config = self.data['config']
 
     @staticmethod
+    def description():
+        return ("This demo uses:\n   * TensorFlow Lite as inference engine."
+                "\n   * YOLO as default algorithm.\n")
+
+    @staticmethod
     def expit(x):
         return 1 / (1 + np.exp(-x))
 

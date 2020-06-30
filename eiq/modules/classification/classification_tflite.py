@@ -21,6 +21,11 @@ class eIQFireClassificationTFLite(DemoBase):
     def __init__(self, args=None):
         super().__init__(args, self.__class__.__name__, FIRE_CLASSIFICATION)
 
+    @staticmethod
+    def description():
+        return ("This demo uses:\n   * TensorFlow Lite as inference engine."
+                "\n   * CNN as default algorithm.\n")
+
     def fire_classification(self, frame):
         image = cv2.resize(frame, (self.interpreter.width(),
                                    self.interpreter.height()))
@@ -61,6 +66,11 @@ class eIQFireClassificationTFLite(DemoBase):
 class eIQObjectClassificationTFLite(DemoBase):
     def __init__(self, args=None):
         super().__init__(args, self.__class__.__name__, OBJ_CLASSIFICATION)
+
+    @staticmethod
+    def description():
+        return ("This demo uses:\n   * TensorFlow Lite as inference engine."
+                "\n   * CNN as default algorithm.\n")
 
     def load_labels(self, label_path):
         with open(label_path, 'r') as f:

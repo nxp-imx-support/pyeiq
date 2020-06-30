@@ -41,6 +41,11 @@ class eIQObjectDetection(DemoBase):
 
         self.colors = None
 
+    @staticmethod
+    def description():
+        return ("This demo uses:\n   * TensorFlow Lite as inference engine."
+                "\n   * Single Shot Detection as default algorithm.\n")
+
     def generate_colors(self):
         hsv_tuples = [(x / len(self.labels), 1., 1.)
                       for x in range(len(self.labels))]
@@ -97,6 +102,11 @@ class eIQObjectDetectionDNN(DemoBase):
         self.caffe = None
         self.proto = None
         self.nn = None
+
+    @staticmethod
+    def description():
+        return ("This demo uses:\n   * OpenCV DNN as inference engine."
+                "\n   * Deep Neural Networks as default algorithm.\n")
 
     def gather_data(self):
         super().gather_data()

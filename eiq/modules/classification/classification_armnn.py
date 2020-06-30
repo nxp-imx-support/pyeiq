@@ -21,6 +21,11 @@ class eIQFireClassificationArmNN(DemoBase):
     def __init__(self, args=None):
         super().__init__(args, self.__class__.__name__, FIRE_CLASSIFICATION)
 
+    @staticmethod
+    def description():
+        return ("This demo uses:\n   * ArmNN as inference engine."
+                "\n   * CNN as default algorithm.\n")
+
     def fire_classification(self, frame):
         image = cv2.resize(frame, (128, 128))
         image = np.expand_dims(image, axis=0)
@@ -59,6 +64,11 @@ class eIQFireClassificationArmNN(DemoBase):
 class eIQObjectClassificationArmNN(DemoBase):
     def __init__(self, args=None):
         super().__init__(args, self.__class__.__name__, OBJ_CLASSIFICATION)
+
+    @staticmethod
+    def description():
+        return ("This demo uses:\n   * ArmNN as inference engine."
+                "\n   * CNN as default algorithm.\n")
 
     def load_labels(self, label_path):
         with open(label_path, 'r') as f:
