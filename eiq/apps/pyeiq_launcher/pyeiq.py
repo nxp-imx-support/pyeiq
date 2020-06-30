@@ -89,7 +89,7 @@ class PyeIQ:
             print(">>> {}".format(demo))
 
         print("\nFor more details about a demo use --info (e.g.,"
-              "pyeiq --info {}).".format(self.randomize(self.demos)))
+              " pyeiq --info {}).".format(self.randomize(self.demos)))
         print("To run a demo use --run (e.g., pyeiq --run "
               "{}).\n".format(self.randomize(self.demos)))
 
