@@ -23,6 +23,7 @@ be used to run the demos and applications, specify parameters, get info and more
 ```
 
 2. The above command returns the PyeIQ manager tool options:
+
 | **Manager Tool Command**          | **Description**                                  | **Example**                            |
 |-----------------------------------|--------------------------------------------------|----------------------------------------|
 | pyeiq --list-apps                 | List the available applications.                 |                                        |
