@@ -9,12 +9,11 @@ from eiq.utils import Timer
 
 class aNNInterpreter:
     def __init__(self, model=None):
-        os.environ['VSI_NN_LOG_LEVEL'] = "0"
         self.interpreter = None
         self.input_details = None
         self.output_details = None
         self.inference_time = None
-        # ONNX, Caffe and TF parsers also exist.
+
         if model is not None:
             parser = ann.ITfLiteParser()
             network = parser.CreateNetworkFromBinaryFile(model)
@@ -24,16 +23,13 @@ class aNNInterpreter:
             self.input_binding_info = parser.GetNetworkInputBindingInfo(
                 graph_id, input_names[0])
 
-            # Create a runtime object that will perform inference.
             options = ann.CreationOptions()
             self.runtime = ann.IRuntime(options)
 
-            # Backend choices earlier in the list have higher preference.
             preferredBackends = [ann.BackendId('CpuAcc'), ann.BackendId('CpuRef')]
             opt_network, messages = ann.Optimize(
                 network, preferredBackends, self.runtime.GetDeviceSpec(), ann.OptimizerOptions())
 
-            # Load the optimized network into the runtime.
             net_id, _ = self.runtime.LoadNetwork(opt_network)
 
             output_names = parser.GetSubgraphOutputTensorNames(graph_id)
