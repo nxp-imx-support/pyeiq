@@ -1,11 +1,11 @@
 ---
 layout: default
-title: Switch Classification
+title: Switch Classification Image
 parent: Applications and Demos
 nav_order: 6
 ---
 
-# **Switch Classification**
+# **Switch Classification Image**
 {: .no_toc }
 
 1. TOC
@@ -18,7 +18,7 @@ This application offers a graphical interface for users to run an object
 classification demo using either CPU or GPU/NPU to perform inference on a list
 of available images.
 
-## **Switch Classification**
+## **Switch Classification Image**
 
 ### **Inference Engine and Algorithm**
 
@@ -31,11 +31,11 @@ This application uses:
 
 More details on [eIQ™][eiq] page.
 
-### **Running Switch Classification**
+### **Running Switch Classification Image**
 
-1. Run the _Switch Classification_ demo using the following line:
+1. Run the _Switch Classification Image_ demo using the following line:
 ```console
-/opt/eiq/apps# python3 eiq_switch_classification_image.py
+# pyeiq --run switch_image
 ```
 2. Choose an image, then click on **CPU** or **GPU**/**NPU** button:
 
