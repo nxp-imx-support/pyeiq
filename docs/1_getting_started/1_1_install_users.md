@@ -34,7 +34,8 @@ Check below the available tarballs:
 
 | **PyeIQ Version**  | **Tarball**                     |
 |--------------------|---------------------------------|
-| ![tag][tag_v1]     | [eiq-1.0.0.tar.gz][v1_tarball] |
+| ![tag][tag_v1]     | [eiq-1.0.0.tar.gz][v1_tarball]  |
+| ![tag][tag_v2]     | [eiq-2.0.0.tar.gz][v2_tarball]  |
 
 1. Get the latest tarball above and copy it to the board:
 ```console
@@ -42,7 +43,9 @@ Check below the available tarballs:
 ```
 [pypi]: ../media/pypieiq.gif
 
-
 [tag_v1]: https://img.shields.io/badge/-v1.0.0-blue
+[tag_v2]: https://img.shields.io/badge/-v2.0.0-blue
 
 [v1_tarball]: https://files.pythonhosted.org/packages/19/43/52b82520c5c65a735c2e64c4be7808df0ef511015555f9f1bd541c2ac0c5/eiq-1.0.0.tar.gz
+
+[v2_tarball]: https://files.pythonhosted.org/packages/92/e5/b66aefa5c9dc990e3a6bc3ece10c525cf2bd83258412e5855ab89ce41631/eiq-2.0.0.tar.gz
