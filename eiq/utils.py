@@ -24,7 +24,7 @@ from urllib.error import URLError
 from urllib.parse import urlparse
 import urllib.request
 
-from eiq.config import ID, INIT_MODULE_FILE, MAX_TIME, TMP_FILE_PATH
+from eiq.config import ID, MAX_TIME, TMP_FILE_PATH
 from eiq.helper.google_drive_downloader import GoogleDriveDownloader as gdd
 
 

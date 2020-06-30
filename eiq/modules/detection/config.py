@@ -74,18 +74,6 @@ OBJ_DETECTION_GST = {'labels': "coco_labels.txt",
                                        "eIQObjectDetectionCVGST.zip"},
                      'window_title': "PyeIQ - Object Detection OpenCV"}
 
-OBJ_DETECTION_SSD = {'image': "dog.jpg",
-                     'labels': "coco_classes.txt",
-                     'model': "ssd_mobilenet_v2.tflite",
-                     'sha1': "fadfdb7c4bf056edee09cd37c87d06bb19e6ef83",
-                     'src': {'drive': "https://drive.google.com/file/d/"
-                                      "1t3VmNdkpfp4M-jyz_AD2QUeyS78FyqQT/"
-                                      "view?usp=sharing",
-                             'github': "https://github.com/diegohdorta/"
-                                       "models/raw/master/models/"
-                                       "object_detection_ssd.zip"},
-                     'window_title': "PyeIQ - Object Detection SSD"}
-
 OBJ_DETECTION_YOLOV3 = {'config': {'anchors': [[0.57273, 0.677385],
                                                [1.87446, 2.06253],
                                                [3.33843, 5.47434],

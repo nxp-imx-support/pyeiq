@@ -2,10 +2,8 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import os
-import cv2 as opencv
 import numpy as np
 import pyarmnn as ann
-from pyarmnn import __version__ as pyarmnn_version
 from eiq.utils import Timer
 
 
@@ -25,9 +23,6 @@ class aNNInterpreter:
             input_names = parser.GetSubgraphInputTensorNames(graph_id)
             self.input_binding_info = parser.GetNetworkInputBindingInfo(
                 graph_id, input_names[0])
-            input_tensor_id = self.input_binding_info[0]
-            input_tensor_info = self.input_binding_info[1]
-            print(input_tensor_info.GetShape())
 
             # Create a runtime object that will perform inference.
             options = ann.CreationOptions()
@@ -49,7 +44,7 @@ class aNNInterpreter:
     def set_tensor(self, image):
         self.input_tensors = ann.make_input_tensors([self.input_binding_info], [image])
 
-    def get_tensor(self, index, squeeze=False):
+    def get_tensor(self, squeeze=False):
         if squeeze:
             return np.squeeze(ann.workload_tensors_to_ndarray(self.output_tensors))
 

@@ -7,8 +7,6 @@ import os
 import cv2
 
 
-INIT_MODULE_FILE = "__init__.py"
-
 TMP_FILE_PATH = "eiq"
 HOME = os.environ['HOME']
 BASE_DIR = os.path.join(HOME, ".cache", "eiq")
