@@ -57,7 +57,7 @@ More details on [eIQ™][eiq] page.
 ```
 
 * This runs inference on a default image:
-![facial_detection][image_eiqfireclassification]
+![image_fire_classification][image_eiqfireclassification]
 
 ##### **Custom Image**
 
@@ -109,6 +109,9 @@ More details on [eIQ™][eiq] page.
 # pyeiq --run fire_classification_armnn --video_src=/dev/video<index>
 ```
 
+* This runs inference on a video camera:
+![video_fire_classification][video_eiqfireclassification]
+
 ### **Extra Parameters**
 
 * **TensorFlow Lite**
@@ -134,6 +137,8 @@ More details on [eIQ™][eiq] page.
 
 
 [image_eiqfireclassification]: ../media/demos/eIQFireClassification/image_eiqfireclassification_resized_logo.gif
+
+[video_eiqfireclassification]: ../media/demos/eIQFireClassification/video_eiqfireclassification_resized_logo.gif
 
 
 [tflite]: https://img.shields.io/badge/TFLite-2.1.0-orange
