@@ -2,44 +2,19 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import os
-import pathlib
-import shutil
-import sys
 from setuptools import setup, find_packages
 
-BASE_DIR = os.path.join(os.path.abspath(os.sep), "opt", "eiq")
-DEMOS_DIR = os.path.join(os.getcwd(), "eiq", "demos")
-DEMOS_INSTALL_DIR = os.path.join(BASE_DIR, "demos")
-APPS_INSTALL_DIR = os.path.join(BASE_DIR, "apps")
+PYEIQ_LAUNCHER = os.path.join(os.getcwd(), "eiq", "apps", "pyeiq_launcher", "pyeiq.py")
+PYEIQ_USR = os.path.join("/usr", "bin", "pyeiq")
 
-SWITCH_IMAGE_APP = os.path.join(os.getcwd(), "eiq", "apps", "switch_image",
-                                "switch_image.py")
+if os.path.exists(PYEIQ_USR):
+    os.system("rm -rf {}".format(PYEIQ_USR))
 
-SWITCH_VIDEO_APP = os.path.join(os.getcwd(), "eiq", "apps", "switch_video",
-                                "switch_video.py")
+os.system("cp {} {}".format(PYEIQ_LAUNCHER, PYEIQ_USR))
 
 this_directory = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
-
-if os.path.exists(BASE_DIR):
-    try:
-        print("Removing {0}...".format(BASE_DIR))
-        shutil.rmtree(BASE_DIR)
-    except:
-        print("shutil.rmtree() has failed "
-              "trying to remove: {}".format(BASE_DIR))
-
-shutil.copytree(DEMOS_DIR, DEMOS_INSTALL_DIR)
-
-try:
-    pathlib.Path(APPS_INSTALL_DIR).mkdir(parents=True, exist_ok=True)
-except:
-    sys.exit("Path().mkdir() has failed "
-             "trying to create: {}".format(APPS_INSTALL_DIR))
-
-shutil.copy(SWITCH_IMAGE_APP, APPS_INSTALL_DIR)
-shutil.copy(SWITCH_VIDEO_APP, APPS_INSTALL_DIR)
 
 setup(name="eiq",
       version="1.0.0",
