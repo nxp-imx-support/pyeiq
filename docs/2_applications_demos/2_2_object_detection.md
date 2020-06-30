@@ -42,7 +42,7 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Object Detection_ demo using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_tflite.py
+# pyeiq --run object_detection_tflite
 ```
   * This runs inference on a default image:
   ![detection][image_eIQObjectDetection]
@@ -51,7 +51,7 @@ More details on [eIQ™][eiq] page.
 
 1. Pass any image as an argument:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_tflite.py --image=/path_to_the_image
+# pyeiq --run object_detection_tflite --image=/path_to_the_image
 ```
 
 #### **Using Video Source for Inference**
@@ -60,7 +60,7 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Object Detection_ using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_tflite.py --video_src=/path_to_the_video
+# pyeiq --run object_detection_tflite --video_src=/path_to_the_video
 ```
   * This runs inference on a video file:
   ![detection_video][video_eIQObjectDetection]
@@ -69,14 +69,14 @@ More details on [eIQ™][eiq] page.
 
 1. Specify the camera device:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_tflite.py --video_src=/dev/video<index>
+# pyeiq --run object_detection_tflite --video_src=/dev/video<index>
 ```
 
 ### **Extra Parameters**
 
 1. Use **--help** argument to check all the available configurations:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_tflite.py --help
+# pyeiq --run object_detection_tflite --help
 ```
 
 ## **Object Detection DNN**
@@ -100,7 +100,7 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Object Detection_ demo using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_dnn.py
+# pyeiq --run object_detection_dnn
 ```
   * This runs inference on a default image:
   ![image_dnn][image_eIQObjectDetectionDNN]
@@ -109,7 +109,7 @@ More details on [eIQ™][eiq] page.
 
 1. Pass any image as an argument:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_dnn.py --image=/path_to_the_image
+# pyeiq --run object_detection_dnn --image=/path_to_the_image
 ```
 
 #### **Using Video Source for Inference**
@@ -118,21 +118,21 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Object Detection_ using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_dnn.py --video_src=/path_to_the_video
+# pyeiq --run object_detection_dnn --video_src=/path_to_the_video
 ```
 
 ##### **Video Camera or Webcam**
 
 1. Specify the camera device:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_dnn.py --video_src=/dev/video<index>
+# pyeiq --run object_detection_dnn --video_src=/dev/video<index>
 ```
 
 ### **Extra Parameters**
 
 1. Use **--help** argument to check all the available configurations:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_dnn.py --help
+# pyeiq --run object_detection_dnn --help
 ```
 
 ## **Object Detection YOLOv3**
@@ -158,7 +158,7 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Object Detection_ demo using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_yolov3_tflite.py
+# pyeiq --run object_detection_yolov3
 ```
   * This runs inference on a default image:
   ![image_yolov3][image_eIQObjectDetectionYOLOv3]
@@ -167,7 +167,7 @@ More details on [eIQ™][eiq] page.
 
 1. Pass any image as an argument:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_yolov3_tflite.py --image=/path_to_the_image
+# pyeiq --run object_detection_yolov3 --image=/path_to_the_image
 ```
 
 #### **Using Video Source for Inference**
@@ -176,21 +176,21 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Object Detection_ using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_yolov3_tflite.py --video_src=/path_to_the_video
+# pyeiq --run object_detection_yolov3 --video_src=/path_to_the_video
 ```
 
 ##### **Video Camera or Webcam**
 
 1. Specify the camera device:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_yolov3_tflite.py --video_src=/dev/video<index>
+# pyeiq --run object_detection_yolov3 --video_src=/dev/video<index>
 ```
 
 ### **Extra Parameters**
 
 1. Use **--help** argument to check all the available configurations:
 ```console
-/opt/eiq/demos# python3 eiq_objects_detection_yolov3_tflite.py --help
+# pyeiq --run object_detection_yolov3 --help
 ```
 
 ## **References**
