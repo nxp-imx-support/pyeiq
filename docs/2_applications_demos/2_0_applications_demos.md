@@ -32,8 +32,6 @@ has_children: true
 |---------------------------------------|----------------------|----------------|------------------------------|--------------------|-------------------|
 | **Switch Classification Application** | ![Framework][tflite] | ![imx][boards] | ![BSP][release_5.4.24_2.1.0] | ![Core][cpugpunpu] | ![build][passing] |
 | **Switch Detection Application**      | ![Framework][tflite] | ![imx][boards] | ![BSP][release_5.4.24_2.1.0] | ![Core][cpugpunpu] | ![build][passing] |
-| **Player Application**                | ![Framework][tflite] | ![imx][boards] | ![BSP][release_5.4.24_2.1.0] | ![Core][gpunpu]    | ![build][passing] |
-
 
 [boards]: https://img.shields.io/badge/-8QM%2C%208MPlus-lightgrey
 [opencv]: https://img.shields.io/badge/OpenCV-4.2.0-yellow
