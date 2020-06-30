@@ -44,7 +44,7 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Facial Expression Detection_ demo using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_facial_expression_detection.py
+# pyeiq --run facial_expression_detection
 ```
   * This runs inference on a default image:
   ![facial_detection][image_eiqfacialexpressiondetection]
@@ -53,7 +53,7 @@ More details on [eIQ™][eiq] page.
 
 1. Pass any image as an argument:
 ```console
-/opt/eiq/demos# python3 eiq_facial_expression_detection.py --image=/path_to_the_image
+# pyeiq --run facial_expression_detection --image=/path_to_the_image
 ```
 
 #### **Using Video Source for Inference**
@@ -62,21 +62,21 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Facial Expression Detection_ using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_facial_expression_detection.py --video_src=/path_to_the_video
+# pyeiq --run facial_expression_detection --video_src=/path_to_the_video
 ```
 
 ##### **Video Camera or Webcam**
 
 1. Specify the camera device:
 ```console
-/opt/eiq/demos# python3 eiq_facial_expression_detection.py --video_src=/dev/video<index>
+# pyeiq --run facial_expression_detection --video_src=/dev/video<index>
 ```
 
 ### **Extra Parameters**
 
 1. Use **--help** argument to check all the available configurations:
 ```console
-/opt/eiq/demos# python3 eiq_facial_expression_detection.py --help
+# pyeiq --run facial_expression_detection --help
 ```
 
 ## **Facial and Eyes Detection**
@@ -100,7 +100,7 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Face and Eyes Detection_ demo using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_face_and_eyes_detection.py
+# pyeiq --run face_and_eyes_detection
 ```
   * This runs inference on a default image:
   ![face_detection][image_eiqfaceandeyesdetection]
@@ -109,7 +109,7 @@ More details on [eIQ™][eiq] page.
 
 1. Pass any image as an argument:
 ```console
-/opt/eiq/demos# python3 eiq_face_and_eyes_detection.py --image=/path_to_the_image
+# pyeiq --run face_and_eyes_detection --image=/path_to_the_image
 ```
 
 #### **Using Video Source for Inference**
@@ -118,21 +118,21 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Face and Eyes Detection_ using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_face_and_eyes_detection.py --video_src=/path_to_the_video
+# pyeiq --run face_and_eyes_detection --video_src=/path_to_the_video
 ```
 
 ##### **Video Camera or Webcam**
 
 1. Specify the camera device:
 ```console
-/opt/eiq/demos# python3 eiq_face_and_eyes_detection.py --video_src=/dev/video<index>
+# pyeiq --run face_and_eyes_detection --video_src=/dev/video<index>
 ```
 
 ### **Extra Parameters**
 
 1. Use **--help** argument to check all the available configurations:
 ```console
-/opt/eiq/demos# python3 eiq_face_and_eyes_detection.py --help
+# pyeiq --run face_and_eyes_detection --help
 ```
 
 ## **References**
