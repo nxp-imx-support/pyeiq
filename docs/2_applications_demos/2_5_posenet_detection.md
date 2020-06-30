@@ -46,7 +46,7 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Pose Detection_ demo using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_pose_detection.py
+# pyeiq --run pose_detection
 ```
   * This runs inference on a default image:
   ![posenet_detection][image_eiqposedetection]
@@ -55,7 +55,7 @@ More details on [eIQ™][eiq] page.
 
 1. Pass any image as an argument:
 ```console
-/opt/eiq/demos# python3 eiq_pose_detection.py --image=/path_to_the_image
+# pyeiq --run pose_detection --image=/path_to_the_image
 ```
 
 #### **Using Video Source for Inference**
@@ -64,21 +64,21 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Pose Detection_ using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_pose_detection.py --video_src=/path_to_the_video
+# pyeiq --run pose_detection --video_src=/path_to_the_video
 ```
 
 ##### **Video Camera or Webcam**
 
 1. Specify the camera device:
 ```console
-/opt/eiq/demos# python3 eiq_pose_detection.py --video_src=/dev/video<index>
+# pyeiq --run pose_detection --video_src=/dev/video<index>
 ```
 
 ### **Extra Parameters**
 
 1. Use **--help** argument to check all the available configurations:
 ```console
-/opt/eiq/demos# python3 eiq_pose_detection.py --help
+# pyeiq --run pose_detection --help
 ```
 
 ## **References**
