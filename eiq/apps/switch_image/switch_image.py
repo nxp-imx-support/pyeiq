@@ -235,7 +235,16 @@ class eIQSwitchLabelImage(Gtk.Window):
         thread.daemon = True
         thread.start()
 
-    def run(self):
+    @staticmethod
+    def description():
+        return ("This demo uses:\n   * TensorFlow Lite as inference engine."
+                "\n   * CNN as default algorithm.\n\n"
+                "This application offers a graphical interface for users to run\n"
+                "an object classification demo using either CPU or GPU/NPU to\n"
+                "perform inference on a list of available images.")
+
+    @staticmethod
+    def run():
         app = eIQSwitchLabelImage()
         app.connect("destroy", Gtk.main_quit)
         app.show_all()

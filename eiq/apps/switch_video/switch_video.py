@@ -28,6 +28,13 @@ class eIQVideoSwitchCore:
         self.binary = os.path.join(self.base_dir, "bin", "video_switch_core")
         self.tmp_img = os.path.join("/tmp", "tmp.jpg")
 
+    @staticmethod
+    def description():
+        return ("This demo uses:\n   * TensorFlow Lite as inference engine."
+                "\n   * Single Shot Detection as default algorithm.\n\n"
+                "This application allows users to run an object detection demo\n"
+                "using either CPU or GPU/NPU to perform inference on a video.\n")
+
     def gather_data(self):
         downloader = Downloader(self.args)
         downloader.retrieve_data(self.data['src'], self.class_name + ZIP,
