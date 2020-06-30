@@ -46,6 +46,6 @@ class TFLiteInterpreter:
 
     def run_inference(self):
         timer = Timer()
-        with timer.timeit("Inference time"):
+        with timer.timeit():
             self.interpreter.invoke()
         self.inference_time = timer.time

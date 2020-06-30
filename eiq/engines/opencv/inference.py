@@ -25,7 +25,7 @@ class OpenCVDNN:
         timer = Timer()
         self.net.setInput(self.blob)
 
-        with timer.timeit("Inference time"):
+        with timer.timeit():
             self.det = self.net.forward()
 
         self.inference_time = timer.time
