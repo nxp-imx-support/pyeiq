@@ -1,3 +1,6 @@
+2.0.1:
+    - Fix bug on switch video application.
+
 2.0.0:
     - General major changes on project structure.
     - Split project into engine, modules, helpers, utils and apps.
