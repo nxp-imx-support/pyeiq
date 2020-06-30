@@ -26,7 +26,7 @@ class eIQVideoSwitchCore:
 
         self.base_dir = os.path.join(BASE_DIR, self.class_name)
         self.binary = os.path.join(self.base_dir, "bin", "video_switch_core")
-        self.tmp_img = os.path.join("/tmp", "tmp.jpg")
+        self.tmp_img = NPU_IMG
 
     @staticmethod
     def description():
@@ -66,14 +66,17 @@ class eIQVideoSwitchCore:
         self.get_device()
 
         while True:
-            interrupt = str(input("Choose between cpu and {} inference: ".format(self.device)))
+            interrupt = str(input("Choose: 'cpu' or '{}': ".format(self.device)))
+            os.system("clear")
 
             if interrupt == "cpu":
                 self.pause_proc(NPU)
                 self.resume_proc(CPU)
+                self.tmp_img = CPU_IMG
             elif interrupt == self.device:
                 self.pause_proc(CPU)
                 self.resume_proc(NPU)
+                self.tmp_img = NPU_IMG
             else:
                 print("Invalid option. Please, choose between 'cpu' or '{}'".format(self.device))
 

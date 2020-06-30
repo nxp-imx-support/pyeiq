@@ -1,14 +1,21 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
-VIDEO_SWITCH_CORE = {'sha1': "a0ddb9d9874282e0ff4e4b063c8688d55eecb4eb",
+import os
+
+
+VIDEO_SWITCH_CORE = {'sha1': "89effa43394b8dd9949ce422224bf3a1ad8f56b6",
                      'src': {'drive': "https://drive.google.com/file/d/"
-                                      "1-GJ-672OC_CmyNTzT1C4OLFrtRti5pAC/"
+                                      "13tUttASMoIombyMCkrFf_Gl64A5Qt30-/"
                                       "view?usp=sharing",
                              'github': "https://github.com/diegohdorta/"
                                        "models/raw/master/models/"
                                        "eIQVideoSwitchCore.zip"},
                      'window_title': "PyeIQ - Object Detection Switch Cores"}
+
+CPU_IMG = os.path.join("/tmp", "cpu.jpg")
+NPU_IMG = os.path.join("/tmp", "npu.jpg")
+
 
 JPEG_EOF = b'\xff\xd9'
 
