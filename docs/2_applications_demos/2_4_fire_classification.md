@@ -46,14 +46,14 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Fire Classification_ demo using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_fire_classification_tflite.py
+# pyeiq --run fire_classification_tflite
 ```
 
 * **Arm NN**
 
 1. Run the _Fire Classification_ demo using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_fire_classification_armnn.py
+# pyeiq --run fire_classification_armnn
 ```
 
 * This runs inference on a default image:
@@ -65,14 +65,14 @@ More details on [eIQ™][eiq] page.
 
 1. Pass any image as an argument:
 ```console
-/opt/eiq/demos# python3 eiq_fire_classification_tflite.py --image=/path_to_the_image
+# pyeiq --run fire_classification_tflite --image=/path_to_the_image
 ```
 
 * **Arm NN**
 
 1. Pass any image as an argument:
 ```console
-/opt/eiq/demos# python3 eiq_fire_classification_armnn.py --image=/path_to_the_image
+# pyeiq --run fire_classification_armnn --image=/path_to_the_image
 ```
 
 #### **Using Video Source for Inference**
@@ -83,14 +83,14 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Fire Classification_ using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_fire_classification_tflite.py --video_src=/path_to_the_video
+# pyeiq --run fire_classification_tflite --video_src=/path_to_the_video
 ```
 
 * **Arm NN**
 
 1. Run the _Fire Classification_ using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_fire_classification_armnn.py --video_src=/path_to_the_video
+# pyeiq --run fire_classification_armnn --video_src=/path_to_the_video
 ```
 
 ##### **Video Camera or Webcam**
@@ -99,14 +99,14 @@ More details on [eIQ™][eiq] page.
 
 1. Specify the camera device:
 ```console
-/opt/eiq/demos# python3 eiq_fire_classification_tflite.py --video_src=/dev/video<index>
+# pyeiq --run fire_classification_tflite --video_src=/dev/video<index>
 ```
 
 * **Arm NN**
 
 1. Specify the camera device:
 ```console
-/opt/eiq/demos# python3 eiq_fire_classification_armnn.py --video_src=/dev/video<index>
+# pyeiq --run fire_classification_armnn --video_src=/dev/video<index>
 ```
 
 ### **Extra Parameters**
@@ -115,14 +115,14 @@ More details on [eIQ™][eiq] page.
 
 1. Use **--help** argument to check all the available configurations:
 ```console
-/opt/eiq/demos# python3 eiq_fire_classification_tflite.py --help
+# pyeiq --run fire_classification_tflite --help
 ```
 
 * **Arm NN**
 
 1. Use **--help** argument to check all the available configurations:
 ```console
-/opt/eiq/demos# python3 eiq_fire_classification_armnn.py --help
+# pyeiq --run fire_classification_armnn --help
 ```
 
 ## **References**
