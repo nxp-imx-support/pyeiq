@@ -43,36 +43,36 @@ class DemoBase:
         print(colored("-d / --download", "yellow") + ": Chooses from which"
               " server the models are going to be downloaded.\n"
               "Options: drive, github, wget. Default: Finds the fastest one.\n"
-              "# pyeiq {} --download drive\n".format(name))
+              "# pyeiq --run {} --download drive\n".format(name))
         print(colored("-i / --image", "yellow") + ": Run the demo on an image"
               " of your choice.\n"
-              "# pyeiq {} --image /home/root/image.jpg\n".format(name))
+              "# pyeiq --run {} --image /home/root/image.jpg\n".format(name))
         if labels:
             print(colored("-l / --labels", "yellow")+ ": Uses a labels file"
                   " of your choice within the demo.\n"
                   "Labels and models must be compatible for proper outputs.\n"
-                  "# pyeiq {} --labels /home/root/labels.txt\n".format(name))
+                  "# pyeiq --run {} --labels /home/root/labels.txt\n".format(name))
         if model:
             print(colored("-m / --model", "yellow") + ": Uses a model file of"
                   " your choice within the demo.\n"
                   "Labels and models must be compatible for proper outputs.\n"
-                  "# pyeiq {} --model /home/root/model.tflite\n".format(name))
+                  "# pyeiq --run {} --model /home/root/model.tflite\n".format(name))
         print(colored("-r / --res", "yellow") + ": Choose the resolution of"
               " your video capture device.\n"
               "Options: full_hd (1920x1080), hd (1280x720), vga (640x480).\n"
               "Default: hd if supported, otherwise uses the best one available.\n"
-              "# pyeiq {} --res vga\n".format(name))
+              "# pyeiq --run {} --res vga\n".format(name))
         print(colored("-f / --video_fwk", "yellow") + ": Choose which framework"
               " is used to display the video.\n"
               "Options: opencv, v4l2, gstreamer (experimental). Default: v4l2.\n"
-              "# pyeiq {} --video_fwk opencv\n".format(name))
+              "# pyeiq --run {} --video_fwk opencv\n".format(name))
         print(colored("-v / --video_src", "yellow") + ": Run inference in videos."
               "It can be from a video capture device or a video file.\n"
               "Options: True (Find a video capture device automatically),"
               " /dev/video<x>, path_to_video_file.\n"
-              "# pyeiq {} --video_src /dev/video3\n".format(name))
+              "# pyeiq --run {} --video_src /dev/video3\n".format(name))
         print(colored("Multiple parameters can be used at once:\n", "yellow") +
-              "# pyeiq {} -d drive -v True -f opencv -res vga\n".format(name))
+              "# pyeiq --run {} -d drive -v True -f opencv -res vga\n".format(name))
 
     def gather_data(self):
         if self.data and 'src' in self.data:
