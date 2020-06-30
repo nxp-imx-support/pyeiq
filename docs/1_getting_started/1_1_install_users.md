@@ -22,7 +22,7 @@ nav_order: 1
 ```console
 # pip3 install eiq
 ```
-  ![pypigif](media/pypieiq.gif)
+  ![pypigif][pypi]
 
 [pypirepo]: https://pypi.org/project/eiq/#description
 [pypicaf]: https://source.codeaurora.org/external/imxsupport/pyeiq/
@@ -40,6 +40,8 @@ Check below the available tarballs:
 ```console
 # pip3 install <tarball>
 ```
+[pypi]: ../media/pypieiq.gif
+
 
 [tag_v1]: https://img.shields.io/badge/-v1.0.0-blue
 
