@@ -26,6 +26,9 @@ class eIQFacialExpressionDetection(DemoBase):
         return ("This demo uses:\n   * TensorFlow Lite and OpenCV as inference engines."
                 "\n   * CNN and Haar Cascade as default algorithms.\n")
 
+    def usage(self, name=None, labels=False, model=True):
+        super().usage(name=name, labels=labels, model=model)
+
     def gather_data(self):
         super().gather_data()
 
@@ -99,6 +102,9 @@ class eIQFaceAndEyesDetection(DemoBase):
         return ("This demo uses:\n   * OpenCV as inference engine."
                 "\n   * Haar Cascade as default algorithm.\n")
 
+    def usage(self, name=None, labels=False, model=False):
+        super().usage(name=name, labels=labels, model=model)
+
     def gather_data(self):
         super().gather_data()
 
@@ -110,7 +116,7 @@ class eIQFaceAndEyesDetection(DemoBase):
     def detect_face(self, frame):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        with self.timer.timeit("Inference time"):
+        with self.timer.timeit():
             faces = self.face_cascade.detectMultiScale(gray, 1.3, 5)
 
         for (x, y, w, h) in faces:

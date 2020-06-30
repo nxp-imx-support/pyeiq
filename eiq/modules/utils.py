@@ -11,7 +11,7 @@ import cv2
 from eiq.config import BASE_DIR, ZIP
 from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.multimedia.utils import GstVideo, save_image, VideoConfig
-from eiq.utils import args_parser, Downloader, file_type, Framerate
+from eiq.utils import args_parser, colored, Downloader, file_type, Framerate
 
 
 class DemoBase:
@@ -37,6 +37,42 @@ class DemoBase:
         self.model = None
 
         self.interpreter = None
+
+    def usage(self, name=None, labels=False, model=False):
+        print("Available parameters:\n")
+        print(colored("-d / --download", "yellow") + ": Chooses from which"
+              " server the models are going to be downloaded.\n"
+              "Options: drive, github, wget. Default: Finds the fastest one.\n"
+              "# pyeiq {} --download drive\n".format(name))
+        print(colored("-i / --image", "yellow") + ": Run the demo on an image"
+              " of your choice.\n"
+              "# pyeiq {} --image /home/root/image.jpg\n".format(name))
+        if labels:
+            print(colored("-l / --labels", "yellow")+ ": Uses a labels file"
+                  " of your choice within the demo.\n"
+                  "Labels and models must be compatible for proper outputs.\n"
+                  "# pyeiq {} --labels /home/root/labels.txt\n".format(name))
+        if model:
+            print(colored("-m / --model", "yellow") + ": Uses a model file of"
+                  " your choice within the demo.\n"
+                  "Labels and models must be compatible for proper outputs.\n"
+                  "# pyeiq {} --model /home/root/model.tflite\n".format(name))
+        print(colored("-r / --res", "yellow") + ": Choose the resolution of"
+              " your video capture device.\n"
+              "Options: full_hd (1920x1080), hd (1280x720), vga (640x480).\n"
+              "Default: hd if supported, otherwise uses the best one available.\n"
+              "# pyeiq {} --res vga\n".format(name))
+        print(colored("-f / --video_fwk", "yellow") + ": Choose which framework"
+              " is used to display the video.\n"
+              "Options: opencv, v4l2, gstreamer (experimental). Default: v4l2.\n"
+              "# pyeiq {} --video_fwk opencv\n".format(name))
+        print(colored("-v / --video_src", "yellow") + ": Run inference in videos."
+              "It can be from a video capture device or a video file.\n"
+              "Options: True (Find a video capture device automatically),"
+              " /dev/video<x>, path_to_video_file.\n"
+              "# pyeiq {} --video_src /dev/video3\n".format(name))
+        print(colored("Multiple parameters can be used at once:\n", "yellow") +
+              "# pyeiq {} -d drive -v True -f opencv -res vga\n".format(name))
 
     def gather_data(self):
         if self.data and 'src' in self.data:
@@ -108,7 +144,7 @@ class DemoBase:
                     ret, frame = sink.read()
                     if ret:
                         self.overlay.draw_fps(frame, round(self.framerate.fps))
-                        with self.framerate.fpsit("FPS"):
+                        with self.framerate.fpsit():
                             cv2.imshow(self.data['window_title'], inference_func(frame))
                     else:
                         print("Your video device could not capture any image.")
@@ -117,7 +153,7 @@ class DemoBase:
                         break
                 sink.release()
             else:
-                with self.framerate.fpsit("FPS"):
+                with self.framerate.fpsit():
                     gst_video = GstVideo(sink, src, inference_func, self.framerate.fps)
                     gst_video.run()
         else:

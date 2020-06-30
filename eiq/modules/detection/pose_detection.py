@@ -32,6 +32,9 @@ class eIQPoseDetection(DemoBase):
         return ("This demo uses:\n   * TensorFlow Lite as inference engine."
                 "\n   * CNN as default algorithm.\n")
 
+    def usage(self, name=None, labels=False, model=True):
+        super().usage(name=name, labels=labels, model=model)
+
     class BodyPart(Enum):
         NOSE = 0,
         LEFT_EYE = 1,
