@@ -30,8 +30,8 @@ has_children: true
 
 | **Application Name**                  | **Framework**        | **i.MX Board** | **BSP Release**              | **Inference Core** | **Status**        |
 |---------------------------------------|----------------------|----------------|------------------------------|--------------------|-------------------|
-| **Switch Classification Application** | ![Framework][tflite] | ![imx][boards] | ![BSP][release_5.4.24_2.1.0] | ![Core][cpugpunpu] | ![build][passing] |
-| **Switch Detection Application**      | ![Framework][tflite] | ![imx][boards] | ![BSP][release_5.4.24_2.1.0] | ![Core][cpugpunpu] | ![build][passing] |
+| **Switch Classification Image**       | ![Framework][tflite] | ![imx][boards] | ![BSP][release_5.4.24_2.1.0] | ![Core][cpugpunpu] | ![build][passing] |
+| **Switch Detection Video**            | ![Framework][tflite] | ![imx][boards] | ![BSP][release_5.4.24_2.1.0] | ![Core][cpugpunpu] | ![build][passing] |
 
 [boards]: https://img.shields.io/badge/-8QM%2C%208MPlus-lightgrey
 [opencv]: https://img.shields.io/badge/OpenCV-4.2.0-yellow
