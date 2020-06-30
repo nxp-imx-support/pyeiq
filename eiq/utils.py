@@ -66,7 +66,7 @@ class Downloader:
 
         try:
             log("Downloading '{0}'".format(filename))
-            with timer.timeit("Download time"):
+            with timer.timeit():
                 urllib.request.urlretrieve(url, download_path)
         except URLError as e:
             sys.exit("Something went wrong: {}".format(e))
@@ -159,12 +159,13 @@ class Downloader:
 def log(*args):
     logging.info(" ".join("{}".format(a) for a in args))
 
+
 class Framerate:
     def __init__(self):
         self.fps = 0
 
     @contextmanager
-    def fpsit(self, message: str = None):
+    def fpsit(self):
         window = collections.deque(maxlen=30)
         begin = monotonic()
         try:
@@ -174,12 +175,13 @@ class Framerate:
             window.append(end - begin)
             self.fps = len(window) / sum(window)
 
+
 class Timer:
     def __init__(self):
         self.time = 0
 
     @contextmanager
-    def timeit(self, message: str = None):
+    def timeit(self):
         begin = monotonic()
         try:
             yield
@@ -193,6 +195,20 @@ class Timer:
 
 def get_temporary_path(*path):
     return os.path.join(tempfile.gettempdir(), *path)
+
+
+def colored(msg, color):
+    color_id = 0
+    if color == "red":
+        color_id = 31
+    elif color == "green":
+        color_id = 32
+    elif color == "blue":
+        color_id = 34
+    elif color == "yellow":
+        color_id = 33
+
+    return "\033[{}m".format(color_id) + msg + "\033[0m"
 
 
 def file_type(file_path):
@@ -213,32 +229,17 @@ def args_parser():
     parser = ArgumentParser()
 
     parser.add_argument('--clear-cache', action='store_true')
-    parser.add_argument('--info', action='store_true')
+    parser.add_argument('--info', default=None)
     parser.add_argument('--list-demos', action='store_true')
     parser.add_argument('--list-apps', action='store_true')
     parser.add_argument('--run', default=None)
 
-    parser.add_argument('-d', '--download', default=None,
-                        help="Choose from which server the models are going to be "
-                        "downloaded")
-    parser.add_argument('-i', '--image', default=None,
-                        help="path of the image to be classified")
-    parser.add_argument('-l', '--labels', default=None,
-                        help="path of the file containing labels")
-    parser.add_argument('-m', '--model', default=None,
-                        help="path of the .tflite model to be executed")
-    parser.add_argument('-r', '--res', default='hd',
-                        help="Choose the video capture device resolution as bellow:"
-                        "full_hd: 1920x1080. hd: 1280x720. vga: 640x480. "
-                        "Default resolution is hd, if supported, else it uses the "
-                        "best supported resolution.")
-    parser.add_argument('-f', '--video_fwk', default='v4l2',
-                        help="Choose the video framework according to the options below:"
-                        "v4l2: GStreamer appsink + OpenCV.imshow(). Default."
-                        "opencv: OpenCV.VideoCapture() + OpenCV.imxshow()."
-                        "gstreamer: GStreamer appsink + GStreamer appsrc.")
-    parser.add_argument('-v', '--video_src', default=None,
-                        help="Choose your video source, it can be the path to a video file"
-                        " or your video device, e.g, /dev/video<x>")
+    parser.add_argument('-d', '--download', default=None)
+    parser.add_argument('-i', '--image', default=None)
+    parser.add_argument('-l', '--labels', default=None)
+    parser.add_argument('-m', '--model', default=None)
+    parser.add_argument('-r', '--res', default='hd')
+    parser.add_argument('-f', '--video_fwk', default='v4l2')
+    parser.add_argument('-v', '--video_src', default=None)
 
     return parser.parse_args()
