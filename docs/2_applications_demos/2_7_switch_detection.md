@@ -37,7 +37,6 @@ More details on [eIQ™][eiq] page.
 # pyeiq --run switch_video
 ```
 2. Type on **CPU** or **GPU**/**NPU** in the terminal to switch between cores.
-
   * This runs inference on a default video:
   ![cpu][switch_detection]
 
