@@ -41,7 +41,7 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Object Classification_ demo using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_objects_classification_tflite.py
+# pyeiq --run object_classification_tflite
 ```
   * This runs inference on a default image:
   ![classification][image_eIQObjectClassification]
@@ -50,7 +50,7 @@ More details on [eIQ™][eiq] page.
 
 1. Pass any image as an argument:
 ```console
-/opt/eiq/demos# python3 eiq_objects_classification_tflite.py --image=/path_to_the_image
+# pyeiq --run object_classification_tflite --image=/path_to_the_image
 ```
 
 #### **Using Video Source for Inference**
@@ -59,7 +59,7 @@ More details on [eIQ™][eiq] page.
 
 1. Run the _Object Classification_ using the following line:
 ```console
-/opt/eiq/demos# python3 eiq_objects_classification_tflite.py --video_src=/path_to_the_video
+# pyeiq --run object_classification_tflite --video_src=/path_to_the_video
 ```
   * This runs inference on a video file:
   ![classification_video][video_eIQObjectClassification]
@@ -68,14 +68,14 @@ More details on [eIQ™][eiq] page.
 
 1. Specify the camera device:
 ```console
-/opt/eiq/demos# python3 eiq_objects_classification_tflite.py --video_src=/dev/video<index>
+# pyeiq --run object_classification_tflite --video_src=/dev/video<index>
 ```
 
 ### **Extra Parameters**
 
 1. Use **--help** argument to check all the available configurations:
 ```console
-/opt/eiq/demos# python3 eiq_objects_classification_tflite.py --help
+# pyeiq --run object_classification_tflite --help
 ```
 
 ## **References**
