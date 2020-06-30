@@ -39,7 +39,7 @@ More details on [eIQ™][eiq] page.
 2. Type on **CPU** or **GPU**/**NPU** in the terminal to switch between cores.
 
 * This result is below:
-  ![cpu][switch_detection]
+![cpu][switch_detection]
 
 [^1]: https://www.tensorflow.org/lite
 [^2]: https://arxiv.org/abs/1704.04861
