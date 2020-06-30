@@ -10,6 +10,7 @@ import time
 
 import cv2
 import numpy as np
+from PIL import Image
 
 from eiq.apps.switch_video.config import *
 from eiq.config import BASE_DIR, ZIP
@@ -81,6 +82,15 @@ class eIQVideoSwitchCore:
                 print("Invalid option. Please, choose between 'cpu' or '{}'".format(self.device))
 
     def start_threads(self):
+        b = np.zeros([100, 100, 3], 'uint8')
+        b[:,:,0] = 255
+        b[:,:,1] = 255
+        b[:,:,2] = 255
+        img = Image.fromarray(b)
+        cv_img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+        cv2.imwrite(CPU_IMG, cv_img)
+        cv2.imwrite(NPU_IMG, cv_img)
+
         input_thread = threading.Thread(target=self.interruption)
         cpu_inference_thread = threading.Thread(target=self.run_inference,
                                                 args=(CPU,))
