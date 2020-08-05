@@ -1,3 +1,8 @@
+2.1.0:
+    - Fix bug of video capture device searching.
+    - Add feature for data checking.
+    - Add feature to get data on host machine.
+
 2.0.1:
     - Fix bug on switch video application.
 
