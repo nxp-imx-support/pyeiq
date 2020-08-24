@@ -7,6 +7,9 @@
 ![pip3][eiqpackage]
 [![PyPI version](https://badge.fury.io/py/eiq.svg)](https://badge.fury.io/py/eiq)
 ![GitHub issues][license]
+[![Downloads](https://pepy.tech/badge/eiq)](pepy_total)
+[![Downloads](https://pepy.tech/badge/eiq/month)](pepy_month)
+[![Downloads](https://pepy.tech/badge/eiq/week)](pepy_week)
 [![Gitter][gitter-image]][gitter-url]
 
 PyeIQ is written on top of [eIQ™ ML Software Development Environment][eiq] and
@@ -22,5 +25,8 @@ For further details: [PyeIQ Page][page].
 [pypirepo]: https://pypi.org/project/eiq/#description
 [pypicaf]: https://source.codeaurora.org/external/imxsupport/pyeiq/
 [license]: https://img.shields.io/badge/License-BSD%203--Clause-blue
+[pepy_total]: https://pepy.tech/project/eiq
+[pepy_month]: https://pepy.tech/project/eiq/month
+[pepy_week]: https://pepy.tech/project/eiq/week
 [gitter-url]: https://gitter.im/pyeiq-imx/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
 [gitter-image]: https://badges.gitter.im/pyeiq-imx/community.svg
