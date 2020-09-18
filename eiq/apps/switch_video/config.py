@@ -4,13 +4,13 @@
 import os
 
 
-VIDEO_SWITCH_CORE = {'sha1': "89effa43394b8dd9949ce422224bf3a1ad8f56b6",
+VIDEO_SWITCH_CORE = {'sha1': "11ef7975a5e60d4cafb821fb474f314c760a04cf",
                      'src': {'drive': "https://drive.google.com/file/d/"
-                                      "13tUttASMoIombyMCkrFf_Gl64A5Qt30-/"
+                                      "1VPBgzeONHbUaQudXJB5GNOp5jCwiX7Hx/"
                                       "view?usp=sharing",
                              'github': "https://github.com/diegohdorta/"
                                        "models/raw/master/models/"
-                                       "eIQVideoSwitchCore.zip"},
+                                       "eIQVideoSwitchCorev2.zip"},
                      'window_title': "PyeIQ - Object Detection Switch Cores"}
 
 CPU_IMG = os.path.join("/tmp", "cpu.jpg")
