@@ -14,7 +14,7 @@ from PIL import Image
 
 from eiq.apps.switch_video.config import *
 from eiq.config import BASE_DIR, ZIP
-from eiq.utils import args_parser, check_data, Downloader
+from eiq.utils import args_parser, check_data, Downloader, file_type
 
 
 class eIQVideoSwitchCore:
@@ -29,8 +29,11 @@ class eIQVideoSwitchCore:
         self.binary = os.path.join(self.base_dir, "bin", "video_switch_core")
         self.labels = os.path.join(self.base_dir, "model", "labelmap.txt")
         self.media = os.path.join(self.base_dir, "media", "video_device.mp4")
+        self.media_backup = os.path.join(self.base_dir, "media", "backup.mp4")
         self.model = os.path.join(self.base_dir, "model", "detect.tflite")
         self.tmp_img = NPU_IMG
+
+        self.backup()
 
     @staticmethod
     def description():
@@ -110,6 +113,10 @@ class eIQVideoSwitchCore:
         time.sleep(5)
         input_thread.start()
 
+    def backup(self):
+        if os.path.isfile(self.media_backup):
+            os.system(f"cp {self.media_backup} {self.media}")
+
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         if not check_data(os.path.join(self.base_dir, self.class_name + ZIP),
@@ -117,6 +124,16 @@ class eIQVideoSwitchCore:
                           self.media, self.model):
             self.gather_data()
         os.chmod(self.binary, S_IEXEC)
+
+        if self.args.video_src and os.path.isfile(self.args.video_src):
+            if file_type(self.args.video_src) != "video":
+                print("Your video_src is not a valid video file. Using the default video...")
+            else:
+                os.system (f"cp {self.media} {self.media_backup}")
+                os.system(f"cp {self.args.video_src} {self.media}")
+        else:
+            print("Your video_src is not a valid video file. Using the default video...")
+
         self.start_threads()
 
     def run(self):
