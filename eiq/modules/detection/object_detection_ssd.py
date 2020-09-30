@@ -76,13 +76,48 @@ class eIQObjectDetection(DemoBase):
                 result.append({'pos': positions[idx], '_id': classes[idx]})
         return result
 
+    def display_result(self, frame, result):
+        width = frame.shape[1]
+        height = frame.shape[0]
+
+        for obj in result:
+            pos = obj['pos']
+            _id = obj['_id']
+
+            x1 = int(pos[1] * width)
+            x2 = int(pos[3] * width)
+            y1 = int(pos[0] * height)
+            y2 = int(pos[2] * height)
+
+            top = max(0, np.floor(y1 + 0.5).astype('int32'))
+            left = max(0, np.floor(x1 + 0.5).astype('int32'))
+            bottom = min(height, np.floor(y2 + 0.5).astype('int32'))
+            right = min(width, np.floor(x2 + 0.5).astype('int32'))
+
+            label_size = cv2.getTextSize(self.labels[_id], FONT['hershey'],
+                                         FONT['size'], FONT['thickness'])[0]
+            label_rect_left = int(left - 3)
+            label_rect_top = int(top - 3)
+            label_rect_right = int(left + 3 + label_size[0])
+            label_rect_bottom = int(top - 5 - label_size[1])
+
+            cv2.rectangle(frame, (left, top), (right, bottom),
+                          self.colors[int(_id) % len(self.colors)], 6)
+            cv2.rectangle(frame, (label_rect_left, label_rect_top),
+                          (label_rect_right, label_rect_bottom),
+                          self.colors[int(_id) % len(self.colors)], -1)
+            cv2.putText(frame, self.labels[_id], (left, int(top - 4)),
+                        FONT['hershey'], FONT['size'],
+                        FONT['color']['black'],
+                        FONT['thickness'])
+            self.overlay.draw_info(frame, self.model, self.media_src,
+                                   self.interpreter.inference_time)
+
     def detect_object(self, frame):
         image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
         image = image.resize((self.interpreter.width(), self.interpreter.height()))
         top_result = self.process_image(image)
-        frame = self.overlay.display_result(frame, self.model, self.media_src,
-                                            self.interpreter.inference_time,
-                                            top_result, self.labels, self.colors)
+        self.display_result(frame, top_result)
 
         return frame
 
