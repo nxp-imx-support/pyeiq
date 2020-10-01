@@ -75,7 +75,8 @@ class eIQFacialExpressionDetection(DemoBase):
                         0.7, (0, 0, 255), 2, cv2.LINE_AA)
 
         self.overlay.draw_info(frame, self.model, self.media_src,
-                               self.interpreter.inference_time)
+                               self.interpreter.inference_time,
+                               self.interpreter.input_details[0]['quantization'])
 
         return frame
 

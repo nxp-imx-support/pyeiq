@@ -178,7 +178,9 @@ class eIQPoseDetection(DemoBase):
                              fill=(0, 128, 0), outline=(255, 255, 0))
 
         frame = cv2.cvtColor(np.array(frame), cv2.COLOR_RGB2BGR)
-        self.overlay.draw_info(frame, self.model, self.media_src, self.interpreter.inference_time)
+        self.overlay.draw_info(frame, self.model, self.media_src,
+                               self.interpreter.inference_time,
+                               self.interpreter.input_details[0]['quantization'])
 
         return frame
 

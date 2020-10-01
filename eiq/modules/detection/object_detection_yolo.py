@@ -159,7 +159,8 @@ class eIQObjectDetectionYOLOV3(DemoBase):
         data = self.interpreter.get_tensor(0)[0]
         self.draw_rectangles(frame, self.check_result(data))
         self.overlay.draw_info(frame, self.model, self.media_src,
-                               self.interpreter.inference_time)
+                               self.interpreter.inference_time,
+                               self.interpreter.input_details[0]['quantization'])
 
         return frame
 
