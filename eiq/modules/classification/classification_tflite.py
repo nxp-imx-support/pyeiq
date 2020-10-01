@@ -53,7 +53,8 @@ class eIQFireClassificationTFLite(DemoBase):
                     1, color, 2)
 
         self.overlay.draw_info(frame, self.model, self.media_src,
-                               self.interpreter.inference_time)
+                               self.interpreter.inference_time,
+                               self.interpreter.input_details[0]['quantization'])
 
         return frame
 
@@ -108,7 +109,8 @@ class eIQObjectClassificationTFLite(DemoBase):
                         FONT['color']['orange'], FONT['thickness'])
 
         self.overlay.draw_info(frame, self.model, self.media_src,
-                               self.interpreter.inference_time)
+                               self.interpreter.inference_time,
+                               self.interpreter.input_details[0]['quantization'])
 
     def classify_image(self, frame):
         image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
