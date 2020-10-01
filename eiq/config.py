@@ -17,6 +17,8 @@ REGULAR_DOWNLOAD_URL = 'https://docs.google.com/uc?export=download'
 INF_TIME_MSG = "INFERENCE TIME"
 FPS_MSG = "FPS"
 MODEL_MSG = "MODEL"
+QUANT_MSG0 = "WARNING: This model is not full integer quantized!"
+QUANT_MSG1 = "Its performance is considerably reduced!"
 SRC_MSG = "SOURCE"
 MAX_TIME = datetime.timedelta(9, 9, 9)
 ID = 5
