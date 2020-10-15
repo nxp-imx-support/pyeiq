@@ -134,33 +134,34 @@ class DemoBase:
 
     def run_inference(self, inference_func):
         if self.args.video_src:
-            video_config = VideoConfig(self.args)
-            sink, src = video_config.get_config()
+            while True:
+                video_config = VideoConfig(self.args)
+                sink, src = video_config.get_config()
 
-            if os.path.isfile(self.args.video_src):
-                self.media_src = os.path.basename(self.args.video_src)
-            else:
-                self.media_src = video_config.dev.name
+                if os.path.isfile(self.args.video_src):
+                    self.media_src = os.path.basename(self.args.video_src)
+                else:
+                    self.media_src = video_config.dev.name
 
-            if not src:
-                if (not sink) or (not sink.isOpened()):
-                    sys.exit("Your video device could not be initialized. Exiting...")
-                while sink.isOpened():
-                    ret, frame = sink.read()
-                    if ret:
-                        self.overlay.draw_fps(frame, round(self.framerate.fps))
-                        with self.framerate.fpsit():
-                            cv2.imshow(self.data['window_title'], inference_func(frame))
-                    else:
-                        print("Your video device could not capture any image.")
-                        break
-                    if (cv2.waitKey(1) & 0xFF) == ord('q'):
-                        break
-                sink.release()
-            else:
-                with self.framerate.fpsit():
-                    gst_video = GstVideo(sink, src, inference_func, self.framerate.fps)
-                    gst_video.run()
+                if not src:
+                    if (not sink) or (not sink.isOpened()):
+                        sys.exit("Your video device could not be initialized. Exiting...")
+                    while sink.isOpened():
+                        ret, frame = sink.read()
+                        if ret:
+                            self.overlay.draw_fps(frame, round(self.framerate.fps))
+                            with self.framerate.fpsit():
+                                cv2.imshow(self.data['window_title'], inference_func(frame))
+                        else:
+                            print("Your video device could not capture any image.")
+                            break
+                        if (cv2.waitKey(1) & 0xFF) == ord('q'):
+                            break
+                    sink.release()
+                else:
+                    with self.framerate.fpsit():
+                        gst_video = GstVideo(sink, src, inference_func, self.framerate.fps)
+                        gst_video.run()
         else:
             try:
                 print("Running inference...")
