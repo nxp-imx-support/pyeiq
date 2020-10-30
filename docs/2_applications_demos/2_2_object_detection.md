@@ -204,7 +204,7 @@ More details on [eIQ™][eiq] page.
 
 [image_eIQObjectDetection]: ../media/demos/eIQObjectDetection/image_eiqobjectdetection_resized_logo.gif
 
-[video_eIQObjectDetection]: ../media/demos/eIQObjectDetection/video_eIQObjectDetection.gif
+[video_eIQObjectDetection]: ../media/demos/eIQObjectDetection/video_eIQObjectDetection_street.gif
 
 [image_eIQObjectDetectionDNN]: ../media/demos/eIQObjectDetectionDNN/image_eiqobjectdetectiondnn_resized_logo.gif
 
