@@ -39,14 +39,6 @@ cross-compilations, deployments or reading extensive guides.
 ![yellow][tag_yellow]
 ![red][tag_red]
 
-**NEW RELEASES**
-* A version containing new features or demos/apps is released right after a new NXP GA (General Availability).
- * Features mostly relies on eIQ support, and demos/apps are created by us or suggested by FAE/customers.
-
-**BUG FIXES**
- * Critical bug: ~1 month for new release;
- * Non-critical bug ~2 months for new release;
-
 ### Major Changes
 
 **2.0.0**
