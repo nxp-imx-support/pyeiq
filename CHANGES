@@ -1,3 +1,10 @@
+2.2.0:
+    - If a demo uses a video file as parameter, the video will keep repeating until being mannually ended.
+    - Improve v4l2 pipeline.
+    - Add a warning message if a demo uses a non quantized model.
+    - Change the color of the detection boxes from the switch_video application.
+    - Add custom video file support to the switch_video application.
+
 2.1.0:
     - Fix bug of video capture device searching.
     - Add feature for data checking.
