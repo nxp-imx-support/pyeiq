@@ -29,10 +29,10 @@ cross-compilations, deployments or reading extensive guides.
 
 ### **Samples**
 
-| **Object Classification (~3ms)**            | **Object Detection (~15ms)**           |
-|---------------------------------------------|----------------------------------------|
-| ![oc][video_eIQObjectClassification_room]   | ![od][video_eIQObjectDetection_room]   |
-| ![oc][video_eIQObjectClassification_street] | ![od][video_eIQObjectDetection_street] |
+| **Object Classification (~3ms)**              | **Object Detection (~15ms)**             |
+|-----------------------------------------------|------------------------------------------|
+| ![oc_1][video_eIQObjectClassification_room]   | ![od_1][video_eIQObjectDetection_room]   |
+| ![oc_2][video_eIQObjectClassification_street] | ![od_2][video_eIQObjectDetection_street] |
 
 
 ### Official Releases
@@ -85,11 +85,11 @@ the terms of the BSD 3-Clause License.
 See [LICENSE](https://source.codeaurora.org/external/imxsupport/pyeiq/tree/LICENSE.md?h=v2.0.0)
 for details.
 
-[video_eIQObjectDetection_room]: media/demos/eIQObjectDetection/video_eIQObjectDetection.gif
-[video_eIQObjectClassification_room]: media/demos/eIQObjectClassification/video_eIQObjectClassification.gif
+[video_eIQObjectDetection_room]: media/demos/eIQObjectDetection/video_eIQObjectDetection_room.gif
+[video_eIQObjectClassification_room]: media/demos/eIQObjectClassification/video_eIQObjectClassification_room.gif
 
-[video_eIQObjectDetection_street]: media/demos/eIQObjectDetection/video_eIQObjectDetection.gif
-[video_eIQObjectClassification_street]: media/demos/eIQObjectClassification/video_eIQObjectClassification.gif
+[video_eIQObjectDetection_street]: media/demos/eIQObjectDetection/video_eIQObjectDetection_street.gif
+[video_eIQObjectClassification_street]: media/demos/eIQObjectClassification/video_eIQObjectClassification_street.gif
 
 [page]: https://community.nxp.com/t5/eIQ-Machine-Learning-Software/bd-p/eiq
 
