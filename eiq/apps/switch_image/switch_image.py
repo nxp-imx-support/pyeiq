@@ -17,7 +17,7 @@ import cv2
 import numpy as np
 
 from eiq.apps.config import SWITCH_IMAGE
-from eiq.apps.utils import run_label_image
+from eiq.apps.utils import create_link, run_label_image
 from eiq.config import BASE_DIR, ZIP
 from eiq.utils import args_parser, check_data, Downloader
 
@@ -58,6 +58,7 @@ class eIQSwitchLabelImage(Gtk.Window):
                                    self.__class__.__name__ + ZIP,
                                    self.base_dir, self.data['sha1'], True)
         os.chmod(self.binary, S_IEXEC)
+        create_link()
 
         self.get_bmp_images()
 
