@@ -3,6 +3,9 @@
 
 # Switch Label Image
 
+LIB_PATH = "/usr/lib"
+LIBNN = "libneuralnetworks.so"
+
 SWITCH_IMAGE = {'bin': "label_image",
                 'labels': "labels.txt",
                 'model': "mobilenet_v1_1.0_224_quant.tflite",
