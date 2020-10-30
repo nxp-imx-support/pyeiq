@@ -1,10 +1,11 @@
 # Copyright 2020 NXP Semiconductors
 # SPDX-License-Identifier: BSD-3-Clause
 
+import os
 import re
 import subprocess
 
-from eiq.apps.config import RUN_LABEL_IMAGE, REGEX_GET_STRING, REGEX_GET_INTEGER_FLOAT
+from eiq.apps.config import LIB_PATH, LIBNN, RUN_LABEL_IMAGE, REGEX_GET_STRING, REGEX_GET_INTEGER_FLOAT
 
 
 def run(use_accel, binary, model, image, labels):
@@ -47,6 +48,13 @@ def parser_cpu_gpu(data, include_accel):
         parsed_data.append(get_chances(res[i]))
     return parsed_data
 
+
+def create_link():
+    if not (LIBNN in os.listdir(LIB_PATH)):
+        for lib in os.listdir(LIB_PATH):
+            if LIBNN in lib:
+                os.system(f"ln -s {os.path.join(LIB_PATH, lib)} {os.path.join(LIB_PATH, LIBNN)}")
+                return
 
 def run_label_image(accel, binary, model, image, labels):
     to_be_parsed = run(accel, binary, model, image, labels).decode('utf-8')
