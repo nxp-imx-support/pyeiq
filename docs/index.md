@@ -9,7 +9,7 @@ nav_order: 1
 </p>
 
 <h1 align="center">
-<b>A Python Framework for eIQ on i.MX Processors</b>
+<b>A Python Demo Framework for eIQ on i.MX Processors</b>
 </h1>
 
 [PyeIQ][caf] is written on top of [eIQ™ ML Software Development Environment][eiq]
@@ -17,6 +17,17 @@ and provides a set of Python classes allowing the user to run Machine Learning
 applications in a simplified and efficiently way without spending time on
 cross-compilations, deployments or reading extensive guides.
 
+![pip3][eiqpackage]
+[![PyPI version](https://badge.fury.io/py/eiq.svg)](https://badge.fury.io/py/eiq)
+![GitHub issues][license]
+[![Downloads](https://pepy.tech/badge/eiq)](pepy_total)
+[![Downloads](https://pepy.tech/badge/eiq/month)](pepy_month)
+[![Downloads](https://pepy.tech/badge/eiq/week)](pepy_week)
+![Total Lines][total_lines]
+![Repo Size][repo_size]
+![Closed Issues][closed_issues]
+![Open Issues][open_issues]
+[![Gitter][gitter-image]][gitter-url]
 
 * **Take as a disclaimer that PyeIQ should not be considered production-ready**.
 * For further questions, please post a comment on [eIQ™ community][page].
@@ -114,3 +125,18 @@ for details.
 [tag_v201]: https://img.shields.io/badge/-v2.0.1-red
 [tag_v210]: https://img.shields.io/badge/-v2.1.0-yellow
 [tag_v220]: https://img.shields.io/badge/-v2.2.0-red
+
+[eiqpackage]: https://img.shields.io/badge/pip3%20install-eiq-green
+[pypirepo]: https://pypi.org/project/eiq/#description
+[license]: https://img.shields.io/badge/License-BSD%203--Clause-blue
+[pepy_total]: https://pepy.tech/project/eiq
+[pepy_month]: https://pepy.tech/project/eiq/month
+[pepy_week]: https://pepy.tech/project/eiq/week
+[gitter-url]: https://gitter.im/pyeiq-imx/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
+[gitter-image]: https://badges.gitter.im/pyeiq-imx/community.svg
+
+
+[total_lines]: https://img.shields.io/tokei/lines/github/diegohdorta/pyeiq
+[repo_size]: https://img.shields.io/github/repo-size/diegohdorta/pyeiq
+[closed_issues]: https://img.shields.io/github/issues-closed-raw/diegohdorta/pyeiq
+[open_issues]: https://img.shields.io/github/issues-raw/diegohdorta/pyeiq
