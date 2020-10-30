@@ -85,7 +85,7 @@ More details on [eIQ™][eiq] page.
 [^3]: https://arxiv.org/abs/1704.04861
 
 [image_eIQObjectClassification]: ../media/demos/eIQObjectClassification/image_eIQObjectClassification_resized_logo.gif
-[video_eIQObjectClassification]: ../media/demos/eIQObjectClassification/video_eIQObjectClassification.gif
+[video_eIQObjectClassification]: ../media/demos/eIQObjectClassification/video_eIQObjectClassification_room.gif
 
 [tflite]: https://img.shields.io/badge/TFLite-2.1.0-orange
 [eiq]: https://www.nxp.com/design/software/development-software/eiq-ml-development-environment:EIQ
