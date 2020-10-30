@@ -35,9 +35,9 @@ has_children: true
 
 [boards]: https://img.shields.io/badge/-8QM%2C%208MPlus-lightgrey
 [opencv]: https://img.shields.io/badge/OpenCV-4.2.0-yellow
-[tflite]: https://img.shields.io/badge/TFLite-2.1.0-orange
-[armnn]: https://img.shields.io/badge/ArmNN-19.08-blue
-[release_5.4.24_2.1.0]: https://img.shields.io/badge/-5.4.24__2.1.0-blueviolet
+[tflite]: https://img.shields.io/badge/TFLite-2.2.0-orange
+[armnn]: https://img.shields.io/badge/ArmNN-20.02-blue
+[release_5.4.24_2.1.0]: https://img.shields.io/badge/-5.4.47__2.2.0-blueviolet
 [cpu]: https://img.shields.io/badge/-CPU-green
 [gpunpu]: https://img.shields.io/badge/-GPU%2C%20NPU-green
 [cpugpunpu]: https://img.shields.io/badge/-CPU%2C%20GPU%2C%20NPU-green
