@@ -13,6 +13,7 @@ import numpy as np
 from PIL import Image
 
 from eiq.apps.switch_video.config import *
+from eiq.apps.utils import create_link
 from eiq.config import BASE_DIR, ZIP
 from eiq.utils import args_parser, check_data, Downloader, file_type
 
@@ -124,6 +125,7 @@ class eIQVideoSwitchCore:
                           self.media, self.model):
             self.gather_data()
         os.chmod(self.binary, S_IEXEC)
+        create_link()
 
         if self.args.video_src and os.path.isfile(self.args.video_src):
             if file_type(self.args.video_src) != "video":
