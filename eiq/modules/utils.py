@@ -8,6 +8,10 @@ import threading
 
 import cv2
 
+import gi
+gi.require_version("Gdk", "3.0")
+from gi.repository import Gdk
+
 from eiq.config import BASE_DIR, ZIP
 from eiq.multimedia.overlay import OpenCVOverlay
 from eiq.multimedia.utils import GstVideo, save_image, VideoConfig
@@ -191,6 +195,7 @@ class DemoBase:
 
 def display_image(window_title, image, dest, name):
     save_image(image, dest, name)
-    cv2.imshow(window_title, image)
-    print("Done.")
-    cv2.waitKey()
+    if Gdk.Display.get_default() is not None:
+        if(Gdk.Display.get_default().get_monitor(0) != None):
+            cv2.imshow(window_title, image)
+            cv2.waitKey()
