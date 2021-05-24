@@ -1,0 +1,44 @@
+3.0.0
+	- Remove all non-quantization models.
+	- Change switch video demo (working on MPlus).
+
+2.2.0:
+    - If a demo uses a video file as parameter, the video will keep repeating until being mannually ended.
+    - Improve v4l2 pipeline.
+    - Add a warning message if a demo uses a non quantized model.
+    - Change the color of the detection boxes from the switch_video application.
+    - Add custom video file support to the switch_video application.
+
+2.1.0:
+    - Fix bug of video capture device searching.
+    - Add feature for data checking.
+    - Add feature to get data on host machine.
+
+2.0.1:
+    - Fix bug on switch video application.
+
+2.0.0:
+    - General major changes on project structure.
+    - Split project into engine, modules, helpers, utils and apps.
+    - Add base class to use on all demos avoiding repeated code.
+    - Support for more demos and applications including Arm NN.
+    - Support for building using Docker.
+    - Support for download data from multiple servers.
+    - Support for searching devices and build pipelines.
+    - Support for appsink/appsrc for QM (not working on MPlus).
+    - Support for camera and H.264 video.
+    - Support for Full HD, HD and VGA resolutions.
+    - Support video and image for all demos.
+    - Add display info in the frame, such as: FPS, model and inference time.
+    - Add manager tool to launch demos and applications.
+    - Add document page for PyeIQ project.
+
+1.0.0:
+    - Support demos based on TensorFlow Lite (2.1.0) and image classification.      
+    - Support inference running on GPU/NPU and CPU.
+    - Support file and camera as input data.
+    - Support SSD (Single Shot Detection).
+    - Support downloads on the fly (models, labels, dataset, etc).
+    - Support old eIQ demos from eiq_sample_apps CAF repository.
+    - Support model training for host PC.
+    - Support UI for switching inference between GPU/NPU/CPU on TensorFlow Lite.
