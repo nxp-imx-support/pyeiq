@@ -1,6 +1,0 @@
-FROM pyeiq/pyeiq:base
-
-ARG BRANCH
-
-RUN git clone https://source.codeaurora.org/external/imxsupport/pyeiq/ -b $BRANCH
-RUN cd pyeiq/ && python3 setup.py sdist
