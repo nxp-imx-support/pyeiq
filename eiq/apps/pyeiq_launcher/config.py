@@ -1,0 +1,17 @@
+# Copyright 2020 NXP Semiconductors
+# SPDX-License-Identifier: BSD-3-Clause
+
+from eiq.apps.switch_image.switch_image import eIQSwitchLabelImage
+from eiq.apps.switch_video.switch_video import eIQVideoSwitchCore
+from eiq.modules.classification.classification_tflite import eIQObjectClassificationTFLite
+from eiq.modules.detection.facial_detection import eIQFaceAndEyesDetection
+from eiq.modules.detection.object_detection_ssd import eIQObjectDetection
+
+
+APPS = {'switch_image': eIQSwitchLabelImage,
+        'switch_video': eIQVideoSwitchCore}
+
+DEMOS = {'face_and_eyes_detection': eIQFaceAndEyesDetection, 
+         'object_classification_tflite': eIQObjectClassificationTFLite,
+         'object_detection_tflite': eIQObjectDetection
+         }
