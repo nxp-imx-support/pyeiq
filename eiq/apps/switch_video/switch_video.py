@@ -28,10 +28,10 @@ class eIQVideoSwitchCore:
 
         self.base_dir = os.path.join(BASE_DIR,self.class_name)
         self.binary = os.path.join(self.base_dir, "bin", "video_switch_core")
-        self.labels = os.path.join(self.base_dir, "model", "labelmap.txt")
+        self.labels = os.path.join(self.base_dir, "model", "labels.txt")
         self.media = os.path.join(self.base_dir, "media", "video_device.mp4")
         self.media_backup = os.path.join(self.base_dir, "media", "backup.mp4")
-        self.model = os.path.join(self.base_dir, "model", "detect.tflite")
+        self.model = os.path.join(self.base_dir, "model", "ssd_mobilenet_v1_1_default_1.tflite")
         self.tmp_img = NPU_IMG
         
         self.backup()

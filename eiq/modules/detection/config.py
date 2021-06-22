@@ -21,14 +21,14 @@ FACE_EYES_DETECTION = {'eye_cascade': "haarcascade_eye.xml",
                        'window_title': "PyeIQ - Face and Eyes Detection"}
 
 OBJ_DETECTION = {'image': "bus.jpg",
-                 'labels': "coco_labels.txt",
-                 'model': "detect.tflite",
+                 'labels': "labels_ssd_mobilenet_v1.txt",
+                 'model': "ssd_mobilenet_v1_1_default_1.tflite",
                  'sha1': "73b8bb0749f275c10366553bab6f5f313230c527",
                  'src': {'drive': "https://drive.google.com/file/d/"
                                   "1LNo1JJwbLGpoTwgxEmKu8bjwrcdpdI4e/"
                                   "view?usp=sharing",
-                         'github': "https://github.com/lizeze-0515/"
-                                   "pymodel/releases/download/model_3.0.0/"
+                         'github': "https://github.com/KaixinDing/"
+                                   "pyeiq_model/releases/download/3.0.0/"
                                    "eIQObjectDetection.zip"},
                  'window_title': "PyeIQ - Object Detection"}
 

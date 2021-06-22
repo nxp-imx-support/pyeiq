@@ -7,10 +7,10 @@ OBJ_CLASSIFICATION = {'image': "cat.jpg",
                       'src': {'drive': "https://drive.google.com/file/d/"
                                        "1j3VnJvpd85dYk7Osip75uoIwWFz0uXqk/"
                                        "view?usp=sharing",
-                              'github': "https://github.com/lizeze-0515/"
-                                        "pymodel/releases/download/model_3.0.0/"
-                                        "eIQImageClassification.zip"},
-                      'window_title': "PyeIQ - Image Classification"}
+                              'github': "https://github.com/KaixinDing/"
+                                        "pyeiq_model/releases/download/3.0.0/"
+                                        "eIQObjectClassificationTFLite.zip"},
+                      'window_title': "PyeIQ - Object Classification"}
 
 
 
