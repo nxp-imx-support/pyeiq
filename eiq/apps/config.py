@@ -13,8 +13,8 @@ SWITCH_IMAGE = {'bin': "label_image",
                 'src': {'drive': "https://drive.google.com/file/d/"
                                  "1PQ1Tz3jlRxq-kCssenOAZSdj-Pjs3pNM/"
                                  "view?usp=sharing",
-                        'github': "https://github.com/lizeze-0515/"
-                                  "pymodel/releases/download/model_3.0.0/"
+                        'github': "https://github.com/KaixinDing/"
+                                  "pyeiq_model/releases/download/3.0.0/"
                                   "eIQSwitchLabelImage.zip"},
                 'msg': {'confidence': "<b>CONFIDENCE</b>",
                         'inf_time': "<b>INFERENCE TIME</b>",

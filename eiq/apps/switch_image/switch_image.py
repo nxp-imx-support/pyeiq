@@ -167,7 +167,8 @@ class eIQSwitchLabelImage(Gtk.Window):
                      " 'pyeiq --clear-cache' and run this application again.")
 
         for file in os.listdir(self.media_dir):
-            self.image_map.append([file])
+            if file != "LICENSE.md":
+                self.image_map.append([file])
 
     def get_random_image(self):
         images = []
