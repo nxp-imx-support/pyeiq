@@ -25,7 +25,7 @@ OBJ_DETECTION = {'image': "bus.jpg",
                  'model': "ssd_mobilenet_v1_1_default_1.tflite",
                  'sha1': "73b8bb0749f275c10366553bab6f5f313230c527",
                  'src': {'drive': "https://drive.google.com/file/d/"
-                                  "1LNo1JJwbLGpoTwgxEmKu8bjwrcdpdI4e/"
+                                  "1rdq36z1qpCz1GZUslqEVtenTReMF51TH/"
                                   "view?usp=sharing",
                          'github': "https://github.com/KaixinDing/"
                                    "pyeiq_model/releases/download/3.0.0/"

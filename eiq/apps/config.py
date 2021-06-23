@@ -11,7 +11,7 @@ SWITCH_IMAGE = {'bin': "label_image",
                 'model': "mobilenet_v1_1.0_224_quant.tflite",
                 'sha1': "2e71d5c1ba5695713260a0492b971c84a0785213",
                 'src': {'drive': "https://drive.google.com/file/d/"
-                                 "1PQ1Tz3jlRxq-kCssenOAZSdj-Pjs3pNM/"
+                                 "1JW33yio1j3YxeyRGg6fitUFD_wbPMSp0/"
                                  "view?usp=sharing",
                         'github': "https://github.com/KaixinDing/"
                                   "pyeiq_model/releases/download/3.0.0/"

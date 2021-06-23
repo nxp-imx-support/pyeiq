@@ -5,7 +5,7 @@ OBJ_CLASSIFICATION = {'image': "cat.jpg",
                       'model': "mobilenet_v1_1.0_224_quant.tflite",
                       'sha1': "765c995e1d27c4a738f77cf13445e7b41306befc",
                       'src': {'drive': "https://drive.google.com/file/d/"
-                                       "1j3VnJvpd85dYk7Osip75uoIwWFz0uXqk/"
+                                       "1juCV0ywOQKN02rT8dHwps7Yc5DU5N9wl/"
                                        "view?usp=sharing",
                               'github': "https://github.com/KaixinDing/"
                                         "pyeiq_model/releases/download/3.0.0/"
