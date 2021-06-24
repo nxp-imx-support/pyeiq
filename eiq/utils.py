@@ -254,4 +254,7 @@ def args_parser():
     parser.add_argument('-f', '--video_fwk', default='v4l2')
     parser.add_argument('-v', '--video_src', default=None)
 
+    parser.add_argument('-w', '--work_mode', default=None)
+    parser.add_argument('-c', '--camera_params', default=None)
+
     return parser.parse_args()
