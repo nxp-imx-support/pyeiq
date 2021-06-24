@@ -20,3 +20,14 @@ OBJ_DETECTION = {'image': "bus.jpg",
                                    "eIQObjectDetection.zip"},
                  'window_title': "PyeIQ - Object Detection"}
 
+OBJ_DETECTION_GST = {'labels': "coco_labels.txt",
+                     'model': "mobilenet_ssd_v2_coco_quant_postprocess.tflite",
+                     'sha1': "4736e758d8d626047df7cd1b3c38c72e77fd32ee",
+                     'src': {'drive': "https://drive.google.com/file/d/"
+                                      "14iRdCfznIlOYC4VURFH0acMHTJt0C4LH/"
+                                      "view?usp=sharing",
+                             'github': "https://github.com/lizeze-0515/"
+                                       "pymodel/releases/download/model_3.0.0/"
+                                       "eIQObjectDetectionCVGST.zip"},
+                     'window_title': "PyeIQ - Object Detection OpenCV"}
+                     

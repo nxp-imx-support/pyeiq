@@ -5,7 +5,7 @@ import os
 import re
 import subprocess
 
-from eiq.apps.config import LIB_PATH, LIBNN, RUN_LABEL_IMAGE, REGEX_GET_STRING, REGEX_GET_INTEGER_FLOAT
+from eiq.apps.switch_image.config import LIB_PATH, LIBNN, RUN_LABEL_IMAGE, REGEX_GET_STRING, REGEX_GET_INTEGER_FLOAT
 
 
 def run(use_accel, binary, model, image, labels):
