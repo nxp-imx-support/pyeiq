@@ -16,7 +16,7 @@ from gi.repository import GLib, Gtk
 import cv2
 import numpy as np
 
-from eiq.apps.config import SWITCH_IMAGE
+from eiq.apps.switch_image.config import SWITCH_IMAGE
 from eiq.apps.utils import create_link, run_label_image
 from eiq.config import BASE_DIR, ZIP
 from eiq.utils import args_parser, check_data, Downloader
