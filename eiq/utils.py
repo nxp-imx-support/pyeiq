@@ -255,6 +255,6 @@ def args_parser():
     parser.add_argument('-v', '--video_src', default=None)
 
     parser.add_argument('-w', '--work_mode', default=None)
-    parser.add_argument('-c', '--camera_params', default=None)
+    parser.add_argument('-c', '--camera_params', default='200 60 60')
 
     return parser.parse_args()

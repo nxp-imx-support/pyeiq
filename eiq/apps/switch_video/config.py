@@ -6,7 +6,7 @@ import os
 
 VIDEO_SWITCH_CORE = {'sha1': "94909aaa1405c8b05fe04bc4b736939a6bbb373a",
                      'src': {'drive': "https://drive.google.com/file/d/"
-                                      "1TMVuxKlzNwzRXZOhKc2nalMP5TiZ3nCU/"
+                                      "1T4qWsixVrtjzmjtQHWJdKiVY9177FagU/"
                                       "view?usp=sharing",
                              'github': "https://github.com/KaixinDing/"
                                        "pyeiq_model/releases/download/3.0.0/"

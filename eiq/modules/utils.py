@@ -71,6 +71,14 @@ class DemoBase:
               "Options: True (Find a video capture device automatically),"
               " /dev/video<x>, path_to_video_file.\n"
               "# pyeiq --run {} --video_src /dev/video3\n".format(name))
+        print(colored("-c / --camera_params", "yellow") + ": Only used in demo covid19 detection."
+              "Choose eye height, eye angle and eye slope for camera.\n"
+              'Options: None or "num num num"\n'
+              '# pyeiq --run covid19_detection --camera_params "200 60 60"\n'.format(name))
+        print(colored("-w / --work_mode", "yellow") + ": Only used in demo covid19 detection."
+              "Choose work mode for demo.\n"
+              "Options: 0 (Only detect facemask), 1 (Detect both facemask and social distance)\n"
+              "# pyeiq --run covid19_detection --work_mode 1\n".format(name))
         print(colored("Multiple parameters can be used at once:\n", "yellow") +
               "# pyeiq --run {} -d drive -v True -f opencv -res vga\n".format(name))
 
