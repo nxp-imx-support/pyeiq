@@ -26,6 +26,7 @@ setup(name="PyeIQ",
       license="BDS-3-Clause",
       packages=find_packages(),
       zip_safe=False,
+      install_requires=['requests'],
       keywords = ['ml', 'eiq', 'demos', 'apps'],
       classifiers=[
         'Development Status :: 3 - Alpha',

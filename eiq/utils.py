@@ -90,8 +90,10 @@ class Downloader:
                                                         dest_path=download_path)
                     self.downloaded_file = download_path
                 except:
-                    sys.exit("Google Drive server could not be reached."
+                    sys.exit("\n"
+                             "Google Drive server could not be reached."
                              "Your download has been canceled.\n"
+                             "Please try other download parameters, github or wget.\n"
                              "Exiting...")
 
         self.downloaded_file = download_path
@@ -106,25 +108,24 @@ class Downloader:
             if self.args.download == 'wget':
                 self.wget(url_dict['github'], filename, download_path)
                 return
+            
             try:
                 url = url_dict[self.args.download]
             except:
                 sys.exit("Your download parameter is invalid. Exiting...")
-
+            
+            if self.args.download == 'github':
+                self.wget(url_dict['github'], filename, download_path)
+                return
+            
             if self.args.download == 'drive':
                 drive_flag = True
                 url = url.split('/')[ID]
-        else:
+        else:           
             print("Searching for the best server to download...")
-            src = self.check_servers(url_dict)
-            if src is not None:
-                url = url_dict[src]
-                if src == 'drive':
-                    url = url.split('/')[ID]
-                    drive_flag = True
-            else:
-                sys.exit("No servers were available to download the data.\n"
-                         "Exiting...")
+            url = url_dict['drive']
+            url = url.split('/')[ID]
+            drive_flag = True
 
         self.download_from_web(url, filename, download_path, drive=drive_flag)
         if unzip and self.downloaded_file is not None:
