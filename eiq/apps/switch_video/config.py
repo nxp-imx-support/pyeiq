@@ -4,10 +4,9 @@
 import os
 
 
-VIDEO_SWITCH_CORE = {'sha1': "94909aaa1405c8b05fe04bc4b736939a6bbb373a",
+VIDEO_SWITCH_CORE = {'sha1': "aa8864498fed9294de27b273a2cce6a6a9097726",
                      'src': {'drive': "https://drive.google.com/file/d/"
-                                      "1T4qWsixVrtjzmjtQHWJdKiVY9177FagU/"
-                                      "view?usp=sharing",
+                                      "1p3hVhEt_nFuiBw5Sj2EI7ghxmYWdggnh",
                              'github': "https://github.com/KaixinDing/"
                                        "pyeiq_model/releases/download/3.0.0/"
                                        "eIQVideoSwitchCore.zip"},

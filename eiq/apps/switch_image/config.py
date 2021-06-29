@@ -9,10 +9,9 @@ LIBNN = "libneuralnetworks.so"
 SWITCH_IMAGE = {'bin': "label_image",
                 'labels': "labels.txt",
                 'model': "mobilenet_v1_1.0_224_quant.tflite",
-                'sha1': "2e71d5c1ba5695713260a0492b971c84a0785213",
+                'sha1': "6cd4ca55c0beb56bcd7f053d2f37cc612f58c710",
                 'src': {'drive': "https://drive.google.com/file/d/"
-                                 "1JW33yio1j3YxeyRGg6fitUFD_wbPMSp0/"
-                                 "view?usp=sharing",
+                                 "1omIHVWVR06evXYG1pLII1kodElFujfFR",
                         'github': "https://github.com/KaixinDing/"
                                   "pyeiq_model/releases/download/3.0.0/"
                                   "eIQSwitchLabelImage.zip"},
