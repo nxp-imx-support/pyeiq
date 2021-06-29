@@ -37,7 +37,7 @@ OBJ_COVID19 = { 'image': "demo5.jpg",
                 'priors': "priors.txt",
                 'sha1': "42bb0f476aa98b2e901c8300965a3b0a04deb87c",
                 'src': {'drive': "https://drive.google.com/file/d/"
-                                 "1799w8eIbbbo8nBeQLFHfa7RDCUb8XG5g/"
+                                 "1r7z0SZV5WlnLr4rfF5dfxc71E1sE_3f8/"
                                  "view?usp=sharing",
                         'github':"https://github.com/fangxiaoying/"
                                  "pyeiq-model/releases/download/v3.0.0/"

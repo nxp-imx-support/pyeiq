@@ -122,10 +122,8 @@ class Downloader:
                 drive_flag = True
                 url = url.split('/')[ID]
         else:           
-            print("Searching for the best server to download...")
-            url = url_dict['drive']
-            url = url.split('/')[ID]
-            drive_flag = True
+            self.wget(url_dict['github'], filename, download_path)
+            return
 
         self.download_from_web(url, filename, download_path, drive=drive_flag)
         if unzip and self.downloaded_file is not None:
