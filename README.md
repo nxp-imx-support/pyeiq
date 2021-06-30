@@ -45,6 +45,7 @@ cross-compilations, deployments or reading extensive guides.
 **3.0.0**
 - Remove all non-quantization models.
 - Change switch video demo (working on MPlus).
+- Add Covid19 detection demo
 
 **2.0.0**
 - General major changes on project structure.
