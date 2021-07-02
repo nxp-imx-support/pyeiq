@@ -1,0 +1,46 @@
+NXP Software Content Register
+
+Release Name:     PyeIQ
+Version:          v3.0.0
+
+google_drive_downloader.py Name: google_drive_downloader.py                      
+                           Version: v3.0.0
+                           Outgoing License: MIT
+                           License File: https://github.com/ndrplz/google-drive-downloader/blob/master/LICENSE          	           
+                           Format: source code                               
+                           Description: google drive download source code                        
+                           Location: pyeiq/eiq/helper     
+                       
+classification_armnn.py    Name: classification_armnn.py                     
+                           Version: v3.0.0
+                           Outgoing License: Apache-2.0                                              
+                           Description: classification armnn source code                        
+                           Location: pyeiq/eiq/modules/classification
+
+classification_tflite.py   Name: classification_armnn.py                    
+                           Version: v3.0.0
+                           Outgoing License: Apache-2.0                                              
+                           Description: classification tflite source code                        
+                           Location: pyeiq/eiq/modules/classification             
+
+covid19_detection.py       Name: covid19_detection.py                      
+                           Version: v3.0.0
+                           Outgoing License: MIT                                             
+                           Description: covid19 detection demo source code
+                           License File: https://github.com/PureHing/face-mask-detection-tf2/blob/master/LICENSE                        
+                           Location: pyeiq/eiq/modules/detection 
+
+object_detection_ssd.py    Name: object_detection_ssd.py                      
+                           Version: v3.0.0
+                           Outgoing License: Apache-2.0                                            
+                           Description: object detection demo source code                        
+                           Location: pyeiq/eiq/modules/detection
+
+pyeiq                      Name: pyeiq                            
+                           Version: v3.0.0                                       
+                           Outgoing License: BSD-3-Clause                    
+                           License File: LICENSE.md                       
+                           Format: source code                                             
+                           Description: pyeiq code.           
+                           Location: pyeiq/                         
+                           Origin: NXP (BSD-3-Clause)
