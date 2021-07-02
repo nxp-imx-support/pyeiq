@@ -1,11 +1,14 @@
-# Copyright 2020 Michael Kuo
-# Copyright 2020 NXP Semiconductors
+# Copyright 2020 PureHing
+# Copyright 2021 NXP Semiconductors
 #
-# Parts of this file were copied from Michael Kuo's github repository
+# Parts of this file were copied from PureHing's github repository
 # respecting its rights. All the modified parts below are according to
 # MIT LICENSE terms.
 #
 # SPDX-License-Identifier:    MIT
+# Reference:
+# https://github.com/PureHing/face-mask-detection-tf2/blob/master/LICENSE
+
 import os
 import cv2
 import numpy as np
