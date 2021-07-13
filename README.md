@@ -106,7 +106,7 @@ for details.
 [passing]: https://img.shields.io/badge/Build-passing-success
 
 [eiq]: https://www.nxp.com/design/software/development-software/eiq-ml-development-environment:EIQ
-[eiqpackage]: https://img.shields.io/badge/pip3%20install-PyeIQ-green
+[eiqpackage]: https://img.shields.io/badge/pip3%20install-pyeiq-green
 [pypirepo]: https://pypi.org/project/eiq/#description
 [pypicaf]: https://source.codeaurora.org/external/imxsupport/pyeiq/
 [license]: https://img.shields.io/badge/License-BSD%203--Clause-blue
