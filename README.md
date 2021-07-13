@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/KaixinDing/pyeiq_model/releases/download/3.0.0/pyeiq.png"" height="191" width="176">
+  <img src="https://raw.githubusercontent.com/KaixinDing/pyeiq_model/main/pyeiq.png" height="191" width="176">
 </p>
 
 ##  **A Python Demo Framework for eIQ on i.MX Processors**
