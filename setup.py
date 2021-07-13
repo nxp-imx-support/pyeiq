@@ -22,8 +22,8 @@ setup(name="PyeIQ",
       long_description=long_description,
       long_description_content_type='text/markdown',
       url = 'https://source.codeaurora.org/external/imxsupport/pyeiq/',
-      author="Alifer Moraes, Diego Dorta, Marco Franchi",
-      license="BDS-3-Clause",
+      author="Alifer Moraes, Diego Dorta, Marco Franchi, Kaixin Ding, Gnar Fang, Michael Pontikes, Jinghui Liu, Manish Bajaj, Devin Jiao",
+      license="BSD-3-Clause",
       packages=find_packages(),
       zip_safe=False,
       install_requires=['requests'],
@@ -33,5 +33,5 @@ setup(name="PyeIQ",
         'Intended Audience :: Information Technology',
         'Natural Language :: English',
         'Operating System :: Other OS',
-        'Programming Language :: Python :: 3.7'
+        'Programming Language :: Python :: 3.9'
       ])

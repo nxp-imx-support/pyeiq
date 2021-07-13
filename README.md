@@ -1,11 +1,10 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/lizeze-0515/pymodel/main/media/pyeiq.png" height="191" width="176">
+  <img src="https://github.com/KaixinDing/pyeiq_model/releases/download/3.0.0/pyeiq.png"" height="191" width="176">
 </p>
 
 ##  **A Python Demo Framework for eIQ on i.MX Processors**
 
 ![pip3][eiqpackage]
-[![PyPI version](https://badge.fury.io/py/eiq.svg)](https://badge.fury.io/py/eiq)
 ![GitHub issues][license]
 [![Downloads](https://pepy.tech/badge/eiq)](pepy_total)
 [![Downloads](https://pepy.tech/badge/eiq/month)](pepy_month)
@@ -34,17 +33,19 @@ cross-compilations, deployments or reading extensive guides.
 |                              |                     | ![tag][tag_v201] | ![imx][boards] | Jun, 2020 | ![Build][passing]  |         |
 |                              |                     | ![tag][tag_v210] | ![imx][boards] | Aug, 2020 | ![Build][passing]  |         |
 | ![BSP][release_5.4.47_2.2.0] |                     | ![tag][tag_v220] | ![imx][boards] | Nov, 2020 | ![Build][passing]  |         |
-| ![BSP][release_5.4.70_2.3.0] | ![tag][tag_v300]    |                  | ![imx][boards] | Jun, 2021 | ![Build][passing]  | Stable  |
+| ![BSP][release_5.4.70_2.3.0] <br /> ![BSP][release_5.4.70_2.3.2]| ![tag][tag_v300]    |                  | ![imx][boards] | Jul, 2021 | ![Build][passing]  | Stable  |
 
 ![blue][tag_blue]
 ![yellow][tag_yellow]
 ![red][tag_red]
 
+* **PyeIQ v1 and v2 can be installed with "pip3 install eiq". For more details, please check [pypi-eiq][previous_version].**
+
 ### Major Changes
 
 **3.0.0**
 - Remove all non-quantization models.
-- Change switch video demo (working on MPlus).
+- Change switch video demo (working on 8MPlus).
 - Add Covid19 detection demo
 
 **2.0.0**
@@ -75,15 +76,16 @@ cross-compilations, deployments or reading extensive guides.
 
 ### Copyright and License
 
-Copyright 2020 NXP Semiconductors. Free use of this software is granted under
+Copyright 2021 NXP Semiconductors. Free use of this software is granted under
 the terms of the BSD 3-Clause License.
-See [LICENSE](https://github.com/lizeze-0515/pymodel/blob/main/LICENSE)
+See [LICENSE](https://source.codeaurora.org/external/imxsupport/pyeiq/tree/LICENSE.md?h=v3.0.0)
 for details.
 
 [release_5.4.3_2.0.0]: https://img.shields.io/badge/-5.4.3__2.0.0-blueviolet
 [release_5.4.24_2.1.0]: https://img.shields.io/badge/-5.4.24__2.1.0-blueviolet
 [release_5.4.47_2.2.0]: https://img.shields.io/badge/-5.4.47__2.2.0-blueviolet
 [release_5.4.70_2.3.0]: https://img.shields.io/badge/-5.4.70__2.3.0-blueviolet
+[release_5.4.70_2.3.2]: https://img.shields.io/badge/-5.4.70__2.3.2-blueviolet
 
 [tag_blue]: https://img.shields.io/badge/-new-blue
 [tag_yellow]: https://img.shields.io/badge/-features-yellow
@@ -104,7 +106,7 @@ for details.
 [passing]: https://img.shields.io/badge/Build-passing-success
 
 [eiq]: https://www.nxp.com/design/software/development-software/eiq-ml-development-environment:EIQ
-[eiqpackage]: https://img.shields.io/badge/pip3%20install-eiq-green
+[eiqpackage]: https://img.shields.io/badge/pip3%20install-PyeIQ-green
 [pypirepo]: https://pypi.org/project/eiq/#description
 [pypicaf]: https://source.codeaurora.org/external/imxsupport/pyeiq/
 [license]: https://img.shields.io/badge/License-BSD%203--Clause-blue
@@ -118,3 +120,5 @@ for details.
 [repo_size]: https://img.shields.io/badge/repo%20size-78MB-blue
 [closed_issues]: https://img.shields.io/badge/closed%20issues-22-yellow
 [open_issues]: https://img.shields.io/badge/open_issues%20issues-5-yellow
+
+[previous_version]: https://pypi.org/project/eiq/
