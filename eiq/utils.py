@@ -119,8 +119,7 @@ class Downloader:
                 return
             
             if self.args.download == 'drive':
-                drive_flag = True
-                url = url.split('/')[ID]
+                sys.exit("Google driver is no longer supported in future release. Please use github instead. Exiting...")
         else:           
             self.wget(url_dict['github'], filename, download_path)
             return

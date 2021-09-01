@@ -8,8 +8,7 @@ from eiq.modules.detection.object_detection_ssd import eIQObjectDetection
 from eiq.modules.detection.covid19_detection import eIQCOVID19Detection
 
 
-APPS = {'switch_image': eIQSwitchLabelImage,
-        'switch_video': eIQVideoSwitchCore}
+APPS = {'switch_video': eIQVideoSwitchCore}
 
 DEMOS = {'covid19_detection': eIQCOVID19Detection,
          'object_classification_tflite': eIQObjectClassificationTFLite,

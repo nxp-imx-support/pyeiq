@@ -14,8 +14,8 @@ OBJ_DETECTION = {'image': "bus.jpg",
                  'sha1': "eef8713a6507850998e9e405f0a2b02a79fba757",
                  'src': {'drive': "https://drive.google.com/file/d/"
                                   "1qwpKsDiKYttEqvoOPWgY8d8FSIyFgNGR",
-                         'github': "https://github.com/KaixinDing/"
-                                   "pyeiq_model/releases/download/3.0.0/"
+                         'github': "https://github.com/NXP/"
+                                   "nxp-demo-experience-assets/releases/download/5.10.52_2.1.0/"
                                    "eIQObjectDetection.zip"},
                  'window_title': "PyeIQ - Object Detection"}
 
@@ -36,7 +36,7 @@ OBJ_COVID19 = { 'image': "demo5.jpg",
                 'sha1': "7a5b25a8664b7e1c6c0e8b52202d1ea0c6138858",
                 'src': {'drive': "https://drive.google.com/file/d/"
                                  "1EAI_V5aueSyADzhPlPNEmEKyAX8T7ZQK",
-                        'github':"https://github.com/fangxiaoying/"
-                                 "pyeiq-model/releases/download/v3.0.0/"
+                        'github':"https://github.com/NXP/"
+                                 "nxp-demo-experience-assets/releases/download/5.10.52_2.1.0/"
                                  "eIQObjectDetectionCOVID19.zip"},
                 'window_title': "PyeIQ - Object Detection COVID19"}
