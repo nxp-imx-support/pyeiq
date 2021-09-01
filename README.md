@@ -34,6 +34,7 @@ cross-compilations, deployments or reading extensive guides.
 |                              |                     | ![tag][tag_v210] | ![imx][boards] | Aug, 2020 | ![Build][passing]  |         |
 | ![BSP][release_5.4.47_2.2.0] |                     | ![tag][tag_v220] | ![imx][boards] | Nov, 2020 | ![Build][passing]  |         |
 | ![BSP][release_5.4.70_2.3.0] <br /> ![BSP][release_5.4.70_2.3.2]| ![tag][tag_v300]    |                  | ![imx][boards] | Jul, 2021 | ![Build][passing]  | Stable  |
+|                              |                     | ![tag][tag_v301] | ![imx][boards] | Sep, 2021 | ![Build][passing]  |         |
 
 ![blue][tag_blue]
 ![yellow][tag_yellow]
@@ -101,6 +102,7 @@ for details.
 [tag_v220]: https://img.shields.io/badge/-v2.2.0-red
 
 [tag_v300]: https://img.shields.io/badge/-v3.0.0-blue
+[tag_v301]: https://img.shields.io/badge/-v3.0.1-red
 
 [boards]: https://img.shields.io/badge/-8QM%2C%208MPlus-lightgrey
 [passing]: https://img.shields.io/badge/Build-passing-success
