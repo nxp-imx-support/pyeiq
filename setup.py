@@ -17,7 +17,7 @@ with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name="pyeiq",
-      version="3.0.0",
+      version="3.0.1",
       description="A Python Framework for eIQ on i.MX Processors",
       long_description=long_description,
       long_description_content_type='text/markdown',
