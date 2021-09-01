@@ -1,5 +1,5 @@
 # Copyright 2017 Andrea Palazzi 
-# Copyright 2021 NXP Semiconductors
+# Copyright 2021 NXP
 #
 # This Google Driver class was copied from Andrea Palazzi respecting its rights.
 # All the modified parts below are according to MIT's LICENSE terms.

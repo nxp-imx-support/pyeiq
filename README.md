@@ -77,7 +77,7 @@ cross-compilations, deployments or reading extensive guides.
 
 ### Copyright and License
 
-Copyright 2021 NXP Semiconductors. Free use of this software is granted under
+Copyright 2021 NXP. Free use of this software is granted under
 the terms of the BSD 3-Clause License.
 See [LICENSE](https://source.codeaurora.org/external/imxsupport/pyeiq/tree/LICENSE.md?h=v3.0.0)
 for details.

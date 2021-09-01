@@ -1,5 +1,5 @@
 # Copyright 2020 PureHing
-# Copyright 2021 NXP Semiconductors
+# Copyright 2021 NXP
 #
 # Parts of this file were copied from PureHing's github repository
 # respecting its rights. All the modified parts below are according to

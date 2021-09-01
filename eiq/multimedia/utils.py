@@ -1,4 +1,4 @@
-# Copyright 2021 NXP Semiconductors
+# Copyright 2021 NXP
 #
 # This file was partial copied from the link below and modified according to
 # its license terms.

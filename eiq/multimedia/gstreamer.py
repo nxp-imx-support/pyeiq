@@ -1,5 +1,5 @@
 # Copyright 2019 Google LLC
-# Copyright 2021 NXP Semiconductors
+# Copyright 2021 NXP
 #
 # This file was copied from Google LLC respecting its rights. All the modified
 # parts below are according to Google LLC's LICENSE terms.

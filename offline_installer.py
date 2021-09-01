@@ -1,3 +1,6 @@
+# Copyright 2021 NXP
+# SPDX-License-Identifier: BSD-3-Clause
+
 import os
 import pathlib
 from subprocess import Popen

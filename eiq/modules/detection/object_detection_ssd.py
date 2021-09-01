@@ -1,5 +1,5 @@
 # Copyright 2018 The TensorFlow Authors
-# Copyright 2021 NXP Semiconductors
+# Copyright 2021 NXP
 #
 # This file was copied from TensorFlow respecting its rights. All the modified
 # parts below are according to TensorFlow's LICENSE terms.

@@ -1,4 +1,4 @@
-# Copyright 2021 NXP Semiconductors
+# Copyright 2021 NXP
 # SPDX-License-Identifier: BSD-3-Clause
 
 def v4l2_camera_pipeline(width, height, device, frate,

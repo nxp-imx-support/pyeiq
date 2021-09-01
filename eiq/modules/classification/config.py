@@ -1,4 +1,4 @@
-# Copyright 2020 NXP Semiconductors
+# Copyright 2020 NXP
 # SPDX-License-Identifier: BSD-3-Clause
 OBJ_CLASSIFICATION = {'image': "cat.jpg",
                       'labels': "labels_mobilenet_quant_v1_224.txt",
