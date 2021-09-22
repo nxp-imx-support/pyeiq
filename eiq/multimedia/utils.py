@@ -253,11 +253,13 @@ class VideoConfig:
 
     def gstreamer_config(self):
         if self.video_src and os.path.isfile(self.video_src):
-            sink_pipeline = set_appsink_video_pipeline(self.video_src)
-            src_pipeline = set_appsrc_pipeline()
+            sink_pipeline = set_appsink_video_pipeline(self.video_src, width=1920, height=1080)
+            src_pipeline = set_appsrc_pipeline(width=1920, height=1080)
             return sink_pipeline, src_pipeline
         else:
-            sink_pipeline = set_appsink_pipeline(device=self.dev.name)
+            sink_pipeline = set_appsink_pipeline(device=self.dev.name,
+                                               width=self.dev_caps.width,
+                                               height=self.dev_caps.height)
             src_pipeline = set_appsrc_pipeline(width=self.dev_caps.width,
                                                height=self.dev_caps.height)
             return sink_pipeline, src_pipeline
