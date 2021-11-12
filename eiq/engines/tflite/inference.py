@@ -4,7 +4,7 @@
 import os
 
 import numpy as np
-from tflite_runtime.interpreter import Interpreter
+import tflite_runtime.interpreter as tflite
 
 from eiq.utils import Timer
 
@@ -18,7 +18,8 @@ class TFLiteInterpreter:
         self.inference_time = None
 
         if model is not None:
-            self.interpreter = Interpreter(model)
+            ext_delegate = tflite.load_delegate("/usr/lib/libvx_delegate.so")
+            self.interpreter = tflite.Interpreter(model,experimental_delegates=[ext_delegate])
             self.interpreter.allocate_tensors()
 
             self.input_details = self.interpreter.get_input_details()
