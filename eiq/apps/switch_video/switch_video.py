@@ -3,7 +3,7 @@
 
 import os
 from socket import gethostname
-from stat import S_IEXEC
+import stat
 import subprocess
 import threading
 import time
@@ -134,11 +134,14 @@ class eIQVideoSwitchCore:
     def start(self):
         os.environ['VSI_NN_LOG_LEVEL'] = "0"
         if not check_data(os.path.join(self.base_dir, self.class_name + ZIP),
-                          self.data['sha1'], self.binary, self.labels,
+                          self.data['sha1'], self.labels,
                           self.media, self.model):
                           
             self.gather_data()
-        os.chmod(self.binary, S_IEXEC)
+            os.chmod(os.path.join(self.base_dir, "bin", "build.sh"), stat.S_IRWXO+stat.S_IRWXG+stat.S_IRWXU)
+            os.system(os.path.join(self.base_dir, "bin", "build.sh"))
+        
+        os.chmod(self.binary, stat.S_IEXEC)
         create_link()
         
         if self.args.video_src and os.path.isfile(self.args.video_src):
