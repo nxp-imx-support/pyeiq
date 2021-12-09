@@ -9,10 +9,6 @@
 [![Downloads](https://pepy.tech/badge/eiq)](pepy_total)
 [![Downloads](https://pepy.tech/badge/eiq/month)](pepy_month)
 [![Downloads](https://pepy.tech/badge/eiq/week)](pepy_week)
-![Total Lines][total_lines]
-![Repo Size][repo_size]
-![Closed Issues][closed_issues]
-![Open Issues][open_issues]
 
 
 PyeIQ is written on top of [eIQ™ ML Software Development Environment][eiq] and
@@ -35,12 +31,13 @@ cross-compilations, deployments or reading extensive guides.
 | ![BSP][release_5.4.47_2.2.0] |                     | ![tag][tag_v220] | ![imx][boards] | Nov, 2020 | ![Build][passing]  |         |
 | ![BSP][release_5.4.70_2.3.0] <br /> ![BSP][release_5.4.70_2.3.2]| ![tag][tag_v300]    |                  | ![imx][boards] | Jul, 2021 | ![Build][passing]  | Stable  |
 |                              |                     | ![tag][tag_v301] | ![imx][boards] | Sep, 2021 | ![Build][passing]  |         |
+|                              |                     | ![tag][tag_v302] | ![imx][boards] | Dec, 2021 | ![Build][passing]  |         |
 
 ![blue][tag_blue]
 ![yellow][tag_yellow]
 ![red][tag_red]
 
-* **PyeIQ v1 and v2 can be installed with "pip3 install eiq". For more details, please check [pypi-eiq][previous_version].**
+**PyeIQ v1 and v2 can be installed with "pip3 install eiq". For more details, please check [pypi-eiq][previous_version].**
 
 ### Major Changes
 
@@ -103,6 +100,7 @@ for details.
 
 [tag_v300]: https://img.shields.io/badge/-v3.0.0-blue
 [tag_v301]: https://img.shields.io/badge/-v3.0.1-red
+[tag_v302]: https://img.shields.io/badge/-v3.0.2-red
 
 [boards]: https://img.shields.io/badge/-8QM%2C%208MPlus-lightgrey
 [passing]: https://img.shields.io/badge/Build-passing-success
@@ -115,12 +113,5 @@ for details.
 [pepy_total]: https://pepy.tech/project/eiq
 [pepy_month]: https://pepy.tech/project/eiq/month
 [pepy_week]: https://pepy.tech/project/eiq/week
-
-
-
-[total_lines]: https://img.shields.io/badge/total%20lines-5.4k-blue
-[repo_size]: https://img.shields.io/badge/repo%20size-78MB-blue
-[closed_issues]: https://img.shields.io/badge/closed%20issues-22-yellow
-[open_issues]: https://img.shields.io/badge/open_issues%20issues-5-yellow
 
 [previous_version]: https://pypi.org/project/eiq/
