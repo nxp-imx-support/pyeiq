@@ -18,7 +18,7 @@ from eiq.config import BASE_DIR,ZIP
 from eiq.utils import args_parser, check_data, Downloader, file_type
 
 
-class eIQVideoSwitchCore:
+class eIQVideoSwitchCore2:
     def __init__(self):
         self.args = args_parser()
         self.pid = [0, 0, 0]
@@ -49,7 +49,10 @@ class eIQVideoSwitchCore:
                                  self.base_dir, self.data['sha1'], True)
     
     def run_inference(self, device):
-        self.pid[device] = subprocess.Popen(RUN.format(device, self.binary, device), shell=True).pid
+        if device == 0:
+            self.pid[device] = subprocess.Popen(RUN.format(device, self.binary, device), shell=True).pid
+        else:
+            self.pid[device] = subprocess.Popen(RUN2.format(device, self.binary, device), shell=True).pid
 
     def get_device(self):
         hostname = gethostname()

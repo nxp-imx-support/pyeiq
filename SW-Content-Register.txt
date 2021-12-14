@@ -1,7 +1,7 @@
 NXP Software Content Register
 
 Release Name:     PyeIQ
-Version:          v3.0.2
+Version:          v3.1.0
 
 google_drive_downloader.py Name: google_drive_downloader.py                      
                            Version: v3.0.0

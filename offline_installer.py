@@ -21,7 +21,7 @@ switch_image = {'name': "eIQSwitchLabelImage",
                 'sha1': SWITCH_IMAGE['sha1'],
                 'src': SWITCH_IMAGE['src']['github']}
 
-switch_video = {'name': "eIQVideoSwitchCore",
+switch_video = {'name': "eIQVideoSwitchCore2",
                 'sha1': VIDEO_SWITCH_CORE['sha1'],
                 'src': VIDEO_SWITCH_CORE['src']['github']}
 

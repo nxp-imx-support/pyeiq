@@ -9,7 +9,7 @@ VIDEO_SWITCH_CORE = {'sha1': "aa8864498fed9294de27b273a2cce6a6a9097726",
                                       "1p3hVhEt_nFuiBw5Sj2EI7ghxmYWdggnh",
                              'github': "https://github.com/NXP/"
                                        "nxp-demo-experience-assets/releases/download/5.10.52_2.1.0/"
-                                       "eIQVideoSwitchCore.zip"},
+                                       "eIQVideoSwitchCore2.zip"},
                      'window_title': "PyeIQ - Object Detection Switch Cores"}
 
 CPU_IMG = os.path.join("/tmp", "cpu.jpg")
@@ -24,4 +24,5 @@ NPU = 2
 
 PAUSE = "kill -STOP {}"
 RESUME = "kill -CONT {}"
-RUN = "USE_GPU_INFERENCE={} {} -a {}"
+RUN = "USE_GPU_INFERENCE={} {} -u {}"
+RUN2 = "USE_GPU_INFERENCE={} {} --external_delegate_path=/usr/lib/libvx_delegate.so -u {}"
