@@ -110,9 +110,9 @@ class eIQVideoSwitchCore:
         cpu_inference_thread = threading.Thread(target=self.run_inference,
                                                 args=(CPU, ))
         npu_inference_thread = threading.Thread(target=self.run_inference,
-                                                args=(GPU, ))
+                                                args=(NPU, ))
         gpu_inference_thread = threading.Thread(target=self.run_inference,
-                                              args=(NPU, ))
+                                                args=(GPU, ))
                                               
         
         input_thread.daemon = True
