@@ -8,7 +8,7 @@ VIDEO_SWITCH_CORE = {'sha1': "aa8864498fed9294de27b273a2cce6a6a9097726",
                      'src': {'drive': "https://drive.google.com/file/d/"
                                       "1p3hVhEt_nFuiBw5Sj2EI7ghxmYWdggnh",
                              'github': "https://github.com/NXP/"
-                                       "nxp-demo-experience-assets/releases/download/5.10.52_2.1.0/"
+                                       "nxp-demo-experience-assets/releases/download/5.10.72_2.2.0/"
                                        "eIQVideoSwitchCore.zip"},
                      'window_title': "PyeIQ - Object Detection Switch Cores"}
 
